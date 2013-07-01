@@ -15,11 +15,10 @@
         }
     }
 
-    export class Test {
+     class Test {
     
         constructor() {
             
         }
     }
 }
- 

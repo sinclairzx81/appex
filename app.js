@@ -2,28 +2,15 @@
  
 var appex = require('appex');
 
-var http  = require('http');
 
+appex.create_runtime('./service.ts', function(runtime){
+    
+    appex.create_activation_context(runtime, function(activation_context) {
 
-var server = http.createServer(function(req, res){
+        appex.create_service_objects(activation_context, function(service_objects) {
+            
 
-
+            
+        });
+    }); 
 });
-
-var service = __dirname + '/service.ts';
-
-appex.createServer(service);
-
-
-
-
- 
-
-
-
-
- 
-
- 
-
-
