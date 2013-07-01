@@ -2,6 +2,8 @@
 {   
     export class Customers
     {   
+        public context : any;
+
         public list(input:any, callback: (output:any) => void) : void {
             
             console.log('invoked customers.add');
@@ -16,11 +18,14 @@
             callback(input);
 
         }
+
         public remove(input:any, callback: (output:any) => void) : void {
 
-            console.log('invoked customers.remove');
+            this.context.response.writeHead(200, {'content-type' : 'text/plain'});
 
-            callback(input);
+            this.context.response.write('intercepted');
+
+            this.context.response.end();
         }
 
         public update(input:any) : any {
