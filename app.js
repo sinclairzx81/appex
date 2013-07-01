@@ -2,7 +2,7 @@
 
 var fs    = require('fs');
 
-var appex = require('appex');
+
 
 var server = http.createServer(function(request, response) {
     
@@ -45,9 +45,17 @@ var server = http.createServer(function(request, response) {
     response.end();
 });
 
-var host = appex.listen(server, './service.ts'); 
-
 console.log('started on 5555');
 
 server.listen(5555);
+
+var appex = require('appex');
+
+appex.create('./service.ts', function(host) {
+   
+    host.discovery = true;
+    
+    host.bind(server);
+});
+
 

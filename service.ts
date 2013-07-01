@@ -10,7 +10,9 @@ export module services
 
         public list(input:any, callback: (output:any) => void) : void {
             
-            fs.readdir('./', (err, files) =>{
+            console.log('invoked customers.list');
+
+            fs.readdir('./', (err, files) => {
             
                 callback(files);
 
@@ -22,10 +24,11 @@ export module services
             console.log('invoked customers.add');
             
             callback(input);
-
         }
 
         public remove(input:any, callback: (output:any) => void) : void {
+
+            console.log('invoked customers.remove');
 
             this.context.response.writeHead(200, {'content-type' : 'text/plain'});
 
@@ -34,11 +37,11 @@ export module services
             this.context.response.end();
         }
 
-        public update(input:any) : any {
+        private update(input:any) : any {
 
             console.log('invoked customers.update');
 
-           return input;
+            return input;
         }
     }
 }
