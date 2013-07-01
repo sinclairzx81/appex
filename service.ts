@@ -2,30 +2,32 @@
 {   
     export class Customers
     {   
-        public list(start:number, end:number) : number [] {
-        
-            return [];
-        }
-
-        public add(data:string) : string {
-
-            console.log('invoked customers.add')
+        public list(input:any, callback: (output:any) => void) : void {
             
-            return data;
+            console.log('invoked customers.add');
+
+            callback(input);
+        }
+
+        public add(input:any, callback: (output:any) => void) : void {
+
+            console.log('invoked customers.add');
+            
+            callback(input);
 
         }
-        public remove(data:string) : string {
+        public remove(input:any, callback: (output:any) => void) : void {
 
-            console.log('invoked customers.remove')
+            console.log('invoked customers.remove');
 
-            return data;
-
+            callback(input);
         }
-        public update(data:string) : string {
 
-            console.log('invoked customers.update')
+        public update(input:any, callback: (output:any) => void) : void {
 
-            return data;
+            console.log('invoked customers.update');
+
+            callback(input);
         }
     }
 }
