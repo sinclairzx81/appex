@@ -23,11 +23,11 @@
             callback(input);
         }
 
-        public update(input:any, callback: (output:any) => void) : void {
+        public update(input:any) : any {
 
             console.log('invoked customers.update');
 
-            callback(input);
+           return input;
         }
     }
 }
