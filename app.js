@@ -1,18 +1,22 @@
-﻿require('typescript.api').register();
- 
-var appex = require('appex');
+﻿var appex = require('appex');
 
-// initialize the runtime.
-appex.create_runtime('./service.ts', function(runtime) {
+appex.create('./service.ts', function(host) {
     
-    // create a activation context for this runtime.
-    appex.create_activation_context(runtime, function(activation_context) {
+    console.log(host.routes);
 
-        // initialize service host object.
-        appex.create_service_host(activation_context, function(service_host) {
+    var output = host.call('/services/customers/remove', 'hello appex');
 
-            console.log(service_host);
-            
-        });
-    }); 
+    console.log(output);
 });
+
+//var http = require('http');
+
+//var server = http.createServer(function(req, res) {
+//  console.log('handler 1');
+//});
+
+//server.on('request', function(req, res) {
+//  console.log('handler 2');
+//});
+
+//server.listen(8088);

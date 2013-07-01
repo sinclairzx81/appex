@@ -1,24 +1,43 @@
-﻿export module services.app
+﻿
+
+export class Fank {
+
+    
+}
+
+export module services
 {   
-    export class Service
+    export class Customers
     {
         constructor() 
         {
-            console.log('Service 1')
 
         }
         
-        public method(data:string) : string {
+        public list(start:number, end:number) : number [] {
+        
+            return [];
+        }
+
+        public add(data:string) : string {
+
+            console.log('invoked customers.add')
+            
+            return data;
+
+        }
+        public remove(data:string) : string {
+
+            console.log('invoked customers.remove')
 
             return data;
 
         }
-    }
+        public update(data:string) : string {
 
-     class Test {
-    
-        constructor() {
-            
+            console.log('invoked customers.update')
+
+            return data;
         }
     }
 }
