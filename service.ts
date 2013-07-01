@@ -1,14 +1,20 @@
-﻿export module services
+﻿/// <reference path="node_modules/appex/decl/node.d.ts" />
+
+var fs = <fs>require('fs');
+
+export module services
 {   
-    export class Customers
+    export class customers
     {   
         public context : any;
 
         public list(input:any, callback: (output:any) => void) : void {
             
-            console.log('invoked customers.add');
+            fs.readdir('./', (err, files) =>{
+            
+                callback(files);
 
-            callback(input);
+            });
         }
 
         public add(input:any, callback: (output:any) => void) : void {
