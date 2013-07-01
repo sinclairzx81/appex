@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>appex service</title>
+        	
+	    <meta charset="utf-8" />
+			
+	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	    
+        <link   type='text/css'       rel ="stylesheet" href="/client.css">
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+        <script type="text/javascript" src="/client.js"></script>
+
+		<style type="text/css">
+		
+			.page-header { margin-top : 50px; }
+
+            #endpoint { width : 400px; }
+
+            #input {
+                font-family : 'Courier New';
+                width  : 100%;
+                height : 600px;
+            }
+			
+           #output {
+                font-family : 'Courier New';
+                width  : 100%;
+                height : 600px;
+            }
+
+		</style>
+        
+        <script type="text/javascript">
+
+            function call() {
+
+                var endpoint = $('#endpoint').val();
+
+                var input    = $('#input').val(); 
+
+                appex.call(endpoint, input, function(output) {
+                    
+                    var json = JSON.stringify(output, null, ' ');
+
+                    $('#output').html(json);
+                });
+            }
+
+            function load(endpoint) {
+
+                $('#endpoint').val(endpoint);
+
+            }
+
+            function setup() {
+            
+            }
+            
+            $(document).ready(setup);
+
+        </script>
+	
+	</head>
+	
+	<body>
+		
+	    <div class="navbar navbar-fixed-top">
+				
+	        <div class="navbar-inner">
+	            
+				<div class="container">
+
+					<a href='/' class='brand'>appex client</a>
+	                
+					<div class="nav-collapse">
+	                			
+						<ul class="nav">
+				
+	                        <li><a href="/">dashboard</a></li>
+				
+	                    </ul>
+
+	                </div>
+			
+	            </div>
+			
+	        </div>
+			
+	    </div>
+			
+	    <div class="container">
+			
+			<div class="page-header">
+		
+				<h2>test client</h2>
+			
+			</div>
+		    
+			<div id='page-container'>
+				
+			    <div class="row">
+			
+                    <div class="span4">
+		  
+                        <ul class="nav nav-tabs nav-stacked">
+							
+                            <li><a href='javascript:load("/services/customers/list")'>/services/customers/list</a></li>	
+                            
+                            <li><a href='javascript:load("/services/customers/add")'>/services/customers/add</a></li>	
+                            
+                            <li><a href='javascript:load("/services/customers/remove")'>/services/customers/remove</a></li>
+
+                            <li><a href='javascript:load("/services/customers/update")'>/services/customers/update</a></li>	
+			
+                        </ul>		
+		
+                    </div>
+		
+                    <div class="span8">
+						
+                        <button class='btn' onclick="call()">call</button>
+
+                        <input type="text" id="endpoint" class="input-medium search-query" />
+
+                    </div>
+
+                    <div class="span4">
+                            
+                        <li class="nav-header">input</li>
+
+                        <textarea  id="input">"hello world"</textarea>
+
+                    </div>
+
+                    <div class="span4">
+
+                        <li class="nav-header">output</li>
+
+                        <textarea id="output"></textarea>
+
+                    </div>
+		
+			    </div>
+		
+			</div>
+			
+		</div>
+				
+	</body>
+	
+</html>

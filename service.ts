@@ -1,19 +1,7 @@
-﻿
-
-export class Fank {
-
-    
-}
-
-export module services
+﻿export module services
 {   
     export class Customers
-    {
-        constructor() 
-        {
-
-        }
-        
+    {   
         public list(start:number, end:number) : number [] {
         
             return [];
