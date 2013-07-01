@@ -2,14 +2,16 @@
  
 var appex = require('appex');
 
-
-appex.create_runtime('./service.ts', function(runtime){
+// initialize the runtime.
+appex.create_runtime('./service.ts', function(runtime) {
     
+    // create a activation context for this runtime.
     appex.create_activation_context(runtime, function(activation_context) {
 
-        appex.create_service_objects(activation_context, function(service_objects) {
-            
+        // initialize service host object.
+        appex.create_service_host(activation_context, function(service_host) {
 
+            console.log(service_host);
             
         });
     }); 
