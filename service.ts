@@ -1,6 +1,4 @@
-﻿var fs = require('fs')
-
-export module services
+﻿export module services.app
 {   
     export class Service
     {
@@ -14,6 +12,13 @@ export module services
 
             return data;
 
+        }
+    }
+
+    export class Test {
+    
+        constructor() {
+            
         }
     }
 }

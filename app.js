@@ -1,11 +1,23 @@
 ﻿require('typescript.api').register();
-
  
 var appex = require('appex');
 
-var server = appex.createServer(__dirname + '/service.ts');
+var http  = require('http');
 
-server.listen(1234);
+
+var server = http.createServer(function(req, res){
+
+
+});
+
+var service = __dirname + '/service.ts';
+
+appex.createServer(service);
+
+
+
+
+ 
 
 
 
