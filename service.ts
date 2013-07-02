@@ -4,6 +4,18 @@ var fs    = <fs>require('fs');
 
 export module services
 {   
+    export class Address 
+    {
+        public street:string;
+    }
+
+    export class Customer
+    {
+        public firstname: string;
+        public lastname : string;
+        public address  : services.Address;
+    }
+
     export class Customers  
     {   
         public context : any;
@@ -19,11 +31,10 @@ export module services
             });
         }
 
-        public add(input:string, callback: (output:string) => void) : void {
+        public add(input:services.Customer, callback: (output:Customer) => void) : void {
 
             console.log('invoked customers.add');
             
-
             callback(input);
         }
 

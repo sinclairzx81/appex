@@ -53,7 +53,7 @@ appex.host('./service.ts', function(host) {
    
     console.log('service loaded')
     
-    console.log(host);
+    console.log(JSON.stringify(host.meta, null, ' '));
 
     host.discovery = true;
     
