@@ -1,10 +1,10 @@
 ﻿/// <reference path="node_modules/appex/decl/node.d.ts" />
 
-var fs = <fs>require('fs');
+var fs    = <fs>require('fs');
 
 export module services
 {   
-    export class customers
+    export class Customers  
     {   
         public context : any;
 
@@ -19,10 +19,11 @@ export module services
             });
         }
 
-        public add(input:any, callback: (output:any) => void) : void {
+        public add(input:string, callback: (output:string) => void) : void {
 
             console.log('invoked customers.add');
             
+
             callback(input);
         }
 

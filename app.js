@@ -2,8 +2,6 @@
 
 var fs    = require('fs');
 
-
-
 var server = http.createServer(function(request, response) {
     
     if (request.url == '/') {
@@ -51,8 +49,12 @@ server.listen(5555);
 
 var appex = require('appex');
 
-appex.create('./service.ts', function(host) {
+appex.host('./service.ts', function(host) {
    
+    console.log('service loaded')
+    
+    console.log(host);
+
     host.discovery = true;
     
     host.bind(server);
