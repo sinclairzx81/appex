@@ -51,11 +51,7 @@ var appex = require('appex');
 
 appex.host('./service.ts', function(host) {
    
-    console.log('service loaded')
-    
-    console.log(JSON.stringify(host.meta, null, ' '));
-
-    //console.log(JSON.stringify(host.routes, null, ' '));
+    console.log('service loaded');
 
     host.discovery = true;
     

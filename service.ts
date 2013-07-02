@@ -1,6 +1,11 @@
 ﻿/// <reference path="node_modules/appex/decl/node.d.ts" />
 
 
+class Foo implements app.Item {
+
+    value:string;
+}
+
 
 export module app {
 
@@ -15,6 +20,7 @@ export module app {
     export interface Address 
     {
         street : string;
+
         app    : app.Item;
     }
 
