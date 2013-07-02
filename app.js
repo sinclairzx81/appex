@@ -55,6 +55,8 @@ appex.host('./service.ts', function(host) {
     
     console.log(JSON.stringify(host.meta, null, ' '));
 
+    //console.log(JSON.stringify(host.routes, null, ' '));
+
     host.discovery = true;
     
     host.bind(server);

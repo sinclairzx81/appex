@@ -1,19 +1,30 @@
 ﻿/// <reference path="node_modules/appex/decl/node.d.ts" />
 
-var fs    = <fs>require('fs');
 
-export module services
-{   
-    export class Address 
-    {
-        public street:string;
+
+export module app {
+
+    var fs = require('fs');
+
+    export interface Item {
+
+        value:string;
+
     }
 
-    export class Customer
+    export interface Address 
     {
-        public firstname: string;
-        public lastname : string;
-        public address  : services.Address;
+        street : string;
+        app    : app.Item;
+    }
+
+    export interface Customer
+    {
+        firstname: string;
+
+        lastname : string;
+
+        address  : app.Address;
     }
 
     export class Customers  
@@ -31,7 +42,7 @@ export module services
             });
         }
 
-        public add(input:services.Customer, callback: (output:Customer) => void) : void {
+        public add(input:app.Customer, callback: (output:app.Customer) => void) : void {
 
             console.log('invoked customers.add');
             
@@ -49,7 +60,7 @@ export module services
             this.context.response.end();
         }
 
-        private update(input:any) : any {
+        private update(input:string) : any {
 
             console.log('invoked customers.update');
 
