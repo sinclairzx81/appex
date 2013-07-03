@@ -12,52 +12,84 @@
 
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
+        <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.1.js"></script>
+
         <script type="text/javascript" src="/client.js"></script>
 
 		<style type="text/css">
 		
 			.page-header { margin-top : 50px; }
 
-            #endpoint { width : 400px; }
+            #endpoint    { width : 400px; }
 
-            #input {
+            #input 
+            {
                 font-family : 'Courier New';
-                width  : 100%;
-                height : 600px;
+                width       : 100%;
+                height      : 600px;
             }
 			
-           #output {
+           #output 
+           {
                 font-family : 'Courier New';
-                width  : 100%;
-                height : 600px;
+                width       : 100%;
+                height      : 600px;
             }
 
 		</style>
         
         <script type="text/javascript">
-
-            function call() {
-
-                var endpoint = $('#endpoint').val();
-
-                var input    = $('#input').val(); 
-
-                appex.call(endpoint, input, function(output) {
-                    
-                    var json = JSON.stringify(output, null, ' ');
-
-                    $('#output').html(json);
-                });
-            }
-
-            function load(endpoint) {
-
-                $('#endpoint').val(endpoint);
-
-            }
-
-            function setup() {
             
+            var Operation = function(meta, operation) 
+            {   
+                this.name     = ko.observable(operation.name);
+
+                this.endpoint = ko.observable(operation.endpoint);
+
+                this.input    = ko.observable(operation.input);
+
+                this.output   = ko.observable(operation.output);
+
+                this.expanded = ko.observable(false);
+            }
+
+            var Service = function (meta, service) 
+            {
+                console.log('loading service')
+
+                this.name = ko.observable(service.name);
+
+                this.operations = ko.observableArray([]);
+                
+                for(var n in service.operations)
+                {
+                    this.operations.push(new Operation(meta, service.operations[n]));
+                }
+            }
+
+            var Meta = function(meta) 
+            {    
+                console.log('loading meta')
+                
+                this.services = ko.observableArray([]);
+
+                for(var n in meta.services) {
+                    
+                    this.services.push(new Service(meta, meta.services[n]));
+
+                }
+            }
+
+            var meta = null;
+            
+            function setup() {
+                
+                appex.call('/appex/meta', null, function(meta) {
+                    
+                    meta = new Meta(meta);
+
+                    ko.applyBindings(meta);
+                });
             }
             
             $(document).ready(setup);
@@ -65,9 +97,11 @@
         </script>
 	
 	</head>
-	
+	    
 	<body>
 		
+
+
 	    <div class="navbar navbar-fixed-top">
 				
 	        <div class="navbar-inner">
@@ -99,24 +133,26 @@
 				<h2>test client</h2>
 			
 			</div>
-		    
+
 			<div id='page-container'>
 				
 			    <div class="row">
 			
                     <div class="span4">
 		  
-                        <ul class="nav nav-tabs nav-stacked">
-							
-                            <li><a href='javascript:load("/app/customers/list")'>/app/customers/list</a></li>	
-                            
-                            <li><a href='javascript:load("/app/customers/add")'>/app/customers/add</a></li>	
-                            
-                            <li><a href='javascript:load("/app/customers/remove")'>/app/customers/remove</a></li>
+                        <ul class="nav nav-tabs nav-stacked" data-bind="foreach: services">
+             
+                            <li><a href="#" data-bind="text: name()"></a>
 
-                            <li><a href='javascript:load("/app/customers/update")'>/app/customers/update</a></li>	
-			
-                        </ul>		
+                                <ul class="nav nav-tabs nav-stacked" data-bind="foreach : operations()">
+
+                                    <li><a href="#" data-bind="text: endpoint()"></a></li>
+
+                                </ul>
+
+                            </li>
+
+                        </ul>	
 		
                     </div>
 		

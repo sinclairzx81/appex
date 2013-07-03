@@ -2,33 +2,59 @@
 
 var fs         = require('fs');
 
+var error_handler = function(units)  {
+    
+    units.forEach(function(unit) {
+                    
+        unit.diagnostics.forEach(function(diagnostic) {
 
-function build(callback) {
+           console.log(diagnostic.toString());
 
-    typescript.resolve(['./node_modules/appex/index.ts'], function(resolved) {
+        });
+    });
+}
+
+function copy(sourcefile, outputfile, callback) {
+
+    var readstream = fs.createReadStream(sourcefile);
+
+    var writestream = fs.createWriteStream(outputfile);
+
+    readstream.pipe(writestream);
+
+    setTimeout(callback, 100)
+
+}
+
+function build(sourcefile, outputfile, callback) {
+
+    typescript.resolve([sourcefile], function(resolved) {
+
+        error_handler(resolved)
 
         typescript.compile(resolved, function(compiled) {
         
-            var writestream = fs.createWriteStream('./node_modules/appex/index.js');
+            error_handler(compiled)
+            
+            var writestream = fs.createWriteStream(outputfile);
 
             for (var n in compiled) {
 
                  writestream.write(compiled[n].content);
             }
-
+            
             writestream.end();
 
-            setTimeout(function(){
-
-                callback();
-
-            }, 500);
+            setTimeout(callback, 100);
         });
 
     });
 }
 
-build(function(){
+build('./node_modules/appex/index.ts', './bin/index.js', function(){ 
 
-    require('./app.js');
+    copy('./node_modules/appex/workers/kernel.js', './bin/kernel.js', function(){
+        
+        require('./app2.js');
+    })    
 });

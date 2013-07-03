@@ -1,61 +1,24 @@
-﻿var http  = require('http');
+﻿var appex = require('./bin/index.js');
 
-var fs    = require('fs');
+//console.log(appex);
 
-var server = http.createServer(function(request, response) {
+var compiler = new appex.compilers.Compiler();
+
+compiler.compile("./service.ts", function(result) {
     
-    if (request.url == '/') {
+    result.errors.forEach(function(error) {
+        
+        console.log(error)
 
-        response.writeHead(200, {'content-type' : 'text/html'});
+    });
 
-        var readstream = fs.createReadStream('./client/client.html');
+    if(result.errors.length == 0 ) {
 
-        readstream.pipe(response);
+        var domain = new appex.runtime.Domain(result.script, result.reflection);
 
-        return;
+        console.log(domain.handles);
+
     }
-
-    if (request.url == '/client.js') {
-
-        response.writeHead(200, {'content-type' : 'text/javascript'});
-
-        var readstream = fs.createReadStream('./client/client.js');
-
-        readstream.pipe(response);
-        return;
-    }
-
-    if (request.url == '/client.css') {
-
-        response.writeHead(200, {'content-type' : 'text/css'});
-
-        var readstream = fs.createReadStream('./client/client.css');
-
-        readstream.pipe(response);
-
-        return;
-    }
-
-    response.writeHead(404, {'content-type' : 'text/plain'});
-
-    response.write('page not found')
-
-    response.end();
-});
-
-console.log('started on 5555');
-
-server.listen(5555);
-
-var appex = require('appex');
-
-appex.host('./service.ts', function(host) {
-   
-    console.log('service loaded');
-
-    host.discovery = true;
     
-    host.bind(server);
+    compiler.dispose();
 });
-
-
