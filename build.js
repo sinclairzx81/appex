@@ -16,6 +16,8 @@ var error_handler = function(units)  {
 
 function copy(sourcefile, outputfile, callback) {
 
+    console.log('copying ' + sourcefile + '>' + outputfile);
+
     var readstream = fs.createReadStream(sourcefile);
 
     var writestream = fs.createWriteStream(outputfile);
@@ -27,6 +29,8 @@ function copy(sourcefile, outputfile, callback) {
 }
 
 function build(sourcefile, outputfile, declfile, callback) {
+
+    console.log('building ' + sourcefile + ' to ' + outputfile + ' and ' + declfile);
 
     typescript.resolve([sourcefile], function(resolved) {
 
@@ -68,23 +72,22 @@ console.log('building appex...')
 
 build('./node_modules/appex/index.ts', './bin/index.js', './bin/appex.d.ts', function(){ 
 
-    console.log('copying worker kernel...')
+    copy('./package.json', './bin/package.js', function(){});
 
-    copy('./node_modules/appex/workers/kernel.js', './bin/kernel.js', function(){
+    copy('./readme.md',    './bin/readme.md',  function(){});
 
-        console.log('copying worker kernel to node_modules...')
+    copy('./bin/appex.d.ts',    './node_modules/appex/appex.d.ts',  function(){});
 
-        copy('./node_modules/appex/workers/kernel.js', './node_modules/appex/kernel.js', function(){
-            
-            console.log('copying index to node_modules...')
+    copy('./node_modules/appex/workers/kernel.js', './node_modules/appex/kernel.js', function(){});
 
-            copy('./bin/index.js', './node_modules/appex/index.js', function(){
+    copy('./node_modules/appex/workers/kernel.js', './bin/kernel.js', function(){ });
+    
+    copy('./bin/index.js', './node_modules/appex/index.js', function(){
                 
-                console.log('starting app.js')
+        console.log('starting app.js')
 
-                require('./app.js');
+        require('./app.js');
 
-            });
-        }) 
-    })    
+    });
+   
 });

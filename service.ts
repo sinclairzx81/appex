@@ -3,37 +3,36 @@
 
 var appex = require('appex');
 
-export module app 
-{
-    export class Customer {
-    
-        public firstName: string;
+export class App extends appex.Controller {   
 
-        public lastName : string;
+    public index  (request:string, callback:(response:string) => void ): void {
+    
+        this.response.writeHead(200, {'content-type': 'text/plain'})
+
+        this.response.write('hello world');
+
+        this.response.end();
     }
 
-    export class Example extends appex.Controller {   
+    public get    (request:string, callback : (response:string) => void) : void {
+            
+        callback(null);
+            
+    }
+    public post   (request:string, callback : (response:string) => void) : void {
+            
+        callback(request);
+            
+    }
+    public put   (request:string, callback : (response:string) => void) : void {
+            
+        callback(request);
+            
+    }
 
-        public get(request:string, callback : (response:app.Customer) => void) : void {
+    public delete (request:string, callback : (response:string) => void) : void {
             
-            callback(null);
+        callback(request);
             
-        }
-        public post(request:string, callback : (response:string) => void) : void {
-            
-            callback(request);
-            
-        }
-        public put(request:string, callback : (response:string) => void) : void {
-            
-            callback(request);
-            
-        }
-
-        public delete(request:string, callback : (response:string) => void) : void {
-            
-            callback(request);
-            
-        }
-    }    
+    }
 }
