@@ -1,45 +1,39 @@
 ﻿/// <reference path="node_modules/appex/references/node.d.ts" />
 /// <reference path="bin/appex.d.ts" />
 
-var appex = <appex>require('appex');
+var appex = require('appex');
 
 export module app 
 {
-    export class Example extends appex.Service 
-    {   
-        //app/example/synchronous 
-        public synchronous(request:any) : any 
-        {
-            return request;
-        }
+    export class Customer {
+    
+        public firstName: string;
 
-        //app/example/asynchronous 
-        public asynchronous(request:string, callback : (response:string) => void) : void {
+        public lastName : string;
+    }
+
+    export class Example extends appex.Controller {   
+
+        public get(request:string, callback : (response:app.Customer) => void) : void {
+            
+            callback(null);
+            
+        }
+        public post(request:string, callback : (response:string) => void) : void {
+            
+            callback(request);
+            
+        }
+        public put(request:string, callback : (response:string) => void) : void {
             
             callback(request);
             
         }
 
-        //app/example/override 
-        public override(request:string, callback : (response:string) => void) : void {
-        
-            this.response.writeHead(200, {'content-type' : 'text/plain'});
-
-            this.response.write('overriding by not calling the callback.')
-
-            this.response.end();
-        }
-
-        //app/example/io 
-        public io (request:string, callback : (response:string[]) => void) : void {
-
-            var fs = <fs>require('fs');
-
-            fs.readdir('./', (err, contents) => {
-                
-                callback(contents);
-
-            });
+        public delete(request:string, callback : (response:string) => void) : void {
+            
+            callback(request);
+            
         }
     }    
 }
