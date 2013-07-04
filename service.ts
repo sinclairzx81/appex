@@ -1,5 +1,5 @@
 ﻿/// <reference path="node_modules/appex/references/node.d.ts" />
-/// <reference path="bin/appex.d.ts" />
+/// <reference path="node_modules/appex/appex.d.ts" />
 
 var appex = require('appex');
 
