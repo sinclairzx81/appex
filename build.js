@@ -26,7 +26,7 @@ function copy(sourcefile, outputfile, callback) {
 
 }
 
-function build(sourcefile, outputfile, callback) {
+function build(sourcefile, outputfile, declfile, callback) {
 
     typescript.resolve([sourcefile], function(resolved) {
 
@@ -45,16 +45,46 @@ function build(sourcefile, outputfile, callback) {
             
             writestream.end();
 
-            setTimeout(callback, 100);
+            var writestream = fs.createWriteStream(declfile);
+
+            for (var n in compiled) {
+
+                 var pattern = /\/\/\/ <reference path="(.*?)" \/>/g;
+
+                 var content = compiled[n].declaration.replace(pattern, '');
+
+                 writestream.write(content);
+            }
+            
+            writestream.end();
+
+            setTimeout(callback, 400);
         });
 
     });
 }
 
-build('./node_modules/appex/index.ts', './bin/index.js', function(){ 
+console.log('building appex...')
+
+build('./node_modules/appex/index.ts', './bin/index.js', './bin/appex.d.ts', function(){ 
+
+    console.log('copying worker kernel...')
 
     copy('./node_modules/appex/workers/kernel.js', './bin/kernel.js', function(){
-        
-        require('./app.js');
+
+        console.log('copying worker kernel to node_modules...')
+
+        copy('./node_modules/appex/workers/kernel.js', './node_modules/appex/kernel.js', function(){
+            
+            console.log('copying index to node_modules...')
+
+            copy('./bin/index.js', './node_modules/appex/index.js', function(){
+                
+                console.log('starting app.js')
+
+                require('./app.js');
+
+            });
+        }) 
     })    
 });

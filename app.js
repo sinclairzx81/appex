@@ -1,32 +1,45 @@
-﻿var appex = require('./bin/index.js');
- 
-var compiler = new appex.Compiler();
+﻿
+var appex = require('appex');
 
-compiler.compile("./service.ts", function(result) {
-    
-    result.errors.forEach(function(error) {
-        
-        console.log(error);
+// create a appex host.
 
-    });
+var host = new appex.Host(server);
 
-    if(result.errors.length == 0 ) {
+// require / compile typescript source file(s). 
 
-        var module = new appex.Module(result.script, result.reflection);
-        
-        for (var n in module.handles) {
+host.require('./service.ts', function() { 
 
-            var obj = module.get( module.handles[n] );
-            
-            if (module.handles[n].type.identifier == 'class') {
+    console.log('compiled and ready to go.'); 
 
-                var instance = new obj();
-
-            }
-
-            console.log(obj);
-        }
-    }
-
-    compiler.dispose();
 });
+
+// simple nodejs http server.
+
+var server = require('http').createServer(function(request, response) {
+
+    response.writeHead(200, { 'content-type' : 'text/plain' });
+
+    response.write('appex web host: \n');
+    
+    for (var n in host.routes) {
+
+        response.write('--------------------------------------------\n')
+
+        response.write( 'url: ' + host.routes[n].url + '\n' );
+
+        response.write('input type:\n');
+
+        response.write( JSON.stringify(host.routes[n].input, null, ' ') + '\n' );
+
+        response.write('output type:\n');
+
+        response.write( JSON.stringify(host.routes[n].output, null, ' ') + '\n' );
+    }
+    
+    response.end();
+
+}).listen(7777);
+
+// bind appex host to server.
+
+host.bind(server);
