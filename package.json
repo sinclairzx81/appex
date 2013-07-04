@@ -1,0 +1,27 @@
+{
+  "name": "appex",
+  "version": "0.0.3",
+  "description": "TypeScript web application framework for nodejs.",
+  "main": "index.js",
+  "directories": {
+     
+  },
+  "dependencies": {"typescript.api": "0.5.1"},
+  "devDependencies": {},
+  "scripts": {
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinclairzx81/appex"
+  },
+  "keywords": [
+    "appex", "typescript"
+  ],
+  "author": "sinclair",
+  "licenses": [ {
+    "type": "Apache 2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+  } ],
+  "readmeFilename": "readme.md"
+}
