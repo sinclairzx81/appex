@@ -55,6 +55,6 @@ build('./node_modules/appex/index.ts', './bin/index.js', function(){
 
     copy('./node_modules/appex/workers/kernel.js', './bin/kernel.js', function(){
         
-        require('./app2.js');
+        require('./app.js');
     })    
 });

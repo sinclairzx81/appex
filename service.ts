@@ -1,13 +1,31 @@
-﻿export class PPP {}
+﻿/// <reference path="node_modules/appex/references/node.d.ts" />
 
-export function A() {}
-
-module app { 
-
-    export class Program {
+export class App {
     
+    constructor() {
         
+        console.log('hello')
+    
+    }
+}
+
+export var num:string = "hello";
+
+export module app {
+   
+    export class Base {
+            
+                
     }
 
-    export class OP {}
+    export class App extends Base {
+    
+        constructor() {
+
+            super();
+
+            console.log('nested')
+            
+        }
+    }    
 }

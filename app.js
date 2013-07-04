@@ -1,24 +1,32 @@
 ﻿var appex = require('./bin/index.js');
-
-//console.log(appex);
-
-var compiler = new appex.compilers.Compiler();
+ 
+var compiler = new appex.Compiler();
 
 compiler.compile("./service.ts", function(result) {
     
     result.errors.forEach(function(error) {
         
-        console.log(error)
+        console.log(error);
 
     });
 
     if(result.errors.length == 0 ) {
 
-        var domain = new appex.runtime.Domain(result.script, result.reflection);
+        var module = new appex.Module(result.script, result.reflection);
+        
+        for (var n in module.handles) {
 
-        console.log(domain.handles);
+            var obj = module.get( module.handles[n] );
+            
+            if (module.handles[n].type.identifier == 'class') {
 
+                var instance = new obj();
+
+            }
+
+            console.log(obj);
+        }
     }
-    
+
     compiler.dispose();
 });
