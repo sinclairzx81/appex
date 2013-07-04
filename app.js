@@ -15,4 +15,8 @@ var server = require('http').createServer(function(request, response) {
 
 host.bind(server);
 
+
+
 server.listen(7777);
+
+console.log('server runnning on port 7777')
