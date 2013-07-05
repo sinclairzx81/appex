@@ -2,6 +2,15 @@
 
 ### nodejs web services with the typescript programming language
 
+```javascript
+export function index (context:any) { 
+		
+	context.response.write('hello typescript!!');
+
+	context.response.end(); 
+}
+```
+
 ## install
 
 ```javascript
@@ -9,6 +18,8 @@ npm install appex
 ```
 
 * [overview](#overview)
+* [getting started](#getting_started)
+* [getting started on express](#getting_started_on_express)
 * [function signatures](#function_signatures)
 	* [http handler](#function_signatures_http_handler)
 	* [json handler](#function_signatures_json_handler)
@@ -23,59 +34,71 @@ Appex is a nodejs web application and service framework built on top of the Type
 enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
 meta data for clients who consume them. 
 
-### typescript
 
+<a name="getting_started" />
+## getting started
 ```javascript
-// program.ts
-
-declare var require; 
-
-// url: http://localhost:1337/
-export function index (context:any): void { 
-  
-    context.response.write('home');
-
-    context.response.end(); 
-}
-
-// url: http://localhost:1337/about
-export function about (context:any): void { 
-	
-    context.response.write('about');
-
-    context.response.end();
-}
-
+//----------------------------------------------
+// file: program.ts
+//----------------------------------------------
 export module services {
+	
+	// url: http://localhost:1337/services/message
+	export function message (context:any): void { 
+		
+		context.response.write('hello typescript');
 
-    // url: http://localhost:1337/services/dir
-    export function dir(context:any, path:string, callback:(contents:string[]) => void) {
-        
-        require('fs').readdir(path || './', (error, contents) => {
-            
-            callback(contents);
-
-        });
-    }
+		context.response.end(); 
+	}
 }
-
-```
-
-### javascript
-
-```javascript
-// app.js
+//----------------------------------------------
+// file: app.js
+//----------------------------------------------
 
 var appex   = require('appex');
 
 var runtime = appex.runtime ({ source : './program.ts', devmode : true });
 
-require('http').createServer( function(request, response) {
-    
-    runtime(request, response);
-    
-}).listen(5444);
+require('http').createServer( runtime ).listen(3000);
 ```
+<a name="getting_started_on_express" />
+## getting started on express
+```javascript
+//----------------------------------------------
+// file: program.ts
+//----------------------------------------------
+export module services {
+	
+	// url: http://localhost:1337/services/message
+	export function message (context:any): void { 
+		
+		context.response.write('hello typescript');
+
+		context.response.end(); 
+	}
+}
+
+//----------------------------------------------
+// file: app.js
+//----------------------------------------------
+
+var express = require('express');
+
+var appex   = require('appex');
+
+var app = express();
+
+app.use( appex.runtime( { source:'./program.ts', devmode:true } ) );
+
+app.get('/', function(req, res){
+
+  res.send('Hello World');
+  
+});
+
+app.listen(3000);
+```
+
 <a name="function_signatures" />
 ## function signatures
 
