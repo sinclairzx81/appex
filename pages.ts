@@ -1,4 +1,5 @@
 ﻿export function index   (context) { 
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
     context.response.write('index');
     context.response.end();
 }
