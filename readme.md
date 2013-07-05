@@ -1,6 +1,6 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
-### develop nodejs web services with typescript
+### develop nodejs web services with [typescript](http://www.typescriptlang.org/)
 
 ## install
 
@@ -19,6 +19,7 @@ npm install appex
 	* [the index function](#the_index_function)	
 	* [routing with modules and functions](#function_routing)
 * [structuring projects](#structuring_projects)
+* [typescript resources](#resources)
 
 <a name="overview" />
 ## overview
@@ -296,3 +297,10 @@ export module users {
 }
 
 ```
+
+<a name="resources" />
+## typescript resources
+
+* [typescript homepage](http://www.typescriptlang.org/)
+* [typescript language specification](http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf)
+* [typescript declarations repository](https://github.com/borisyankov/DefinitelyTyped)
