@@ -35,7 +35,7 @@ require('http').createServer( function(request, response) {
 ### typescript
 
 The following demonstrates creating http accessible endpoints. appex will generate routing tables based on the module
-scope of a given method. Functions named 'index' resolve to the current module scope.
+scope of a given function. Functions named 'index' resolve to the current module scope.
 
 ```javascript
 // program.ts
@@ -81,7 +81,7 @@ export module services {
 
 ```
 
-## creating http endpoints
+## http functions
 
 Appex supports two types of http endpoints, http handlers and json service methods. 
 
@@ -118,9 +118,9 @@ export function method(context:any, request:string, callback:(response:any) => v
 }
 ```
 
-## routing
+## function routing
 
-Appex creates url routing tables based on a functions name and its modules scope. For example consider the following...
+Appex creates url routing tables based on a function name and module scope. For example consider the following...
 
 ```javascript
 export function index   (context:any) { }
@@ -139,7 +139,7 @@ export module services.customers {
 }
 ```
 
-Will create the following routes:
+will create the following routes:
 
 ```javascript
 http://[host]:[port]/
@@ -155,8 +155,40 @@ http://[host]:[port]/services/customers/update
 http://[host]:[port]/services/customers/delete
 ```
 
-note: at this time, there is not mechanism for wildcard routing.
+## public and private functions
 
+Appex only exposes 'exported' functions over http. From this developers infer notions of public and private over http. consider
+the following example.
 
+```javascript
+
+module private_module {
+
+	export function public_method () {
+	
+		// this function is exported, but as this module is 
+		
+		// not exported, neither is this method.
+	}
+}
+
+function private_function() {
+
+	// this method is private
+}
+
+export function public_function   (context:any) { 
+
+	private_function(); // ok
+	
+	private_module.public_method(); // ok
+}
+```
+
+will result in the following routes.
+
+```javascript
+http://[host]:[port]/public_function
+```
 
 
