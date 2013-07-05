@@ -269,7 +269,9 @@ functionality, as demonstrated below.
 
 var appex = require('appex');
 
-require('http').createServer(  appex.runtime ({ source : './index.ts', devmode : true }) ).listen(3000);
+var runtime = appex.runtime ({ source : './index.ts', devmode : true });
+
+require('http').createServer( runtime  ).listen(3000);
 
 //---------------------------------------------------	
 // file: index.ts

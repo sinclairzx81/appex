@@ -1,6 +1,6 @@
 {
   "name": "appex",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "develop nodejs web services with the typescript programming language.",
   "main": "index.js",
   "directories": {
