@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>appex service</title>
+        	
+	    <meta charset="utf-8" />
+			
+	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	    
+        <link   type='text/css'       rel ="stylesheet" href="/client.css">
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+        <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.1.js"></script>
+
+        <script type="text/javascript" src="/client.js"></script>
+
+		<style type="text/css">
+		
+			.page-header { margin-top : 50px; }
+
+            #endpoint    { width : 400px; }
+
+            #input 
+            {
+                font-family : 'Courier New';
+                width       : 100%;
+                height      : 600px;
+            }
+			
+           #output 
+           {
+                font-family : 'Courier New';
+                width       : 100%;
+                height      : 600px;
+            }
+
+		</style>
+        
+        <script type="text/javascript">
+            
+            var Operation = function(meta, operation) 
+            {   
+                this.name     = ko.observable(operation.name);
+
+                this.endpoint = ko.observable(operation.endpoint);
+
+                this.input    = ko.observable(operation.input);
+
+                this.output   = ko.observable(operation.output);
+
+                this.expanded = ko.observable(false);
+            }
+
+            var Service = function (meta, service) 
+            {
+                console.log('loading service')
+
+                this.name = ko.observable(service.name);
+
+                this.operations = ko.observableArray([]);
+                
+                for(var n in service.operations)
+                {
+                    this.operations.push(new Operation(meta, service.operations[n]));
+                }
+            }
+
+            var Meta = function(meta) 
+            {    
+                console.log('loading meta')
+                
+                this.services = ko.observableArray([]);
+
+                for(var n in meta.services) {
+                    
+                    this.services.push(new Service(meta, meta.services[n]));
+
+                }
+            }
+
+            var meta = null;
+            
+            function setup() {
+                
+                appex.call('/appex/meta', null, function(meta) {
+                    
+                    meta = new Meta(meta);
+
+                    ko.applyBindings(meta);
+                });
+            }
+            
+            $(document).ready(setup);
+
+        </script>
+	
+	</head>
+	    
+	<body>
+		
+
+
+	    <div class="navbar navbar-fixed-top">
+				
+	        <div class="navbar-inner">
+	            
+				<div class="container">
+
+					<a href='/' class='brand'>appex client</a>
+	                
+					<div class="nav-collapse">
+	                			
+						<ul class="nav">
+				
+	                        <li><a href="/">dashboard</a></li>
+				
+	                    </ul>
+
+	                </div>
+			
+	            </div>
+			
+	        </div>
+			
+	    </div>
+			
+	    <div class="container">
+			
+			<div class="page-header">
+		
+				<h2>test client</h2>
+			
+			</div>
+
+			<div id='page-container'>
+				
+			    <div class="row">
+			
+                    <div class="span4">
+		  
+                        <ul class="nav nav-tabs nav-stacked" data-bind="foreach: services">
+             
+                            <li><a href="#" data-bind="text: name()"></a>
+
+                                <ul class="nav nav-tabs nav-stacked" data-bind="foreach : operations()">
+
+                                    <li><a href="#" data-bind="text: endpoint()"></a></li>
+
+                                </ul>
+
+                            </li>
+
+                        </ul>	
+		
+                    </div>
+		
+                    <div class="span8">
+						
+                        <button class='btn' onclick="call()">call</button>
+
+                        <input type="text" id="endpoint" class="input-medium search-query" />
+
+                    </div>
+
+                    <div class="span4">
+                            
+                        <li class="nav-header">input</li>
+
+                        <textarea  id="input">"hello world"</textarea>
+
+                    </div>
+
+                    <div class="span4">
+
+                        <li class="nav-header">output</li>
+
+                        <textarea id="output"></textarea>
+
+                    </div>
+		
+			    </div>
+		
+			</div>
+			
+		</div>
+				
+	</body>
+	
+</html>

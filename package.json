@@ -1,12 +1,12 @@
 {
   "name": "appex",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "develop nodejs web services with the typescript programming language.",
   "main": "index.js",
   "directories": {
      
   },
-  "dependencies": {"typescript.api": "0.5.2"},
+  "dependencies": {"typescript.api": "0.5.1"},
   "devDependencies": {},
   "scripts": {
     
