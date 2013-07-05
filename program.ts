@@ -1,4 +1,4 @@
-﻿/// <reference path="examples/reflection/appex.reflection.ts" />
+﻿/// <reference path="tooling/reflection/appex.reflection.ts" />
 
 export function index(context) {
     

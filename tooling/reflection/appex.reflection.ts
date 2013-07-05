@@ -8,7 +8,7 @@ export module appex.reflection {
         
         context.response.writeHead(200, {'content-type': 'text/html'});
 
-        var readstream = fs.createReadStream('./examples/reflection/appex.reflection.html');
+        var readstream = fs.createReadStream('./tooling/reflection/appex.reflection.html');
 
         readstream.pipe(context.response);
     }
@@ -17,7 +17,7 @@ export module appex.reflection {
         
         context.response.writeHead(200, {'content-type': 'text/javascript'});
 
-        var readstream = fs.createReadStream('./examples/reflection/appex.reflection.js');
+        var readstream = fs.createReadStream('./tooling/reflection/appex.reflection.js');
 
         readstream.pipe(context.response);
     }
