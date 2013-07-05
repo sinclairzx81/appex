@@ -8,8 +8,8 @@ npm install appex
 
 * [overview](#overview)
 * [function signatures](#function_signatures)
-** [http handler](#function_signatures_http_handler)
-** [json handler](#function_signatures_json_handler)
+- * [http handler](#function_signatures_http_handler)
+- * [json handler](#function_signatures_json_handler)
 * [function visibility](#function_visibility)
 * [function routing](#function_routing)
 
