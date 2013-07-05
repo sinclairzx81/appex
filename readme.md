@@ -11,7 +11,7 @@ npm install appex
 * [overview](#overview)
 * [getting started](#getting_started)
 * [getting started on express](#getting_started_on_express)
-* [development mode and dynamic compilation](#development_mode)
+* [developing with dynamic compilation](#development_mode)
 * [functions](#functions)
 	* [http handler function](#http_handler_function)
 	* [json handler function](#json_handler_function)
@@ -27,8 +27,8 @@ Appex is a nodejs web application and service framework built on top of the Type
 enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
 meta data for clients to consume.
 
-Appex is also provides a dynamic compilation environment for typescript. Appex will effeciently manage compilation 
-in the background without the need to restart the web server. 
+Appex also provides a dynamic compilation environment for typescript to aid in development. Appex will effeciently 
+manage compilation in the background without the need to restart the web server, or use addition modules.
 
 <a name="getting_started" />
 ## getting started
@@ -95,6 +95,32 @@ app.get('/', function(req, res){
 app.listen(3000);
 ```
 
+<a name="development_mode" />
+## developing with dynamic compilation
+
+```javascript 
+// enable dynamic compilations with the devmode option.
+var runtime = appex.runtime ({ source : './program.ts', devmode : true }); 
+```
+
+Appex is built directly on top of the Microsoft TypeScript 0.9 compiler and leverages it for tight
+integration with the nodejs platform. By enabling the 'devmode' option will have the compiler
+effiecently rebuild typescript source code on each request made to the server. 
+
+Appex achieves performance in this regard by leveraging features introduced in
+TS 0.9 which allows incremental building / caching of typescript compilation units.
+
+In addition to this, compilations are run in a background worker process to ensure they do interupt
+requests being served on the web process.
+
+![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
+
+The benefit to this is that updates can be made to source files without needing to restart the web process. Additionally, 
+syntactic errors made in typescript source code do not bring the web process. Everything stays running (excluding runtime 
+errors).
+
+Appex will output detailed syntax and type errors on the main process stdout stream, as well as a http response.
+
 <a name="functions" />
 ## functions
 
@@ -142,7 +168,7 @@ export function method(context:any, request:any, callback:(response:any) => void
 ```
 
 <a name="public_private_functions" />
-### public private functions
+### public and private functions
 
 Appex extends TypeScripts concept of visibility to include visibility over http. From this
 developers and control which functions are exported as http handlers.  
