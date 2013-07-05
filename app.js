@@ -1,11 +1,16 @@
 ﻿var appex   = require('appex');
 
-var http    = require('http');
+var runtime = appex.runtime ({
 
-var runtime = appex.runtime({source : './service.ts', devmode : true})
+    source   : './program.ts', // location of 
 
-var server  = http.createServer( runtime );
+    devmode  : true
+});
 
-server.listen(7777);
+require('http').createServer( function(request, response) {
+    
+    runtime(request, response);
+    
+}).listen(5444);
 
-console.log('server runnning on port 7777')
+

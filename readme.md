@@ -1,124 +1,135 @@
-﻿# appex
+# APPEX 
 
-Create nodejs web services with typescript.
+A nodejs web application framework built on top of the TypeScript programming language.  
 
 ## install
 
 ```javascript
+
 npm install appex
+
 ```
-# overview
 
-appex is a nodejs framework built on top of the TypeScript programming language. appex enables developers to 
-create json web services by writing typescript classes. 
- 
+## overview
 
-see below for example.
+Appex is a nodejs web application framework built on top of the TypeScript programming language. Appex simplifies 
+web application development by enabling developers to create/export http endpoints with TypeScript functions, 
+as well as being able to generate http interface descriptions directly from TypeScript type annotations. 
 
-## example usage
+## quick start
 
-
+The following illistrates setting up a appex runtime, and handling requests. 
 
 ```javascript
 
-var appex = require('appex');
+// app.js
 
+var appex   = require('appex');
 
+var runtime = appex.runtime ({ source : './program.ts', devmode : true });
 
-// create a appex host.
-
-var host = new appex.Host(server);
-
-// require / compile typescript source file(s). 
-
-host.require('./service.ts', function() { 
-
-    console.log('compiled and ready to go.'); 
-
-});
-
-// simple nodejs http server.
-
-var server = require('http').createServer(function(request, response) {
-
-    response.writeHead(200, { 'content-type' : 'text/plain' });
-
-    response.write('appex web host: \n');
+require('http').createServer( function(request, response) {
     
-    for (var n in host.routes) {
+    runtime(request, response);
+    
+}).listen(5444);
 
-        response.write('--------------------------------------------\n')
+```
+The following demonstrates creating http methods.
 
-        response.write( 'url: ' + host.routes[n].url + '\n' );
+note: appex requires that http servicable methods be exported with the 'export' keyword. 
 
-        response.write('input type:\n');
+note: urls are infered from a functions module scope.
 
-        response.write( JSON.stringify(host.routes[n].input, null, ' ') + '\n' );
+note: the function 'index' act as top level route in the current module scope. 
 
-        response.write('output type:\n');
+```javascript
 
-        response.write( JSON.stringify(host.routes[n].output, null, ' ') + '\n' );
+// program.ts
+
+declare var require;
+
+// url: http://localhost:1337/
+
+export function index (context:any): void { 
+
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
+    
+    context.response.write('home');
+
+    context.response.end(); 
+}
+
+// url: http://localhost:1337/about
+
+export function about (context:any): void { 
+
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
+    
+    context.response.write('about');
+
+    context.response.end();
+}
+
+export module services {
+    
+    // url: http://localhost:1337/services/
+
+    export function index(context:any) : void {
+        
+        context.response.writeHead(200, {'content-type' : 'text/plain'});
+    
+        context.response.write('services index');
+
+        context.response.end(); 
+
     }
-    
-    response.end();
 
-}).listen(7777);
+    // url: http://localhost:1337/services/dir
 
-// bind appex host to server.
+    export function dir(context:any, path:string, callback:(contents:string[]) => void) {
+        
+        require('fs').readdir(path || './', (error, contents) => {
+            
+            callback(contents);
 
-host.bind(server);
+        });
+    }
+}
 
 ```
-note: the http endpoints are inferred based on module/class/method. 
 
-note: at this stage, all methods accept json data over http post.
+## writing http endpoints
+
+Appex supports two types of http endpoints, handlers and json service methods.
+
+### http handlers
+
+A standard request response handler method can be created with the following method signature.
 
 ```javascript
 
-/// <reference path="node_modules/appex/references/node.d.ts" />
-/// <reference path="bin/appex.d.ts" />
+export function method(context:any) : void {
 
-var appex = <appex>require('appex');
+	// handle request ...
 
-export module app 
-{
-    export class Example extends appex.Service 
-    {   
-        //app/example/synchronous 
-        public synchronous(request:any) : any 
-        {
-            return request; // echo
-        }
+}
 
-        //app/example/asynchronous 
-        public asynchronous(request:string, callback : (response:string) => void) : void {
-            
-            callback(request); // echo
-            
-        }
+```
 
-        //app/example/override 
-        public override(request:string, callback : (response:string) => void) : void {
-			
-            this.response.writeHead(200, {'content-type' : 'text/plain'});
+### json service methods
 
-            this.response.write('overriding by not calling the callback.')
+Json service methods are http endpoints whose request and responses are POST'ed to them. Json service
+methods automatically parse incoming json requests as well as stringify-ing the response. 
 
-            this.response.end();
-        }
+A json service method can be created with the following method signature.
 
-        //app/example/io 
-        public io (request:string, callback : (response:string[]) => void) : void {
-			
-            var fs = <fs>require('fs');
+```javascript
 
-            fs.readdir('./', (err, contents) => {
-                
-                callback(contents);
+export function method(context:any, request:string, callback:(response:any) => void) {
 
-            });
-        }
-    }    
+	callback(request); // echo
+
 }
 
 ```

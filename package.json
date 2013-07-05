@@ -1,7 +1,7 @@
 {
   "name": "appex",
-  "version": "0.0.3",
-  "description": "TypeScript web application framework for nodejs.",
+  "version": "0.1.0",
+  "description": "A nodejs web application framework built on top of the TypeScript programming language.",
   "main": "index.js",
   "directories": {
      
