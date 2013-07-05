@@ -113,7 +113,7 @@ TS 0.9 which allows incremental building / caching of typescript compilation uni
 In addition to this, compilations are run in a background worker process to ensure they do interupt
 requests being served on the web process.
 
-![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
+![](https://raw.github.com/sinclairzx81/appex/master/assets/devmode.jpg)
 
 The benefit to this is that updates can be made to source files without needing to restart the web process. Additionally, 
 syntactic errors made in typescript source code do not bring the web process. Everything stays running (excluding runtime 
