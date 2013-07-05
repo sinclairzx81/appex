@@ -11,7 +11,7 @@ npm install appex
 * [overview](#overview)
 * [getting started](#getting_started)
 * [getting started on express](#getting_started_on_express)
-* [developing with dynamic compilation](#development_mode)
+* [developing with appex](#development_mode)
 * [functions](#functions)
 	* [http handler function](#http_handler_function)
 	* [json handler function](#json_handler_function)
@@ -96,7 +96,9 @@ app.listen(3000);
 ```
 
 <a name="development_mode" />
-## developing with dynamic compilation
+## developing with appex
+
+To enable development mode, set the devmode option to true on the runtime option parameter.
 
 ```javascript 
 // enable dynamic compilations with the devmode option.
