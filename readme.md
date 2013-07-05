@@ -11,20 +11,24 @@ npm install appex
 * [overview](#overview)
 * [getting started](#getting_started)
 * [getting started on express](#getting_started_on_express)
-* [function signatures](#function_signatures)
-	* [http handler](#function_signatures_http_handler)
-	* [json handler](#function_signatures_json_handler)
-* [function visibility](#function_visibility)
-* [function routing](#function_routing)
-
+* [functions](#functions)
+	* [http handler function](#http_handler_function)
+	* [json handler function](#json_handler_function)
+	* [public and private functions](#public_private_functions)
+	* [routing with modules and functions](#function_routing)
+		* [the index function](#the_index_function)
+* [the dynamic compilation development](#development_mode)
+* [structuring projects](#structuring_projects)
 
 <a name="overview" />
 ## overview
 
 Appex is a nodejs web application and service framework built on top of the TypeScript programming language. Appex 
 enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
-meta data for clients who consume them. 
+meta data for clients to consume.
 
+Appex is also provides a dynamic compilation environment for typescript. Appex will effeciently manage compilation 
+in the background without the need to restart the web server. 
 
 <a name="getting_started" />
 ## getting started
@@ -35,7 +39,7 @@ meta data for clients who consume them.
 export module services {
 	
 	// url: http://localhost:3000/services/message
-	export function message (context:any): void { 
+	export function message (context) { 
 		
 		context.response.write('hello typescript');
 
@@ -58,10 +62,11 @@ require('http').createServer( runtime ).listen(3000);
 //----------------------------------------------
 // file: program.ts
 //----------------------------------------------
+
 export module services {
 	
 	// url: http://localhost:3000/services/message
-	export function message (context:any): void { 
+	export function message (context) { 
 		
 		context.response.write('hello typescript');
 
@@ -90,16 +95,21 @@ app.get('/', function(req, res){
 app.listen(3000);
 ```
 
-<a name="function_signatures" />
-## function signatures
+<a name="functions" />
+## functions
 
-Appex supports two distinct function signatures. http handler signatures and json handler signatures.
+Appex supports two types of functions, http handler functions, and json handler functions. 
 
-<a name="function_signatures_http_handler" />
-### http handler signature
+Appex will only create http handlers for functions a specific signature, these are outlined below.
 
-A http handler method can be created with the following function signature. The context
-argument contains the http request and response objects.
+<a name="http_handler_function" />
+### http handler function
+
+A http handler method can be created with the following function signature.
+
+* arg0 - the http context which contains the  http request and response.
+
+The return type is optional. http handler functions should complete the http request.
 
 ```javascript
 export function method(context:any) : void {
@@ -110,65 +120,35 @@ export function method(context:any) : void {
 
 }
 ```
-<a name="function_signatures_json_handler" />
-### json handler signature
+<a name="json_handler_function" />
+### json handler function
 
-A json handler function is a function which will automatically accept a HTTP POST'ed json string and 
-pass it to the function as a object parameter. in addition, json handler functions also require that 
-a response object be returned on the callback, which in turn will be passed back as a http response
-as a json string.
+A json handler is a function which will accept HTTP POST'ed json strings and 
+pass it to the function as a object. A json handler has three distinct arguments: 
 
-A http handler method can be created with the following function signature. The context
-argument contains the http request and response objects.
+* arg0 - the http context which contains the  http request and response.
+* arg1 - the json request object 
+* arg2 - a typescript callback with a single argument for the object response. 
+
+The return type is optional. json handler functions "must" call the callback to
+complete the request.
 
 ```javascript
-export function method(context:any, request:any, callback:(response:any) => void) {
+export function method(context:any, request:any, callback:(response:any) => void) : void {
 
-	callback(request); // echo
+	callback(request); // echo the object back.
 
 }
 ```
-<a name="function_routing" />
-## function routing
 
-Appex creates url routing tables based on a function name and module scope. For example consider the following...
+<a name="public_private_functions" />
+### public private functions
 
-```javascript
-export function index   (context:any) { }
+Appex extends TypeScripts concept of visibility to include visibility over http. From this
+developers and control which functions are exported as http handlers.  
 
-export function about   (context:any) { }
-
-export function contact (context:any) { }
-
-export module services.customers {
-
-	export function insert(context:any) : void { }
-	
-	export function update(context:any) : void { }
-	
-	export function delete(context:any) : void { }
-}
-```
-
-will create the following routes:
-
-```javascript
-http://[host]:[port]/
-
-http://[host]:[port]/about
-
-http://[host]:[port]/contact
-
-http://[host]:[port]/services/customers/insert
-
-http://[host]:[port]/services/customers/update
-
-http://[host]:[port]/services/customers/delete
-```
-<a name="function_visibility" />
-## function visibility
-
-Appex only exposes 'exported' functions over http. From this developers infer notions of public and private over http. 
+Appex will create routes only for functions marked with export and for functions that reside
+withing modules with export.
 
 Consider the following example:
 
@@ -197,10 +177,95 @@ export function public_function   (context:any) {
 }
 ```
 
-will result in the following routes.
+which will result in a single route.
 
 ```javascript
 http://[host]:[port]/public_function
 ```
 
+<a name="function_routing" />
+### routing with modules and functions
 
+Appex creates url routing tables based on function name and module scope. For example consider the following...
+
+```javascript
+export function index   (context:any) { }
+export function about   (context:any) { }
+export function contact (context:any) { }
+export module services.customers {
+	export function insert(context:any) : void { }
+	export function update(context:any) : void { }
+	export function delete(context:any) : void { }
+}
+
+// results in the following routes
+// http://[host]:[port]/
+// http://[host]:[port]/about
+// http://[host]:[port]/contact
+// http://[host]:[port]/services/customers/insert
+// http://[host]:[port]/services/customers/update
+// http://[host]:[port]/services/customers/delete
+```
+
+<a name="the_index_function" />
+#### the_index_function
+
+Appex denotes that functions named 'index' route to the current module scope. As demonstrated below. 
+
+```javascript
+export function index(context) {}
+export module blogs {
+	export function index (context) { }
+	export function get   (context) { }
+}
+
+// results in the following routes
+// http://[host]:[port]/
+// http://[host]:[port]/blogs
+// http://[host]:[port]/blogs/get
+```
+
+<a name="structuring_projects" />
+## structuring projects
+
+Appex leverages TypeScript's ability to reference source files with the reference element. Appex 
+will traverse the each source files references and include it in the compilation step. 
+
+Developers can use this functionality to logically split source files into reusable components of
+functionality, as demonstrated below. 
+
+```javascript
+//---------------------------------------------------	
+// file: app.js
+//---------------------------------------------------
+
+var appex = require('appex');
+
+require('http').createServer(  appex.runtime ({ source : './index.ts', devmode : true }) ).listen(3000);
+
+//---------------------------------------------------	
+// file: index.ts
+//---------------------------------------------------
+
+/// <reference path="pages.ts" />
+/// <reference path="users.ts" />
+
+//---------------------------------------------------	
+// file: pages.ts
+//---------------------------------------------------
+
+export function index   (context) { /* handle request */ }
+export function about   (context) { /* handle request */ }
+export function contact (context) { /* handle request */ }
+
+//---------------------------------------------------	
+// file: users.ts
+//---------------------------------------------------
+
+export module users {
+
+	export function login  (context) { /* handle request */ }
+	export function logout (context) { /* handle request */ }
+}
+
+```
