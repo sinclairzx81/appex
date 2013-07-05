@@ -1,6 +1,6 @@
 ﻿# appex
 
-TypeScript web application framework for nodejs.
+Create nodejs web services with typescript.
 
 ## install
 
@@ -9,14 +9,9 @@ npm install appex
 ```
 # overview
 
-appex is a nodejs web application framework built on top of the TypeScript programming language. appex enables developers to 
-create RESTful json services in a way compariable to the class / interface approach in asp.net web services or wcf. 
-
-Additionally, appex provides a rich reflection api to let developers dive into service type information for the purposes of generating
-client side models (backbonejs, knockoutjs, etc) as well as to generate WSDL / JSON Schema like service contracts for remote applications 
-to consume. 
-
-appex comes bundled with the typescript 0.9 compiler built in, and will compile in the background while your application serves requests. 
+appex is a nodejs framework built on top of the TypeScript programming language. appex enables developers to 
+create json web services by writing typescript classes. 
+ 
 
 see below for example.
 
@@ -27,6 +22,8 @@ see below for example.
 ```javascript
 
 var appex = require('appex');
+
+
 
 // create a appex host.
 

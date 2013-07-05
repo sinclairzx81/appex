@@ -1,21 +1,10 @@
-﻿
-var appex = require('appex');
+﻿var appex   = require('appex');
 
-var host = new appex.Host(server);
+var http    = require('http');
 
-host.require('./service.ts');
+var runtime = appex.runtime({source : './service.ts', devmode : true})
 
-
-var server = require('http').createServer(function(request, response) {
-
-    host.metadata(request, response);
-
-});
-
-
-host.bind(server);
-
-
+var server  = http.createServer( runtime );
 
 server.listen(7777);
 

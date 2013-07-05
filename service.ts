@@ -1,38 +1,9 @@
-﻿/// <reference path="node_modules/appex/references/node.d.ts" />
-/// <reference path="node_modules/appex/appex.d.ts" />
+﻿export function index(context:any): void {
 
-var appex = require('appex');
-
-export class App extends appex.Controller {   
-
-    public index  (request:string, callback:(response:string) => void ): void {
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
     
-        this.response.writeHead(200, {'content-type': 'text/plain'})
+    context.response.write('hello there');
 
-        this.response.write('hello world');
+    context.response.end();
 
-        this.response.end();
-    }
-
-    public get    (request:string, callback : (response:string) => void) : void {
-            
-        callback(null);
-            
-    }
-    public post   (request:string, callback : (response:string) => void) : void {
-            
-        callback(request);
-            
-    }
-    public put   (request:string, callback : (response:string) => void) : void {
-            
-        callback(request);
-            
-    }
-
-    public delete (request:string, callback : (response:string) => void) : void {
-            
-        callback(request);
-            
-    }
 }
