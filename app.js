@@ -1,6 +1,6 @@
 ﻿var appex   = require('appex');
 
-var runtime = appex.runtime ({ source : './index.ts', devmode  : true });
+var runtime = appex.runtime ({ source : './program.ts', devmode  : true });
 
 require('http').createServer( function(request, response) {
     
