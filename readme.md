@@ -1,6 +1,6 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
-### develop nodejs web services with the typescript programming language.
+### nodejs web services with the typescript programming language
 
 ## install
 
