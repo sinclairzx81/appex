@@ -1,6 +1,4 @@
-# APPEX 
-
-A nodejs web application framework built on top of the TypeScript programming language.  
+![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
 ## install
 
