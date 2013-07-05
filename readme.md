@@ -1,15 +1,6 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
-### nodejs web services with the typescript programming language
-
-```javascript
-export function index (context:any) { 
-		
-	context.response.write('hello typescript!!');
-
-	context.response.end(); 
-}
-```
+### develop nodejs web services with typescript
 
 ## install
 
@@ -43,7 +34,7 @@ meta data for clients who consume them.
 //----------------------------------------------
 export module services {
 	
-	// url: http://localhost:1337/services/message
+	// url: http://localhost:3000/services/message
 	export function message (context:any): void { 
 		
 		context.response.write('hello typescript');
@@ -69,7 +60,7 @@ require('http').createServer( runtime ).listen(3000);
 //----------------------------------------------
 export module services {
 	
-	// url: http://localhost:1337/services/message
+	// url: http://localhost:3000/services/message
 	export function message (context:any): void { 
 		
 		context.response.write('hello typescript');
