@@ -7,9 +7,12 @@ npm install appex
 ```
 
 * [overview](#overview)
-* [http functions](#http_functions)
+* [function signatures](#function_signatures)
+** [http handler](#function_signatures_http_handler)
+** [json handler](#function_signatures_json_handler)
+* [function visibility](#function_visibility)
 * [function routing](#function_routing)
-* [public and private functions](#public_private)
+
 
 <a name="overview" />
 ## overview
@@ -71,17 +74,16 @@ require('http').createServer( function(request, response) {
     
 }).listen(5444);
 ```
-<a name="http_functions" />
-## http functions
+<a name="function_signatures" />
+## function signatures
 
-Appex supports two types of http endpoints, http handlers and json service methods. 
+Appex supports two distinct function signatures. http handler signatures and json handler signatures.
 
-### http handler methods
+<a name="function_signatures_http_handler" />
+### http handler signature
 
-A standard request response handler method can be created with the following method signature. the context
-contains the standard node http request and response objects.
-
-A http handler method can be created with the following method signature.
+A http handler method can be created with the following function signature. The context
+argument contains the http request and response objects.
 
 ```javascript
 export function method(context:any) : void {
@@ -92,17 +94,19 @@ export function method(context:any) : void {
 
 }
 ```
+<a name="function_signatures_json_handler" />
+### json handler signature
 
-### json service methods
+A json handler function is a function which will automatically accept a HTTP POST'ed json string and 
+pass it to the function as a object parameter. in addition, json handler functions also require that 
+a response object be returned on the callback, which in turn will be passed back as a http response
+as a json string.
 
-Json service methods are http endpoints whose request and responses are POST'ed to them. Json service
-methods automatically parse incoming json requests as well as stringify-ing the response. the context
-contains the standard node http request and response objects.
-
-A json service method can be created with the following method signature.
+A http handler method can be created with the following function signature. The context
+argument contains the http request and response objects.
 
 ```javascript
-export function method(context:any, request:string, callback:(response:any) => void) {
+export function method(context:any, request:any, callback:(response:any) => void) {
 
 	callback(request); // echo
 
@@ -145,11 +149,12 @@ http://[host]:[port]/services/customers/update
 
 http://[host]:[port]/services/customers/delete
 ```
-<a name="public_private" />
-## public and private functions
+<a name="function_visibility" />
+## function visibility
 
-Appex only exposes 'exported' functions over http. From this developers infer notions of public and private over http. consider
-the following example.
+Appex only exposes 'exported' functions over http. From this developers infer notions of public and private over http. 
+
+Consider the following example:
 
 ```javascript
 
