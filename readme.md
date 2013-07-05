@@ -14,6 +14,8 @@ descriptions for clients consuming them.
 
 ## quick start
 
+### javascript
+
 The following illustrates setting up a appex runtime, and handling requests. 
 
 ```javascript
@@ -29,25 +31,20 @@ require('http').createServer( function(request, response) {
     
 }).listen(5444);
 ```
-The following demonstrates creating http methods.
 
-note: appex requires that http servicable methods be exported with the 'export' keyword. 
+### typescript
 
-note: urls are infered from a functions module scope.
-
-note: the function 'index' act as top level route in the current module scope. 
+The following demonstrates creating http accessible endpoints. appex will generate routing tables based on the module
+scope of a given method. Functions named 'index' resolve to the current module scope.
 
 ```javascript
-
 // program.ts
 
-declare var require;
+declare var require; 
 
 // url: http://localhost:1337/
 export function index (context:any): void { 
-
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
-    
+  
     context.response.write('home');
 
     context.response.end(); 
@@ -55,9 +52,7 @@ export function index (context:any): void {
 
 // url: http://localhost:1337/about
 export function about (context:any): void { 
-
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
-    
+	
     context.response.write('about');
 
     context.response.end();
@@ -68,12 +63,9 @@ export module services {
     // url: http://localhost:1337/services/
     export function index(context:any) : void {
         
-        context.response.writeHead(200, {'content-type' : 'text/plain'});
-    
         context.response.write('services index');
 
         context.response.end(); 
-
     }
 
     // url: http://localhost:1337/services/dir
@@ -89,7 +81,7 @@ export module services {
 
 ```
 
-## writing http endpoints
+## creating http endpoints
 
 Appex supports two types of http endpoints, http handlers and json service methods. 
 
@@ -125,3 +117,46 @@ export function method(context:any, request:string, callback:(response:any) => v
 
 }
 ```
+
+## routing
+
+Appex creates url routing tables based on a functions name and its modules scope. For example consider the following...
+
+```javascript
+export function index   (context:any) { }
+
+export function about   (context:any) { }
+
+export function contact (context:any) { }
+
+export module services.customers {
+
+	export function insert(context:any) : void { }
+	
+	export function update(context:any) : void { }
+	
+	export function delete(context:any) : void { }
+}
+```
+
+Will create the following routes:
+
+```javascript
+http://[host]:[port]/
+
+http://[host]:[port]/about
+
+http://[host]:[port]/contact
+
+http://[host]:[port]/services/customers/insert
+
+http://[host]:[port]/services/customers/update
+
+http://[host]:[port]/services/customers/delete
+```
+
+note: at this time, there is not mechanism for wildcard routing.
+
+
+
+
