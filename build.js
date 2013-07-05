@@ -72,7 +72,7 @@ console.log('building appex...')
 
 build('./node_modules/appex/index.ts', './bin/index.js', './bin/appex.d.ts', function(){ 
 
-    copy('./package.json', './bin/package.js', function(){});
+    copy('./package.json', './bin/package.json', function(){});
 
     copy('./readme.md',    './bin/readme.md',  function(){});
 
