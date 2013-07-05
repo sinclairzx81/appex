@@ -11,13 +11,13 @@ npm install appex
 * [overview](#overview)
 * [getting started](#getting_started)
 * [getting started on express](#getting_started_on_express)
+* [development mode and dynamic compilation](#development_mode)
 * [functions](#functions)
 	* [http handler function](#http_handler_function)
 	* [json handler function](#json_handler_function)
 	* [public and private functions](#public_private_functions)
+	* [the index function](#the_index_function)	
 	* [routing with modules and functions](#function_routing)
-		* [the index function](#the_index_function)
-* [the dynamic compilation development](#development_mode)
 * [structuring projects](#structuring_projects)
 
 <a name="overview" />
@@ -182,6 +182,23 @@ which will result in a single route.
 ```javascript
 http://[host]:[port]/public_function
 ```
+<a name="the_index_function" />
+### the index function
+
+Appex denotes that functions named 'index' route to the current module scope. As demonstrated below. 
+
+```javascript
+export function index(context) {}
+export module blogs {
+	export function index (context) { }
+	export function get   (context) { }
+}
+
+// results in the following routes
+// http://[host]:[port]/
+// http://[host]:[port]/blogs
+// http://[host]:[port]/blogs/get
+```
 
 <a name="function_routing" />
 ### routing with modules and functions
@@ -207,29 +224,11 @@ export module services.customers {
 // http://[host]:[port]/services/customers/delete
 ```
 
-<a name="the_index_function" />
-#### the_index_function
-
-Appex denotes that functions named 'index' route to the current module scope. As demonstrated below. 
-
-```javascript
-export function index(context) {}
-export module blogs {
-	export function index (context) { }
-	export function get   (context) { }
-}
-
-// results in the following routes
-// http://[host]:[port]/
-// http://[host]:[port]/blogs
-// http://[host]:[port]/blogs/get
-```
-
 <a name="structuring_projects" />
 ## structuring projects
 
-Appex leverages TypeScript's ability to reference source files with the reference element. Appex 
-will traverse the each source files references and include it in the compilation step. 
+Appex leverages TypeScript's ability to reference source files with the <reference> element. Appex 
+will traverse each source files references and include it as part of the compilation.
 
 Developers can use this functionality to logically split source files into reusable components of
 functionality, as demonstrated below. 
