@@ -6,36 +6,19 @@
 npm install appex
 ```
 
+* [overview](#overview)
+* [http functions](#http_functions)
+* [function routing](#function_routing)
+* [public and private functions](#public_private)
+
+<a name="overview" />
 ## overview
 
 Appex is a nodejs web application and service framework built on top of the TypeScript programming language. Appex 
-enables nodejs developers to easily develop restful json services with typescript and generate meaningful service
-descriptions for clients consuming them. 
-
-## quick start
-
-### javascript
-
-The following illustrates setting up a appex runtime, and handling requests. 
-
-```javascript
-// app.js
-
-var appex   = require('appex');
-
-var runtime = appex.runtime ({ source : './program.ts', devmode : true });
-
-require('http').createServer( function(request, response) {
-    
-    runtime(request, response);
-    
-}).listen(5444);
-```
+enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
+meta data for clients who consume them. 
 
 ### typescript
-
-The following demonstrates creating http accessible endpoints. appex will generate routing tables based on the module
-scope of a given function. Functions named 'index' resolve to the current module scope.
 
 ```javascript
 // program.ts
@@ -59,14 +42,6 @@ export function about (context:any): void {
 }
 
 export module services {
-    
-    // url: http://localhost:1337/services/
-    export function index(context:any) : void {
-        
-        context.response.write('services index');
-
-        context.response.end(); 
-    }
 
     // url: http://localhost:1337/services/dir
     export function dir(context:any, path:string, callback:(contents:string[]) => void) {
@@ -81,6 +56,22 @@ export module services {
 
 ```
 
+### javascript
+
+```javascript
+// app.js
+
+var appex   = require('appex');
+
+var runtime = appex.runtime ({ source : './program.ts', devmode : true });
+
+require('http').createServer( function(request, response) {
+    
+    runtime(request, response);
+    
+}).listen(5444);
+```
+<a name="http_functions" />
 ## http functions
 
 Appex supports two types of http endpoints, http handlers and json service methods. 
@@ -117,7 +108,7 @@ export function method(context:any, request:string, callback:(response:any) => v
 
 }
 ```
-
+<a name="function_routing" />
 ## function routing
 
 Appex creates url routing tables based on a function name and module scope. For example consider the following...
@@ -154,7 +145,7 @@ http://[host]:[port]/services/customers/update
 
 http://[host]:[port]/services/customers/delete
 ```
-
+<a name="public_private" />
 ## public and private functions
 
 Appex only exposes 'exported' functions over http. From this developers infer notions of public and private over http. consider
