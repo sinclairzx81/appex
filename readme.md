@@ -47,12 +47,10 @@ enables nodejs developers to expose typescript functions as http endpoints as we
 meta data for clients to consume.
 
 Appex also provides a dynamic compilation environment for typescript to aid in development. Appex will effeciently 
-manage compilation in the background without the need to restart the web server, or use addition modules.
+manage compilation in the background without the need to restart the web server, or use additional modules.
 
 Appex is designed to operate as both a standalone web service solution or a compliment an existing applications written
 in frameworks such as express / connect.
-
-Appex makes writing http endpoints as easy as writing a functions. 
 
 <a name="getting_started" />
 ## getting started
