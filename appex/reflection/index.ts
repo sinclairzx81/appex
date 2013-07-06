@@ -5,7 +5,7 @@ export module appex.reflection {
 
     export function index(context) {
         
-        console.log('hello from index')
+        console.log(context);
 
         context.response.writeFile('text/html', './appex/reflection/index.html');
     }
