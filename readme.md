@@ -5,17 +5,16 @@
 ```javascript
 export module app.services {
 
-	// http://[host]:[port]/app/services/hello
+	// http://[host]:[port]/app/services/message
 	export function message(context) {
-			
+
 		context.response.write('hello world!!');
-			
+
 		context.response.end();
 	}
 }
 ```
-
-## install
+### install
 
 ```javascript
 npm install appex
