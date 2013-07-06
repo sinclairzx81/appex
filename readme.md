@@ -8,6 +8,23 @@
 npm install appex
 ```
 
+## usage
+```javascript
+export module app {
+
+	export module services {
+		
+		// http://[host]:[port]/app/services/hello
+		export function hello(context) {
+			
+			context.response.write('hello world!!');
+			
+			context.response.end();
+		}
+	}
+}
+```
+
 * [overview](#overview)
 * [getting started](#getting_started)
 	* [the appex runtime](#runtime)
