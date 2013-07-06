@@ -1,14 +1,7 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
-### develop nodejs web services with [typescript](http://www.typescriptlang.org/)
+### http handlers with [typescript](http://www.typescriptlang.org/)
 
-## install
-
-```javascript
-npm install appex
-```
-
-## usage
 ```javascript
 export module app {
 
@@ -23,6 +16,12 @@ export module app {
 		}
 	}
 }
+```
+
+## install
+
+```javascript
+npm install appex
 ```
 
 * [overview](#overview)
