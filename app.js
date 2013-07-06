@@ -12,11 +12,18 @@ var runtime = new appex.Runtime ( { sourcefile : './program.ts', devmode:true } 
 
 var server  = http.createServer( function(req, res) {
     
-    runtime.request_handler(req, res)    
+    runtime.request_handler(req, res, function(){
+        
+        res.write('not found')    
+
+        res.end();
+    })    
 
 });
 
 server.listen(port)
+
+
 
 console.log('server running on ' + port);
 

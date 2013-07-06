@@ -24,7 +24,7 @@ function copy(sourcefile, outputfile, callback) {
 
     readstream.pipe(writestream);
 
-    setTimeout(callback, 100)
+    setTimeout(callback, 200)
 
 }
 
