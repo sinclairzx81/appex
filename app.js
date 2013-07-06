@@ -1,11 +1,10 @@
-﻿var port = 5444;
-var devmode = false;
+﻿var port    = 5444;
+
+var devmode = true;
 
 var appex   = require('appex');
 
 var runtime = appex.runtime ({ source : './program.ts', devmode  : devmode });
-
-
 
 require('http').createServer( function(request, response) {
     
@@ -13,4 +12,4 @@ require('http').createServer( function(request, response) {
     
 }).listen(port);
 
-console.log('server running on ' + port)
+console.log('server running on ' + port);

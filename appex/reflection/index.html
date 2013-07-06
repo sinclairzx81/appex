@@ -23,10 +23,16 @@
 
         </style>
         
+        <link   type='text/css'        rel ="stylesheet" href="/appex/css/site">
+
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         
         <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.1.js"></script>
         
+        
+        
+        <script type="text/javascript" src="/appex/scripts/api"></script>
+
         <script type="text/javascript" src="/appex/reflection/script"></script>
         
         <script type="text/javascript">
@@ -38,8 +44,8 @@
 
             function initialize() 
             {
-                ajax.get('/appex/reflection/data', function (data) 
-                {
+                appex.get('/appex/reflection/data', function (data) {
+
                     var model = new Model(data);
 
                     ko.applyBindings(model);
