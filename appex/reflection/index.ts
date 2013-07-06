@@ -5,13 +5,13 @@ export module appex.reflection {
 
     export function index(context) {
         
+        console.log('hello from index')
+
         context.response.writeFile('text/html', './appex/reflection/index.html');
     }
 
     export function script(context) {
         
-        console.log('loading script')
-
         context.response.writeFile('text/javascript', './appex/reflection/script.js');
     }
 

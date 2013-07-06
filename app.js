@@ -1,6 +1,6 @@
 ﻿var port    = 5444;
 
-var devmode = false;
+var devmode = true;
 
 var appex   = require('appex');
 

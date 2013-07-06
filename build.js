@@ -84,10 +84,11 @@ build('./node_modules/appex/index.ts', './bin/index.js', './bin/appex.d.ts', fun
     
     copy('./bin/index.js', './node_modules/appex/index.js', function(){
                 
-        console.log('starting app.js')
+        console.log('starting app.js');
+
+        console.log('----------------------------------------------------');
 
         require('./app.js');
-
     });
    
 });
