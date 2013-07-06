@@ -18,11 +18,21 @@
         <script type="text/javascript" src="/appex/scripts/api"></script>
 
         <script type="text/javascript" src="/appex/reflection/script"></script>
-
-
+        
 		<style type="text/css">
 		
 			.page-header { margin-top : 50px; }
+
+            #reflection {
+
+                font-size: 0.6em;
+
+            }
+
+            #source {
+
+                font-size: 0.6em;
+            }
 
 		</style>
         
@@ -112,7 +122,7 @@
         ------------------------------------------------------------------ -->
         <script type="text/html" id="template.module">
 
-            <a href="#" data-bind="text: name(), event:{click:toggle}" />
+            <a href="#" data-bind="text: text(), event:{click:toggle}" />
 
             <div data-bind="if:expanded">
 
@@ -239,13 +249,7 @@
 					<a href='/' class='brand'>appex</a>
 	                
 					<div class="nav-collapse">
-	                			
-						<ul class="nav">
-				
-	                        <li><a href="/">dashboard</a></li>
-				
-	                    </ul>
-
+	                    
 	                </div>
 			
 	            </div>
@@ -266,9 +270,9 @@
 				
 			    <div class="row">
 			
-                    <div class="span4">
+                    <div class="span5">
 		  
-                        <ul data-bind="foreach: reflection.scripts"> 
+                        <ul id='reflection' data-bind="foreach: reflection.scripts"> 
 
                             <li data-bind="template:{name:'template.script', data:$data}" />
 
@@ -276,7 +280,7 @@
 		
                     </div>
 		
-                    <div class="span8">
+                    <div class="span7">
 						
                         <pre id="source"></pre>
 
