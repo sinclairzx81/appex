@@ -103,7 +103,7 @@ var options = {
 };
 
 var runtime = appex.runtime ( options );
-'''
+```
 
 <a name="http_server" />
 ### http server
