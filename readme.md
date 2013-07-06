@@ -55,30 +55,30 @@ in frameworks such as express / connect.
 <a name="getting_started" />
 ## getting started
 
-The following outlines setting the Appex runtime. 
+The following sections outline getting up and running with Appex. 
 
 <a name="runtime" />
 ### the appex runtime
 
-The Appex runtime is compilation engine that handles compiling typescript code, mapping routes to functions and 
-invocation. Appex provides a utility method to setting for setting up the runtime, as described below.
+The Appex runtime is compilation engine that handles compiling typescript code, mapping routes and function 
+invocation. Appex provides a utility method for setting up the runtime, as described below.
 
 ```javascript
 var http    = require('http');
 
 var appex   = require('appex');
 
-var runtime = appex.runtime ( { sourcefile : './program.ts' } );
+var runtime = appex.runtime ( { sourcefile : './program.ts' } ); // create the runtime.
 
-var server  = http.createServer( runtime );
+var server  = http.createServer( runtime ); // bind to the http server.
 
 server.listen(3000);
 ```
 
 The appex.runtime() method returns a http handler function which is both compatable with nodejs' 
-http server as well as connect middleware. This is the recommended means of creating runtimes, 
+http server as well as connect middleware. This is the recommended approach of creating runtimes, 
 However, if you need to access the runtime directly or are simply curious, you can also setup 
-the runtime in the following way...
+the runtime as follows..
 
 ```javascript
 var http    = require('http');
