@@ -1,7 +1,7 @@
 {
   "name": "appex",
   "version": "0.2.7",
-  "description": "nodejs web apps with typescript",
+  "description": "nodejs web apps with",
   "main": "index.js",
   "directories": {
      
@@ -16,7 +16,7 @@
     "url": "https://github.com/sinclairzx81/appex"
   },
   "keywords": [
-    "typescript", "web app", "compiler",
+    "typescript", "web app", "compiler"
   ],
   "author": "sinclair",
   "licenses": [ {
