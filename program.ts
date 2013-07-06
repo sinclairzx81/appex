@@ -4,8 +4,6 @@ declare var console;
 
 export function index(context) {
     
-    console.log(context.routes);
-
     context.response.write('home')
 
     context.response.end();
@@ -21,6 +19,8 @@ export module blogs {
     }
 
     export function wildcard(context, year, month, day) {
+
+        console.log(year);
 
         context.response.write('blogs ' + year + ' ' + month + ' ' + day)
 
