@@ -370,9 +370,8 @@ export module blogs {
 <a name="wildcard_functions" />
 ### wildcard_functions
 
-Appex supports wildcard/ url parameter arguments with functions named 'wildcard'. Wildcard are special 
-in the regard they support more than one augment other than the context, for which url arguments will 
-be mapped.
+Appex supports url arguments with functions named 'wildcard'. Wildcard functions are special in the regard 
+they support more than one argument (other than the context)  for which url parameters will be mapped.
 
 ```javascript
 export module blogs {
@@ -395,7 +394,7 @@ export module blogs {
 }
 ```
 
-note: wildcard functions should be declared last in any module scope. this way, specific route declared in this scope
+note: wildcard functions should be declared last in any module scope. this way, other function types in this scope
 will be resolved first.
 
 
