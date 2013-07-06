@@ -1,12 +1,13 @@
-﻿declare var console;
+﻿export module appex.reflection {
 
+    declare var require;
 
-export module appex.reflection {
+    declare var console;
+
+    declare var JSON;
 
     export function index(context) {
         
-        console.log(context);
-
         context.response.writeFile('text/html', './appex/reflection/index.html');
     }
 
@@ -18,5 +19,34 @@ export module appex.reflection {
     export function data (context, request:any, callback:(response:any)=>void) { 
 
         callback(context.reflection);
+    }
+
+    export function get (context) {
+        
+        var path = context.request.headers['appex.path'];
+        
+        if(path) {
+            
+            require('fs').readFile(path, 'utf8', (error, content) => {
+                
+                if(error) {
+                    
+                    context.response.end(); 
+
+                    return;      
+                }
+                
+                context.response.writeHead(200, {'content-type' : 'application/json'});
+
+                context.response.write(JSON.stringify(content));
+
+                context.response.end();   
+                
+            });
+
+            return;
+        }
+
+        context.response.end(); 
     }
 }

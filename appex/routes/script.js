@@ -503,13 +503,8 @@ var ScriptModel = function (obj) {
     this.path(obj.path);
 
     this.toggle = function () {
-
         this.expanded(this.expanded() ? false : true);
-
-        load('./' + this.path());
-
     }
-
 }
 
 /////////////////////////////////////////////////////////////////////

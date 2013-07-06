@@ -201,20 +201,9 @@
                 this.reflection = new ReflectionModel(data);
             }
 
-            function load(filename) {
-                
-                appex.headers['appex.path'] = filename;
-
-                appex.get('/appex/reflection/get', function (data) {
-
-                    $('#source').html(data);
-
-                });
-            }
-
             function initialize() 
             {
-                appex.get('/appex/reflection/data', function (data) {
+                appex.get('/appex/reflection/reflect', function (data) {
 
                     var model = new Model(data);
 
@@ -236,7 +225,7 @@
 	            
 				<div class="container">
 
-					<a href='/' class='brand'>appex</a>
+					<a href='/' class='brand'>appex client</a>
 	                
 					<div class="nav-collapse">
 	                			
@@ -259,7 +248,7 @@
 			<div class="page-header">
 		
 				<h3>appex:reflection</h3>
-			 
+			
 			</div>
 
 			<div id='page-container'>
@@ -278,10 +267,28 @@
 		
                     <div class="span8">
 						
-                        <pre id="source"></pre>
+                        <button class='btn' onclick="call()">call</button>
+
+                        <input type="text" id="endpoint" class="input-medium search-query" />
 
                     </div>
 
+                    <div class="span4">
+                            
+                        <li class="nav-header">input</li>
+
+                        <textarea  id="input">"hello world"</textarea>
+
+                    </div>
+
+                    <div class="span4">
+
+                        <li class="nav-header">output</li>
+
+                        <textarea id="output"></textarea>
+
+                    </div>
+		
 			    </div>
 		
 			</div>
