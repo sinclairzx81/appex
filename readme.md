@@ -1,19 +1,16 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
-### http handlers with [typescript](http://www.typescriptlang.org/)
+### nodejs web apps with [typescript](http://www.typescriptlang.org/)
 
 ```javascript
-export module app {
+export module app.services {
 
-	export module services {
-		
-		// http://[host]:[port]/app/services/hello
-		export function hello(context) {
+	// http://[host]:[port]/app/services/hello
+	export function message(context) {
 			
-			context.response.write('hello world!!');
+		context.response.write('hello world!!');
 			
-			context.response.end();
-		}
+		context.response.end();
 	}
 }
 ```
