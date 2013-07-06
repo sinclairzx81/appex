@@ -370,8 +370,11 @@ export module blogs {
 <a name="wildcard_functions" />
 ### wildcard_functions
 
-Appex supports url arguments with functions named 'wildcard'. Wildcard functions are special in the regard 
-they support more than one argument (other than the context)  for which url parameters will be mapped.
+Appex supports typed url arguments on functions named 'wildcard'. Wildcard functions are special in the regard 
+they support more than one argument (other than the context) for which url parameters will be mapped.
+
+Appex currently supports only numeric type annotations on wildcard arguments. All other types will mapped as strings.
+if a argument is annotated with 'number', then only numeric are matched. 
 
 ```javascript
 export module blogs {
@@ -384,8 +387,10 @@ export module blogs {
         context.response.end();       
     }
 	
-	// url : http://[host]:[port]/blogs/:year/:month/:day
-    export function wildcard(context, year, month, day) {
+	// url : http://[host]:[port]/blogs/2013/1/11  - matched
+	// url : http://[host]:[port]/blogs/2013/01/11 - matched
+	// url : http://[host]:[port]/blogs/cat/01/11  - not matched
+    export function wildcard(context, year:number, month:number, day:number) {
 
         context.response.write('blogs ' + year + ' ' + month + ' ' + day)
 
