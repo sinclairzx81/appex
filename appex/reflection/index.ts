@@ -21,9 +21,7 @@
         callback(context.reflection);
     }
 
-    export function get (context) {
-        
-        var path = context.request.headers['appex.path'];
+    export function wildcard (context, path) {
         
         if(path) {
             

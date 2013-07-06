@@ -1,4 +1,4 @@
-﻿// <reference path="appex/index.ts" />
+﻿/// <reference path="appex/index.ts" />
 
 declare var console;
 

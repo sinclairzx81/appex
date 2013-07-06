@@ -223,7 +223,7 @@
                 
                 appex.headers['appex.path'] = filename;
 
-                appex.get('/appex/reflection/get', function (data) {
+                appex.get('/appex/reflection/' + filename, function (data) {
 
                     $('#source').html(data);
 
