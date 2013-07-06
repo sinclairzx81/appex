@@ -2,14 +2,22 @@
 
 var devmode = true;
 
+var logging = true;
+
+var http    = require('http');
+
 var appex   = require('appex');
 
-var runtime = appex.runtime ({ sourcefile : './program.ts', devmode  : devmode });
+var runtime = new appex.Runtime ( { sourcefile : './program.ts' } );
 
-require('http').createServer( function(request, response) {
+var server  = http.createServer( function(req, res) {
     
-    runtime(request, response);
-    
-}).listen(port);
+    runtime.request_handler(req, res)    
+
+});
+
+server.listen(port)
 
 console.log('server running on ' + port);
+
+ 

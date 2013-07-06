@@ -10,7 +10,10 @@ npm install appex
 
 * [overview](#overview)
 * [getting started](#getting_started)
-* [getting started on express](#getting_started_on_express)
+	* [runtime](#runtime)
+	* [options](#options)
+	* [http server](#http_server)
+	* [express server](#express_server)
 * [developing with appex](#development_mode)
 * [functions](#functions)
 	* [http handler function](#http_handler_function)
@@ -24,15 +27,89 @@ npm install appex
 <a name="overview" />
 ## overview
 
-Appex is a nodejs web application and service framework built on top of the TypeScript programming language. Appex 
+Appex is a nodejs web service framework built on top of the TypeScript programming language. Appex 
 enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
 meta data for clients to consume.
 
 Appex also provides a dynamic compilation environment for typescript to aid in development. Appex will effeciently 
 manage compilation in the background without the need to restart the web server, or use addition modules.
 
+Appex is designed to operate as both a standalone web service solution or a compliment an existing applications written
+in frameworks such as express / connect.
+
+Appex makes writing http endpoints as easy as writing a functions. 
+
 <a name="getting_started" />
 ## getting started
+
+The following outlines setting the Appex runtime. 
+
+<a name="runtime" />
+### runtime
+
+The Appex runtime is compilation engine that handles compiling typescript code, mapping routes to functions and 
+invocation. Appex provides a utility method to setting for setting up the runtime, as described below.
+
+```javascript
+var http    = require('http');
+
+var appex   = require('appex');
+
+var runtime = appex.runtime ( { sourcefile : './program.ts' } );
+
+var server  = http.createServer( runtime );
+
+server.listen(3000);
+```
+
+The appex.runtime() method returns a http handler function which is both compatable with nodejs' 
+http server as well as connect middleware. This is the recommended means of creating runtimes, 
+However, if you need to access the runtime directly or are simply curious, you can also setup 
+the runtime in the following way...
+
+```javascript
+var http    = require('http');
+
+var appex   = require('appex');
+
+var runtime = new appex.Runtime ( { sourcefile : './program.ts' } );
+
+var server  = http.createServer( function(req, res) {
+    
+	console.log(runtime); // investigate the runtime.
+
+    runtime.request_handler(req, res, function() { 
+
+		// request was not handled...
+
+	});  
+});
+
+server.listen(3000)
+```
+
+<a name="options" />
+### options
+
+The appex runtime accepts the following options.
+
+```javascript
+var options = { 
+	sourcefile : './program.ts', // (required) location of source file.
+    devmode    : true,           // (optional) recompile on request. 
+    logging    : true,           // (optional) write requests to stdout.
+	stdout     : process.stdout, // (optional) output stream. default is process.stdout
+	stderr     : process.stderr, // (optional) error  stream. default is process.stderr
+};
+
+var runtime = appex.runtime ( options );
+'''
+
+<a name="http_server" />
+### http server
+
+Setting up on a nodejs http server.
+
 ```javascript
 //----------------------------------------------
 // file: program.ts
@@ -47,18 +124,26 @@ export module services {
 		context.response.end(); 
 	}
 }
+
 //----------------------------------------------
 // file: app.js
 //----------------------------------------------
 
+var http    = require('http');
+
 var appex   = require('appex');
 
-var runtime = appex.runtime ({ source : './program.ts', devmode : true });
+var runtime = appex.runtime ( { sourcefile : './program.ts' } );
 
-require('http').createServer( runtime ).listen(3000);
+var server  = http.createServer( runtime );
+
+server.listen(3000);
 ```
-<a name="getting_started_on_express" />
-## getting started on express
+<a name="express_server" />
+### express_server
+
+Setting up on a existing express instance as middleware.
+
 ```javascript
 //----------------------------------------------
 // file: program.ts
@@ -85,7 +170,7 @@ var appex   = require('appex');
 
 var app = express();
 
-app.use( appex.runtime( { source:'./program.ts', devmode:true } ) );
+app.use( appex.runtime ( { sourcefile : './program.ts' } ) );
 
 app.get('/', function(req, res){
 
@@ -103,7 +188,7 @@ To enable development mode, set the devmode option to true on the runtime option
 
 ```javascript 
 // enable dynamic compilations with the devmode option.
-var runtime = appex.runtime ({ source : './program.ts', devmode : true }); 
+var runtime = appex.runtime ({ sourcefile : './program.ts', devmode : true, logging: true }); 
 ```
 
 Appex is built directly on top of the Microsoft TypeScript 0.9 compiler and leverages it for tight
@@ -269,7 +354,7 @@ functionality, as demonstrated below.
 
 var appex = require('appex');
 
-var runtime = appex.runtime ({ source : './index.ts', devmode : true });
+var runtime = appex.runtime ({ sourcefile : './index.ts' });
 
 require('http').createServer( runtime  ).listen(3000);
 
