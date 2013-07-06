@@ -34,6 +34,7 @@ npm install appex
 	* [exporting functions](#exporting_functions)
 	* [routing functions](#routing_functions)
 	* [index functions](#index_functions)
+	* [wildcard functions](#wildcard_functions)
 * [developing with appex](#developing_with_appex)
 	* [development mode](#development_mode)
 	* [structuring projects](#structuring_projects)
@@ -366,6 +367,37 @@ export module blogs {
 // http://[host]:[port]/blogs
 // http://[host]:[port]/blogs/get
 ```
+<a name="wildcard_functions" />
+### wildcard_functions
+
+Appex supports wildcard/ url parameter arguments with functions named 'wildcard'. Wildcard are special 
+in the regard they support more than one augment other than the context, for which url arguments will 
+be mapped.
+
+```javascript
+export module blogs {
+    
+	// url : http://[host]:[port]/blogs
+    export function index(context) {
+    
+        context.response.write('blogs index')
+
+        context.response.end();       
+    }
+	
+	// url : http://[host]:[port]/blogs/:year/:month/:day
+    export function wildcard(context, year, month, day) {
+
+        context.response.write('blogs ' + year + ' ' + month + ' ' + day)
+
+        context.response.end(); 
+    }
+}
+```
+
+note: wildcard functions should be declared last in any module scope. this way, specific route declared in this scope
+will be resolved first.
+
 
 <a name="developing_with_appex" />
 ## developing with appex

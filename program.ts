@@ -24,7 +24,6 @@ export module blogs {
 
         context.response.write('blogs ' + year + ' ' + month + ' ' + day)
 
-        context.response.end();
-        
+        context.response.end(); 
     }
 }
