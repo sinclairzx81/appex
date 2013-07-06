@@ -18,7 +18,7 @@ export module blogs {
         context.response.end();       
     }
 
-    export function wildcard(context, year, month, day) {
+    export function wildcard(context, year:number, month, day:number) {
 
         console.log(year);
 

@@ -50,7 +50,7 @@ meta data for clients to consume.
 Appex also provides a dynamic compilation environment for typescript to aid in development. Appex will effeciently 
 manage compilation in the background without the need to restart the web server, or use additional modules.
 
-Appex is designed to operate as both a standalone web service solution or a compliment an existing applications written
+Appex is designed to operate as both a standalone web service solution or compliment an existing application written
 in frameworks such as express / connect.
 
 <a name="getting_started" />
