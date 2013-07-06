@@ -1,9 +1,16 @@
-﻿var appex   = require('appex');
+﻿var port = 5444;
+var devmode = false;
 
-var runtime = appex.runtime ({ source : './program.ts', devmode  : true });
+var appex   = require('appex');
+
+var runtime = appex.runtime ({ source : './program.ts', devmode  : devmode });
+
+
 
 require('http').createServer( function(request, response) {
     
     runtime(request, response);
     
-}).listen(5444);
+}).listen(port);
+
+console.log('server running on ' + port)
