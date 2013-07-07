@@ -50,19 +50,19 @@ meta data for clients to consume.
 appex also provides a dynamic compilation environment for typescript to aid in development. appex will effeciently 
 manage compilation in the background without the need to restart the web server, or use additional modules.
 
-appex is designed to operate as both a standalone web service solution or compliment an existing application written
-in frameworks such as express / connect.
+appex is designed to operate as both a standalone web service solution or as a complement to existing applications
+written in frameworks such as express / connect that wish to extend their projects with typed web api's. 
 
 <a name="getting_started" />
 ## getting started
 
-The following sections outline getting up and running with appex. 
+The following sections outline configuring appex.
 
 <a name="runtime" />
 ### the appex runtime
 
-The appex runtime is compilation engine that handles compiling typescript code, mapping routes and function 
-invocation. appex provides a utility method for setting up the runtime, as described below.
+The appex runtime is compilation engine that handles dynamic compilation, route mapping and function 
+invocation. appex provides a simple utility method for setting up the runtime, as described below.
 
 ```javascript
 var http    = require('http');
@@ -129,22 +129,20 @@ var runtime = appex.runtime ( options );
 <a name="http_server" />
 ### binding to an http server
 
-Setting up on a nodejs http server.
+Setting up appex on a nodejs http server.
 
 ```javascript
 //----------------------------------------------
 // file: program.ts
 //----------------------------------------------
-export module services {
-	
-	// url: http://localhost:3000/services/message
-	export function message (context) { 
-		
-		context.response.write('hello typescript');
 
-		context.response.end(); 
-	}
+export function index (context) { 
+		
+	context.response.write('hello world');
+
+	context.response.end(); 
 }
+
 
 //----------------------------------------------
 // file: app.js
@@ -170,16 +168,14 @@ The following illistrates setting up appex on an express instance.
 // file: program.ts
 //----------------------------------------------
 
-export module services {
-	
-	// url: http://localhost:3000/services/message
-	export function message (context) { 
-		
-		context.response.write('hello typescript');
+// http://localhost:3000/about
+export function about (context) { 
 
-		context.response.end(); 
-	}
+	context.response.write('about page');
+
+	context.response.end(); 
 }
+
 
 //----------------------------------------------
 // file: app.js
@@ -212,7 +208,7 @@ The following section describes how to write http accessible functions.
 <a name="appex_context" />
 ### appex context
 
-All appex functions are passed a object context as the first argument. The context object encapulates
+All appex functions are passed a context object as the first argument. The context object encapulates
 the http request and response objects issued by the underlying http server, as well as
 additional objects specific to appex. These are listed below:
 
@@ -228,7 +224,7 @@ export function method(context) {
 
 	// context.routes     - appex routing tables.
 
-	// context.exports    - appex module exports.
+	// context.exports    - appex module exports handles.
 
 	// context.mime       - appex mime utility.
 }
@@ -300,10 +296,10 @@ export module blogs {
 <a name="wildcard_functions" />
 ### wildcard functions
 
-appex supports wildcard routing by way of wildcard functions. Wildcard functions are special in the regard 
+appex supports url wildcard routing by way of wildcard functions. Wildcard functions are special in the regard 
 they support more than one argument (other than the context) for which url parameters will be mapped.
 
-appex currently supports any (or none), string and number type annotations on wildcard arguments. 
+appex currently supports the type 'any' (or none), string and number type annotations on wildcard arguments. 
 if a wildcard argument specifies any other type, the wildcard function will not be routed. 
 
 if no type annotation is specified, appex will pass a string value.
@@ -338,9 +334,9 @@ will be matched first.
 appex extends TypeScripts concept of visibility to include visibility over http. From this
 developers and control which functions are exported as http endpoints.  
 
-In order to make a function accessible over http, you must explicitly "export" this function. 
+In order to make a function accessible over http, you must explicitly "export" the function. 
 
-Consider the following example:
+consider the following example:
 
 ```javascript
 
@@ -435,22 +431,27 @@ section outlines how to effeciently develop with appex and the TypeScript progra
 ### development mode
 
 ```javascript 
-// enable dynamic compilations with the devmode option.
-var runtime = appex.runtime ({ sourcefile : './program.ts', devmode : true, logging: true }); 
+// enable compilation on request with the devmode option.
+var runtime = appex.runtime ({ sourcefile : './program.ts', 
+							   devmode    : true, 
+							   logging    : true }); 
+
 ```
 appex is built directly on top of the Microsoft TypeScript 0.9 compiler and leverages it for tight
 integration with the nodejs platform. By enabling the 'devmode' option on a appex runtime, appex 
-will efficiently rebuild your source code on each request made to the server. 
+will rebuild your source code on each request made to the server. 
 
 appex achieves performance in this regard by leveraging features available in
 TypeScript compiler which facilitate incremental building / caching of typescript 
-compilation units.
+compilation units. request compilation in devmode typically take tens of milliseconds 
+to complete for modest size projects.
 
 In addition to this, compilations are run as a background worker process to ensure they 
 do not interupt requests being served on the parent process. 
 
-appex will output syntax and type errors to the stdout and http response. Syntax errors 
-will not bring down the web process. And you won't need to restart on code updates.
+appex will output syntax and type errors to the runtime stdout as well as the http response. 
+Syntax errors will not bring down the web process. And you won't need to restart on code 
+updates.
 
 <a name="structuring_projects" />
 ### structuring projects
