@@ -1,4 +1,4 @@
-![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
+![](https://raw.github.com/sinclairzx81/Appex/master/assets/logo.jpg)
 
 ### nodejs web apps with [typescript](http://www.typescriptlang.org/)
 
@@ -27,16 +27,16 @@ npm install appex
 	* [binding to an http server](#http_server)
 	* [binding to an express instance](#express_server)
 * [creating services with typescript](#creating_services)
-	* [appex context](#appex_context)
-	* [appex http handlers](#appex_http_handlers)
-	* [appex json handlers](#appex_json_handlers)
-	* [appex signatures](#appex_signatures)
+	* [appex context](#Appex_context)
+	* [appex http handlers](#Appex_http_handlers)
+	* [appex json handlers](#Appex_json_handlers)
+	* [appex signatures](#Appex_signatures)
 	* [exporting functions](#exporting_functions)
 	* [routing functions](#routing_functions)
 	* [index functions](#index_functions)
 	* [wildcard functions](#wildcard_functions)
 	* [handling 404](#handling_404)
-* [developing with appex](#developing_with_appex)
+* [developing with appex](#developing_with_Appex)
 	* [development mode](#development_mode)
 	* [structuring projects](#structuring_projects)
 * [additional resources](#resources)
@@ -60,7 +60,7 @@ in frameworks such as express / connect.
 The following sections outline getting up and running with Appex. 
 
 <a name="runtime" />
-### the appex runtime
+### the Appex runtime
 
 The Appex runtime is compilation engine that handles compiling typescript code, mapping routes and function 
 invocation. Appex provides a utility method for setting up the runtime, as described below.
@@ -79,7 +79,7 @@ var server  = http.createServer( runtime );
 server.listen(3000);
 ```
 
-The appex.runtime() method returns a http handler function which is both compatable with nodejs' 
+The Appex.runtime() method returns a http handler function which is both compatable with nodejs' 
 http server as well as connect middleware. This is the recommended approach of creating runtimes, 
 However, if you need to access the runtime directly or are simply curious, you can also setup 
 the runtime as follows..
@@ -108,18 +108,23 @@ server.listen(3000)
 <a name="options" />
 ### runtime options
 
-The appex runtime accepts the following options.
+The Appex runtime accepts the following options.
 
 ```javascript
 var options = { 
+
 	sourcefile : './program.ts', // (required) location of source file.
+
     devmode    : true,           // (optional) recompile on request. 
+
     logging    : true,           // (optional) write requests to stdout.
+
 	stdout     : process.stdout, // (optional) output stream. default is process.stdout
+
 	stderr     : process.stderr, // (optional) error  stream. default is process.stderr
 };
 
-var runtime = appex.runtime ( options );
+var runtime = Appex.runtime ( options );
 ```
 
 <a name="http_server" />
@@ -159,7 +164,7 @@ server.listen(3000);
 <a name="express_server" />
 ### binding to an express instance
 
-The following illistrates setting up appex on an express instance.
+The following illistrates setting up Appex on an express instance.
 
 ```javascript
 //----------------------------------------------
@@ -205,12 +210,12 @@ Appex enables developers to write http endpoints by writing typescript functions
 
 The following section describes how to write http accessible functions. 
 
-<a name="appex_context" />
+<a name="Appex_context" />
 ### appex_context
 
-All appex functions are passed a object context as the first argument. The context object encapulates
+All Appex functions are passed a object context as the first argument. The context object encapulates
 the http request and response objects issued by the underlying http server, as well as
-additional objects specific to appex. These are listed below:
+additional objects specific to Appex. These are listed below:
 
 ```javascript
 // the context object
@@ -220,27 +225,29 @@ export function method(context) {
 
 	// context.response   - the http response object.
 
-	// context.reflection - appex runtime type information.
+	// context.reflection - Appex runtime type information.
 
-	// context.routes     - appex routing tables.
+	// context.routes     - Appex routing tables.
 
-	// context.exports    - appex module exports.
+	// context.exports    - Appex module exports.
 
-	// context.mime       - appex mime utility.
+	// context.mime       - Appex mime utility.
 }
 ```
 
-<a name="appex_http_handlers" />
+<a name="Appex_http_handlers" />
 ### appex http handlers
 
-A appex http handler is defined with the following signature.
+A Appex http handler is defined with the following signature.
 
-* argument[0] - the appex context
+* argument[0] - the Appex context
 * returns     - void (optional)
 
 http handler functions need to complete the http request.
 
 ```javascript
+
+// url: http://[host]:[port]/method
 export function method(context) : void {
 
 	context.response.write('hello world');
@@ -249,16 +256,16 @@ export function method(context) : void {
 }
 ```
 
-<a name="appex_json_handlers" />
+<a name="Appex_json_handlers" />
 ### appex json handlers
 
-A appex json handler is a function suited to handling json based http requests. appex json handlers
+A Appex json handler is a function suited to handling json based http requests. Appex json handlers
 are invoked via HTTP POST and expect JSON to be subbmited with the request. Passing null or invalid
 JSON results in the request argument being null.
 
-A appex json handler requires the following signature.
+A Appex json handler requires the following signature.
 
-* argument[0] - the appex context
+* argument[0] - the Appex context
 * argument[1] - A optionally typed json request object. 
 * argument[2] - a optionally typed optypescript callback with a single argument for the object response.
 * returns     - void (optional) 
@@ -272,7 +279,7 @@ export function method(context, request, callback:(response) => void) : void {
 
 }
 ```
-<a name="appex_signatures" />
+<a name="Appex_signatures" />
 ### appex signatures
 
 Appex only supports two function signatures for http binding. Functions that do not conform to these
@@ -321,45 +328,33 @@ export function public_function   (context) {
 }
 ```
 
-The above will result in the following route being created:
-
-```javascript
-http://[host]:[port]/public_function
-```
-
 <a name="routing_functions" />
 ### routing functions
 
 Appex creates routes based on module scope and function name. consider the following:
 
 ```javascript
+
+// url: http://[host]:[port]/
 export function index   (context:any) { }
 
+// url: http://[host]:[port]/about
 export function about   (context:any) { }
 
+// url: http://[host]:[port]/contact
 export function contact (context:any) { }
 
 export module services.customers {
-
+	
+	// url: http://[host]:[port]/services/customers/insert
 	export function insert(context:any) : void { }
-
+	
+	// url: http://[host]:[port]/services/customers/update
 	export function update(context:any) : void { }
-
+	
+	// url: http://[host]:[port]/services/customers/delete
 	export function delete(context:any) : void { }
 }
-
-// results in the following routes
-// http://[host]:[port]/
-
-// http://[host]:[port]/about
-
-// http://[host]:[port]/contact
-
-// http://[host]:[port]/services/customers/insert
-
-// http://[host]:[port]/services/customers/update
-
-// http://[host]:[port]/services/customers/delete
 ```
 
 <a name="index_functions" />
@@ -368,19 +363,17 @@ export module services.customers {
 Appex denotes that functions named 'index' resolve to the current module scope. As demonstrated below: 
 
 ```javascript
+// url: http://[host]:[port]/
 export function index(context) { }
 
 export module blogs {
-
-	export function index (context) { }
-
-	export function get   (context) { }
+	
+	// url: http://[host]:[port]/blogs
+	export function index  (context) { }
+	
+	// url: http://[host]:[port]/blogs/submit
+	export function submit (context) { }
 }
-
-// results in the following routes
-// http://[host]:[port]/
-// http://[host]:[port]/blogs
-// http://[host]:[port]/blogs/get
 ```
 <a name="wildcard_functions" />
 ### wildcard_functions
@@ -395,19 +388,14 @@ if a argument is annotated with 'number', then only numeric are matched.
 export module blogs {
     
 	// url : http://[host]:[port]/blogs
-    export function index(context) {
-    
-        context.response.write('blogs index')
-
-        context.response.end();       
-    }
+    export function index (context) { /* handle request */ }
+	
+	// http://[host]:[port]/blogs/submit
+	export function submit (context) { /* handle request */ }
 	
 	// url : http://[host]:[port]/blogs/2013/1/11  - matched
-
 	// url : http://[host]:[port]/blogs/2013/01/11 - matched
-
 	// url : http://[host]:[port]/blogs/cat/01/11  - not matched
-
     export function wildcard(context, year:number, month:number, day:number) {
 
         context.response.write('blogs ' + year + ' ' + month + ' ' + day)
@@ -441,7 +429,7 @@ export function wildcard(context, path) {
 }
 ```
 
-<a name="developing_with_appex" />
+<a name="developing_with_Appex" />
 ## developing with appex
 
 Appex enables nodejs developers to write applications in TypeScript as though it were native to nodejs. The following
@@ -500,10 +488,13 @@ require('http').createServer( runtime  ).listen(3000);
 // file: pages.ts
 //---------------------------------------------------
 
+// http://[host]:[port]/
 export function index   (context) { /* handle request */ }
 
+// http://[host]:[port]/about
 export function about   (context) { /* handle request */ }
 
+// http://[host]:[port]/contact
 export function contact (context) { /* handle request */ }
 
 //---------------------------------------------------	
@@ -511,9 +502,11 @@ export function contact (context) { /* handle request */ }
 //---------------------------------------------------
 
 export module users {
-
+	
+	// http://[host]:[port]/users/login
 	export function login  (context) { /* handle request */ }
-
+	
+	// http://[host]:[port]/users/logout
 	export function logout (context) { /* handle request */ }
 }
 
