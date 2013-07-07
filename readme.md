@@ -211,7 +211,7 @@ Appex enables developers to write http endpoints by writing typescript functions
 The following section describes how to write http accessible functions. 
 
 <a name="Appex_context" />
-### appex_context
+### appex context
 
 All Appex functions are passed a object context as the first argument. The context object encapulates
 the http request and response objects issued by the underlying http server, as well as
@@ -286,7 +286,7 @@ Appex only supports two function signatures for http binding. Functions that do 
 signatures will be ignored as http endpoints.
 
 <a name="exporting_functions" />
-### exporting_functions
+### exporting functions
 
 Appex extends TypeScripts concept of visibility to include visibility over http. From this
 developers and control which functions are exported as http handlers.  
@@ -358,7 +358,7 @@ export module services.customers {
 ```
 
 <a name="index_functions" />
-### index_functions
+### index functions
 
 Appex denotes that functions named 'index' resolve to the current module scope. As demonstrated below: 
 
@@ -376,7 +376,7 @@ export module blogs {
 }
 ```
 <a name="wildcard_functions" />
-### wildcard_functions
+### wildcard functions
 
 Appex supports typed url arguments on functions named 'wildcard'. Wildcard functions are special in the regard 
 they support more than one argument (other than the context) for which url parameters will be mapped.
@@ -436,7 +436,7 @@ Appex enables nodejs developers to write applications in TypeScript as though it
 section outlines how to effeciently with Appex and the TypeScript programming language.
 
 <a name="development_mode" />
-### development_mode
+### development mode
 
 ```javascript 
 // enable dynamic compilations with the devmode option.
