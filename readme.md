@@ -1,4 +1,4 @@
-![](https://raw.github.com/sinclairzx81/Appex/master/assets/logo.jpg)
+![](https://raw.github.com/sinclairzx81/appex/master/assets/logo.jpg)
 
 ### nodejs web apps with [typescript](http://www.typescriptlang.org/)
 
@@ -27,16 +27,15 @@ npm install appex
 	* [binding to an http server](#http_server)
 	* [binding to an express instance](#express_server)
 * [creating services with typescript](#creating_services)
-	* [appex context](#Appex_context)
-	* [appex http handlers](#Appex_http_handlers)
-	* [appex json handlers](#Appex_json_handlers)
-	* [appex signatures](#Appex_signatures)
-	* [exporting functions](#exporting_functions)
-	* [routing functions](#routing_functions)
+	* [appex context](#appex_context)
+	* [appex http handlers](#appex_http_handlers)
+	* [appex json handlers](#appex_json_handlers)
 	* [index functions](#index_functions)
 	* [wildcard functions](#wildcard_functions)
+	* [exporting functions](#exporting_functions)
+	* [routing functions](#routing_functions)
 	* [handling 404](#handling_404)
-* [developing with appex](#developing_with_Appex)
+* [developing with appex](#developing_with_appex)
 	* [development mode](#development_mode)
 	* [structuring projects](#structuring_projects)
 * [additional resources](#resources)
@@ -44,26 +43,26 @@ npm install appex
 <a name="overview" />
 ## overview
 
-Appex is a nodejs web service framework built on top of the TypeScript programming language. Appex 
+appex is a nodejs web service framework built on top of the TypeScript programming language. appex 
 enables nodejs developers to expose typescript functions as http endpoints as well as generate meaningful service
 meta data for clients to consume.
 
-Appex also provides a dynamic compilation environment for typescript to aid in development. Appex will effeciently 
+appex also provides a dynamic compilation environment for typescript to aid in development. appex will effeciently 
 manage compilation in the background without the need to restart the web server, or use additional modules.
 
-Appex is designed to operate as both a standalone web service solution or compliment an existing application written
+appex is designed to operate as both a standalone web service solution or compliment an existing application written
 in frameworks such as express / connect.
 
 <a name="getting_started" />
 ## getting started
 
-The following sections outline getting up and running with Appex. 
+The following sections outline getting up and running with appex. 
 
 <a name="runtime" />
-### the Appex runtime
+### the appex runtime
 
-The Appex runtime is compilation engine that handles compiling typescript code, mapping routes and function 
-invocation. Appex provides a utility method for setting up the runtime, as described below.
+The appex runtime is compilation engine that handles compiling typescript code, mapping routes and function 
+invocation. appex provides a utility method for setting up the runtime, as described below.
 
 ```javascript
 var http    = require('http');
@@ -79,7 +78,7 @@ var server  = http.createServer( runtime );
 server.listen(3000);
 ```
 
-The Appex.runtime() method returns a http handler function which is both compatable with nodejs' 
+The appex.runtime() method returns a http handler function which is both compatable with nodejs' 
 http server as well as connect middleware. This is the recommended approach of creating runtimes, 
 However, if you need to access the runtime directly or are simply curious, you can also setup 
 the runtime as follows..
@@ -108,7 +107,7 @@ server.listen(3000)
 <a name="options" />
 ### runtime options
 
-The Appex runtime accepts the following options.
+The appex runtime accepts the following options.
 
 ```javascript
 var options = { 
@@ -124,7 +123,7 @@ var options = {
 	stderr     : process.stderr, // (optional) error  stream. default is process.stderr
 };
 
-var runtime = Appex.runtime ( options );
+var runtime = appex.runtime ( options );
 ```
 
 <a name="http_server" />
@@ -164,7 +163,7 @@ server.listen(3000);
 <a name="express_server" />
 ### binding to an express instance
 
-The following illistrates setting up Appex on an express instance.
+The following illistrates setting up appex on an express instance.
 
 ```javascript
 //----------------------------------------------
@@ -206,16 +205,16 @@ app.listen(3000);
 <a name="creating_services" />
 ## creating services with typescript
 
-Appex enables developers to write http endpoints by writing typescript functions. 
+appex enables developers to write http endpoints by writing typescript functions. 
 
 The following section describes how to write http accessible functions. 
 
-<a name="Appex_context" />
+<a name="appex_context" />
 ### appex context
 
-All Appex functions are passed a object context as the first argument. The context object encapulates
+All appex functions are passed a object context as the first argument. The context object encapulates
 the http request and response objects issued by the underlying http server, as well as
-additional objects specific to Appex. These are listed below:
+additional objects specific to appex. These are listed below:
 
 ```javascript
 // the context object
@@ -225,22 +224,22 @@ export function method(context) {
 
 	// context.response   - the http response object.
 
-	// context.reflection - Appex runtime type information.
+	// context.reflection - appex runtime type information.
 
-	// context.routes     - Appex routing tables.
+	// context.routes     - appex routing tables.
 
-	// context.exports    - Appex module exports.
+	// context.exports    - appex module exports.
 
-	// context.mime       - Appex mime utility.
+	// context.mime       - appex mime utility.
 }
 ```
 
-<a name="Appex_http_handlers" />
+<a name="appex_http_handlers" />
 ### appex http handlers
 
-A Appex http handler is defined with the following signature.
+A appex http handler is defined with the following signature.
 
-* argument[0] - the Appex context
+* argument[0] - the appex context
 * returns     - void (optional)
 
 http handler functions need to complete the http request.
@@ -256,18 +255,18 @@ export function method(context) : void {
 }
 ```
 
-<a name="Appex_json_handlers" />
+<a name="appex_json_handlers" />
 ### appex json handlers
 
-A Appex json handler is a function suited to handling json based http requests. Appex json handlers
-are invoked via HTTP POST and expect JSON to be subbmited with the request. Passing null or invalid
+A appex json handler is a function suited to handling json based http requests. appex json handlers
+are invoked via HTTP POST and expect JSON to be submitted with the request. POSTing null or invalid
 JSON results in the request argument being null.
 
-A Appex json handler requires the following signature.
+A appex json handler requires the following signature.
 
-* argument[0] - the Appex context
+* argument[0] - the appex context
 * argument[1] - A optionally typed json request object. 
-* argument[2] - a optionally typed optypescript callback with a single argument for the object response.
+* argument[2] - a optionally typed typescript callback with a single argument for the object response.
 * returns     - void (optional) 
 
 The return type is optional. json handler functions "must" invoke the callback to complete the request.
@@ -275,21 +274,69 @@ The return type is optional. json handler functions "must" invoke the callback t
 ```javascript
 export function method(context, request, callback:(response) => void) : void {
 
-	callback(request); // echo the object back.
+	callback(request); // echo
 
 }
 ```
-<a name="Appex_signatures" />
-### appex signatures
 
-Appex only supports two function signatures for http binding. Functions that do not conform to these
-signatures will be ignored as http endpoints.
+<a name="index_functions" />
+### index functions
+
+appex denotes that functions named 'index' resolve to the current module scope. As demonstrated below: 
+
+```javascript
+// url: http://[host]:[port]/
+export function index(context) { }
+
+export module blogs {
+	
+	// url: http://[host]:[port]/blogs
+	export function index  (context) { }
+	
+	// url: http://[host]:[port]/blogs/submit
+	export function submit (context) { }
+}
+```
+<a name="wildcard_functions" />
+### wildcard functions
+
+appex supports wildcard routing by way of wildcard functions. Wildcard functions are special in the regard 
+they support more than one argument (other than the context) for which url parameters will be mapped.
+
+appex currently supports any (or none), string and number type annotations on wildcard arguments. 
+if a wildcard argument specifies any other type, the wildcard function will not be routed. 
+
+if no type annotation is specified, appex will pass a string value.
+
+```javascript
+export module blogs {
+    
+	// url : http://[host]:[port]/blogs
+    export function index (context) { /* handle request */ }
+	
+	// http://[host]:[port]/blogs/submit
+	export function submit (context) { /* handle request */ }
+	
+	// url : http://[host]:[port]/blogs/2013/1/11  - matched
+	// url : http://[host]:[port]/blogs/2013/01/11 - matched
+	// url : http://[host]:[port]/blogs/cat/01/11  - not matched
+    export function wildcard(context, year:number, month:number, day:number) {
+
+        context.response.write('blogs ' + year + ' ' + month + ' ' + day)
+
+        context.response.end(); 
+    }
+}
+```
+
+note: wildcard functions should be declared last in any module scope. this ensures other routes
+will be matched first.
 
 <a name="exporting_functions" />
 ### exporting functions
 
-Appex extends TypeScripts concept of visibility to include visibility over http. From this
-developers and control which functions are exported as http handlers.  
+appex extends TypeScripts concept of visibility to include visibility over http. From this
+developers and control which functions are exported as http endpoints.  
 
 In order to make a function accessible over http, you must explicitly "export" this function. 
 
@@ -331,7 +378,7 @@ export function public_function   (context) {
 <a name="routing_functions" />
 ### routing functions
 
-Appex creates routes based on module scope and function name. consider the following:
+appex creates routes based on module scope and function name. consider the following:
 
 ```javascript
 
@@ -357,57 +404,6 @@ export module services.customers {
 }
 ```
 
-<a name="index_functions" />
-### index functions
-
-Appex denotes that functions named 'index' resolve to the current module scope. As demonstrated below: 
-
-```javascript
-// url: http://[host]:[port]/
-export function index(context) { }
-
-export module blogs {
-	
-	// url: http://[host]:[port]/blogs
-	export function index  (context) { }
-	
-	// url: http://[host]:[port]/blogs/submit
-	export function submit (context) { }
-}
-```
-<a name="wildcard_functions" />
-### wildcard functions
-
-Appex supports typed url arguments on functions named 'wildcard'. Wildcard functions are special in the regard 
-they support more than one argument (other than the context) for which url parameters will be mapped.
-
-Appex currently supports only numeric type annotations on wildcard arguments. All other types will mapped as strings.
-if a argument is annotated with 'number', then only numeric are matched. 
-
-```javascript
-export module blogs {
-    
-	// url : http://[host]:[port]/blogs
-    export function index (context) { /* handle request */ }
-	
-	// http://[host]:[port]/blogs/submit
-	export function submit (context) { /* handle request */ }
-	
-	// url : http://[host]:[port]/blogs/2013/1/11  - matched
-	// url : http://[host]:[port]/blogs/2013/01/11 - matched
-	// url : http://[host]:[port]/blogs/cat/01/11  - not matched
-    export function wildcard(context, year:number, month:number, day:number) {
-
-        context.response.write('blogs ' + year + ' ' + month + ' ' + day)
-
-        context.response.end(); 
-    }
-}
-```
-
-note: wildcard functions should be declared last in any module scope. this way, other function types in this scope
-will be resolved first.
-
 <a name='handling_404' />
 ### handling 404
 
@@ -429,11 +425,11 @@ export function wildcard(context, path) {
 }
 ```
 
-<a name="developing_with_Appex" />
+<a name="developing_with_appex" />
 ## developing with appex
 
-Appex enables nodejs developers to write applications in TypeScript as though it were native to nodejs. The following
-section outlines how to effeciently with Appex and the TypeScript programming language.
+appex enables nodejs developers to write applications in pure TypeScript. The following
+section outlines how to effeciently develop with appex and the TypeScript programming language.
 
 <a name="development_mode" />
 ### development mode
@@ -442,25 +438,24 @@ section outlines how to effeciently with Appex and the TypeScript programming la
 // enable dynamic compilations with the devmode option.
 var runtime = appex.runtime ({ sourcefile : './program.ts', devmode : true, logging: true }); 
 ```
-Appex is built directly on top of the Microsoft TypeScript 0.9 compiler and leverages it for tight
-integration with the nodejs platform. By enabling the 'devmode' option, Appex will efficiently
-rebuild your source code on each request made to the server. 
+appex is built directly on top of the Microsoft TypeScript 0.9 compiler and leverages it for tight
+integration with the nodejs platform. By enabling the 'devmode' option on a appex runtime, appex 
+will efficiently rebuild your source code on each request made to the server. 
 
-Appex achieves performance in this regard by leveraging features available in
+appex achieves performance in this regard by leveraging features available in
 TypeScript compiler which facilitate incremental building / caching of typescript 
-compilation units. 
+compilation units.
 
 In addition to this, compilations are run as a background worker process to ensure they 
-do interupt requests being served on the parent web process. 
+do not interupt requests being served on the parent process. 
 
-Appex will output syntax and type errors to the stdout and http response. Syntax errors 
+appex will output syntax and type errors to the stdout and http response. Syntax errors 
 will not bring down the web process. And you won't need to restart on code updates.
-
 
 <a name="structuring_projects" />
 ### structuring projects
 
-Appex leverages TypeScript's ability to reference source files with the 'reference' element. Appex 
+appex includes TypeScript's ability to reference source files with the 'reference' element. appex 
 will traverse each source files references and include it as part of the compilation.
 
 Developers can use this functionality to logically split source files into reusable components of
