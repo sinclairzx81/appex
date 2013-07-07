@@ -4,7 +4,7 @@ declare var console;
 
 export function index(context) {
     
-    context.response.write('home')
+    context.response.write(context.mime.lookup('asdasdas.ts'))
 
     context.response.end();
 }  
