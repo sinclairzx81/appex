@@ -2,8 +2,6 @@
 
 declare var console;
 
-
-
 export function index(context) {
     
     context.response.write('home')
@@ -15,11 +13,9 @@ export module static {
 
     declare var require;
 
-    declare var fs;
-
     export function wildcard(context, path) {
-                  
-        require('fs').readFile('./node_modules/' + path, 'utf8', (error, content) => {
+        
+        require('fs').readFile('./static/' + path, 'utf8', (error, content) => {
                 
             if(error) {
                 

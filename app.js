@@ -10,7 +10,7 @@ var appex   = require('appex');
 
  
 
-var runtime = new appex.Runtime ( { sourcefile : './program.ts', devmode:true, logging:true } );
+var runtime = new appex.Runtime ( { sourcefile : './program.ts', devmode:false, logging:true } );
 
 var server  = http.createServer( function(req, res) {
     
