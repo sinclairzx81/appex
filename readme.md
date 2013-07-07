@@ -35,6 +35,7 @@ npm install appex
 	* [routing functions](#routing_functions)
 	* [index functions](#index_functions)
 	* [wildcard functions](#wildcard_functions)
+	* [handling 404](#handling_404)
 * [developing with appex](#developing_with_appex)
 	* [development mode](#development_mode)
 	* [structuring projects](#structuring_projects)
@@ -69,9 +70,11 @@ var http    = require('http');
 
 var appex   = require('appex');
 
-var runtime = appex.runtime ( { sourcefile : './program.ts' } ); // create the runtime.
+// create the runtime.
+var runtime = appex.runtime ( { sourcefile : './program.ts' } ); 
 
-var server  = http.createServer( runtime ); // bind to the http server.
+// bind to the http server.
+var server  = http.createServer( runtime ); 
 
 server.listen(3000);
 ```
@@ -212,11 +215,18 @@ additional objects specific to appex. These are listed below:
 ```javascript
 // the context object
 export function method(context) {
+	
 	// context.request    - the http request object.
+
 	// context.response   - the http response object.
+
 	// context.reflection - appex runtime type information.
+
 	// context.routes     - appex routing tables.
-	// context.exports    - appex module exports. 
+
+	// context.exports    - appex module exports.
+
+	// context.mime       - appex mime utility.
 }
 ```
 
@@ -340,10 +350,15 @@ export module services.customers {
 
 // results in the following routes
 // http://[host]:[port]/
+
 // http://[host]:[port]/about
+
 // http://[host]:[port]/contact
+
 // http://[host]:[port]/services/customers/insert
+
 // http://[host]:[port]/services/customers/update
+
 // http://[host]:[port]/services/customers/delete
 ```
 
@@ -388,8 +403,11 @@ export module blogs {
     }
 	
 	// url : http://[host]:[port]/blogs/2013/1/11  - matched
+
 	// url : http://[host]:[port]/blogs/2013/01/11 - matched
+
 	// url : http://[host]:[port]/blogs/cat/01/11  - not matched
+
     export function wildcard(context, year:number, month:number, day:number) {
 
         context.response.write('blogs ' + year + ' ' + month + ' ' + day)
@@ -402,6 +420,26 @@ export module blogs {
 note: wildcard functions should be declared last in any module scope. this way, other function types in this scope
 will be resolved first.
 
+<a name='handling_404' />
+### handling 404
+
+Use wildcard functions to catch unhandled routes.
+
+```javascript
+// http:[host]:[port]/
+export function index   (context) { 
+	context.response.writeHead(404, {'content-type' : 'text/plain'});
+	context.response.write('home page');
+	context.response.end();
+}
+
+// http:[host]:[port]/(.*)
+export function wildcard(context, path) {
+	context.response.writeHead(404, {'content-type' : 'text/plain'});
+	context.response.write(path + ' page not found');
+	context.response.end();
+}
+```
 
 <a name="developing_with_appex" />
 ## developing with appex
@@ -463,7 +501,9 @@ require('http').createServer( runtime  ).listen(3000);
 //---------------------------------------------------
 
 export function index   (context) { /* handle request */ }
+
 export function about   (context) { /* handle request */ }
+
 export function contact (context) { /* handle request */ }
 
 //---------------------------------------------------	
@@ -473,6 +513,7 @@ export function contact (context) { /* handle request */ }
 export module users {
 
 	export function login  (context) { /* handle request */ }
+
 	export function logout (context) { /* handle request */ }
 }
 
