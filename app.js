@@ -1,4 +1,4 @@
-﻿var port    = 5444;
+﻿var port    = 5000;
 
 var devmode = true;
 

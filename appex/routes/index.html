@@ -1,7 +1,5 @@
 ﻿<!DOCTYPE html>
-
-<html>
-	
+<html lang="en">
 	<head>
 		<title>appex:reflection</title>
         	
@@ -18,284 +16,98 @@
         <script type="text/javascript" src="/appex/scripts/api"></script>
 
         <script type="text/javascript" src="/appex/reflection/script"></script>
-
-
+        
 		<style type="text/css">
 		
-			.page-header { margin-top : 50px; }
-
-		</style>
-        
-        <!-- ----------------------------------------------------------------
-        template.variable
-        ------------------------------------------------------------------ -->
-
-        <script type="text/html" id="template.variable">
-
-            <a href="#" data-bind="text: text()" />
-
-        </script>
-
-        <!-- ----------------------------------------------------------------
-        template.method
-        ------------------------------------------------------------------ -->
-
-        <script type="text/html" id="template.method">
-
-             <a href=" " data-bind="text: text(), event:{click:toggle}" />
-
-        </script>
-
-        <!-- ----------------------------------------------------------------
-        template.interface
-        ------------------------------------------------------------------ -->
-
-        <script type="text/html" id="template.interface">
-
-            <a href="#" data-bind="text: text(), event:{click:toggle}" />
-
-            <div data-bind="if:expanded">
-
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template: {name:'template.variable', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template: {name:'template.method', data:$data}" />
-
-                </ul>
-
-            </div>
-
-        </script>
-        
-        <!-- ----------------------------------------------------------------
-        template.class
-        ------------------------------------------------------------------ -->
-              
-        <script type="text/html" id="template.class">
-
-            <a href="#" data-bind="text: text(), event:{click:toggle}" />
-
-            <div data-bind="if:expanded">
-
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template: {name:'template.variable', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template: {name:'template.method', data:$data}" />
-
-                </ul>
-
-            </div>
-
-        </script>
-        
-        <!-- ----------------------------------------------------------------
-        template.import
-        ------------------------------------------------------------------ -->
-        <script type="text/html" id="template.import">
-
-            <a data-bind="{text:'import: ' + alias()}" href="#"></a>
-
-        </script>
-
-        <!-- ----------------------------------------------------------------
-        template.module
-        ------------------------------------------------------------------ -->
-        <script type="text/html" id="template.module">
-
-            <a href="#" data-bind="text: name(), event:{click:toggle}" />
-
-            <div data-bind="if:expanded">
-
-                <ul data-bind="foreach:imports">
-
-                    <li data-bind="template:{name:'template.import', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:modules">
-
-                    <li data-bind="template:{name:'template.module', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template:{name:'template.method', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template:{name:'template.variable', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:interfaces">
-
-                    <li data-bind="template:{name:'template.interface', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:classes">
-
-                    <li data-bind="template:{name:'template.class', data:$data}" />
-
-                </ul>
-
-            </div>
-
-        </script>
-
-        <!-- ----------------------------------------------------------------
-        template.script
-        ------------------------------------------------------------------ -->
-        <script type="text/html" id="template.script">
-
-             <a href="#" data-bind="text: path(), event:{click:toggle}"></a>
-
-             <div data-bind="if:expanded">
-
-                <ul data-bind="foreach:modules">
-
-                    <li data-bind="template:{name:'template.module', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template:{name:'template.method', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template:{name:'template.variable', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:interfaces">
-
-                    <li data-bind="template:{name:'template.interface', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:classes">
-
-                    <li data-bind="template:{name:'template.class', data:$data}" />
-
-                </ul>
-
-            </div>
-
-        </script>
-          
-        <script type="text/javascript">
-
-            var Model = function(data) 
+			.page-header { margin-top : 150px; }
+            body 
             {
-                this.reflection = new ReflectionModel(data);
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+            .sidebar-nav 
+            {
+                padding: 9px 0;
             }
 
-            function initialize() 
+            @media (max-width: 980px) 
             {
-                appex.get('/appex/reflection/reflect', function (data) {
 
-                    var model = new Model(data);
-
-                    ko.applyBindings(model);
-                });
+                /* Enable use of floated navbar text */
+                .navbar-text.pull-right 
+                {
+                    float: none;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
             }
 
-            $(document).ready(initialize);
-
-        </script>	
+	    </style>
 
 	</head>
-	    
-    <body>
 
-	    <div class="navbar navbar-fixed-top">
-				
-	        <div class="navbar-inner">
-	            
-				<div class="container">
+  <body>
 
-					<a href='/' class='brand'>appex client</a>
-	                
-					<div class="nav-collapse">
-	                			
-						<ul class="nav">
-				
-	                        <li><a href="/">dashboard</a></li>
-				
-	                    </ul>
+    <div class="navbar navbar-inverse navbar-fixed-top">
 
-	                </div>
-			
-	            </div>
-			
-	        </div>
-			
-	    </div>
-			
-	    <div class="container">
-			
-			<div class="page-header">
-		
-				<h3>appex:reflection</h3>
-			
-			</div>
+      <div class="navbar-inner">
 
-			<div id='page-container'>
-				
-			    <div class="row">
-			
-                    <div class="span4">
-		  
-                        <ul data-bind="foreach: reflection.scripts"> 
+        <div class="container-fluid">
 
-                            <li data-bind="template:{name:'template.script', data:$data}" />
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 
-                        </ul>  	
-		
-                    </div>
-		
-                    <div class="span8">
-						
-                        <button class='btn' onclick="call()">call</button>
+            <span class="icon-bar"></span>
 
-                        <input type="text" id="endpoint" class="input-medium search-query" />
+            <span class="icon-bar"></span>
 
-                    </div>
+            <span class="icon-bar"></span>
 
-                    <div class="span4">
-                            
-                        <li class="nav-header">input</li>
+          </button>
 
-                        <textarea  id="input">"hello world"</textarea>
+          <a class="brand" href="#">appex/routes</a>
 
-                    </div>
+          <div class="nav-collapse collapse">
 
-                    <div class="span4">
-
-                        <li class="nav-header">output</li>
-
-                        <textarea id="output"></textarea>
-
-                    </div>
-		
-			    </div>
-		
-			</div>
-			
-		</div>        
+            <p class="navbar-text pull-right">
 
              
-    </body>
-	
+
+            </p>
+
+            <ul class="nav">
+
+ 
+
+            </ul>
+
+          </div><!--/.nav-collapse -->
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="container-fluid">
+      
+      <div class="row-fluid">
+
+        <div class="span4">
+
+            <h3>routes</h3>
+
+        </div>         
+          
+        <div class="span8">
+
+            <h3>source</h3>
+
+        </div>
+                
+      </div>
+
+    </div><!--/.fluid-container-->
+    
+  </body>
+
 </html>

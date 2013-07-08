@@ -520,7 +520,7 @@ var ScriptModel = function (obj) {
 
     this.variables  = ko.observableArray([]);
 
-    this.path       = ko.observable();
+    this.name       = ko.observable();
 
     this.expanded   = ko.observable(false);
 
@@ -550,13 +550,18 @@ var ScriptModel = function (obj) {
 
     for (var n in obj.variables)  this.variables.push  ( new VariableModel  ( obj.variables  [n] ) );
 
-    this.path(obj.path);
+    this.name(obj.name);
+
+    this.text = function () {
+
+        return this.name();
+    }
 
     this.toggle = function () {
 
         this.expanded(this.expanded() ? false : true);
 
-        load('./' + this.path());
+        load('./' + this.name());
 
     }
 

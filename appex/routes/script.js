@@ -145,31 +145,26 @@ var ParameterModel = function (obj)
 /////////////////////////////////////////////////////////////////////
 var MethodModel = function (obj) 
 {
+    this.name       = ko.observable(obj.name);
+    
+    this.isStatic   = ko.observable(obj.isStatic);
+
+    this.isExported = ko.observable(obj.isExported);
+
+    this.returns    = ko.observable(new TypeModel(obj.returns));
+
     this.parameters = ko.observableArray([]);
 
-    this.name       = ko.observable();
+    for (var n in obj.parameters)  {
 
-    this.returns    = ko.observable();
-
-    this.isStatic   = ko.observable();
-
-    this.expanded   = ko.observable(false);
-
-    this.construct = function (obj) 
-    {
-        this.name (obj.name);
-
-        this.isStatic (obj.isStatic);
-
-        for (var n in obj.parameters) 
-        {
-            this.parameters.push( new ParameterModel( obj.parameters[n] ) );
-        }
-        
-        this.returns ( new TypeModel(obj.returns) );
+        this.parameters.push( new ParameterModel( obj.parameters[n] ) );
     }
+    
+    // interactions
 
-    this.toggle = function () 
+    this.expanded = ko.observable(false);
+
+    this.toggle   = function () 
     {
         this.expanded(this.expanded() ? false : true);
     }
@@ -177,6 +172,11 @@ var MethodModel = function (obj)
     this.text = function()
     {
         var buffer = [];
+        
+        if(this.isExported())
+        {
+            buffer.push('export function ');
+        }
 
         if(this.isStatic())
         {
@@ -207,8 +207,6 @@ var MethodModel = function (obj)
 
         return buffer.join('');
     }
-
-    this.construct(obj);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -227,6 +225,8 @@ var ClassModel = function (obj) {
     this.implements  = ko.observableArray([]);
     
     this.name        = ko.observable();
+
+    this.isExported  = ko.observable(obj.isExported);
 
     this.expanded    = ko.observable(false);
 
@@ -253,6 +253,12 @@ var ClassModel = function (obj) {
     this.text = function()
     {
         var buffer = [];
+
+        if (this.isExported()) {
+
+            buffer.push('export ')
+        }
+
 
         buffer.push('class ')
 
@@ -338,6 +344,9 @@ var InterfaceModel = function (obj)
 
     this.name        = ko.observable();
 
+    this.isExported  = ko.observable(obj.isExported);
+
+
     this.expanded    = ko.observable(false);
 
     this.construct = function () 
@@ -361,6 +370,11 @@ var InterfaceModel = function (obj)
     this.text = function()
     {
         var buffer = [];
+
+        if (this.isExported()) {
+
+            buffer.push('export ');
+        }
 
         buffer.push('interface ')
 
@@ -417,9 +431,13 @@ var InterfaceModel = function (obj)
 // ImportModel
 /////////////////////////////////////////////////////////////////////
 var ImportModel = function (obj) {
+    
     this.name  = ko.observable();
+    
     this.alias = ko.observable();   
+    
     this.name  (obj.name);
+    
     this.alias (obj.alias);
 
     this.expanded   = ko.observable(false);
@@ -447,7 +465,9 @@ var ModuleModel = function (obj) {
     
     this.variables  = ko.observableArray([]);
     
-    this.name       = ko.observable();
+    this.isExported = ko.observable(obj.isExported);
+    
+    this.name       = ko.observable(obj.name);
 
     this.expanded   = ko.observable(false);
     
@@ -463,7 +483,21 @@ var ModuleModel = function (obj) {
     
     for (var n in obj.variables)  this.variables.push  ( new VariableModel  ( obj.variables  [n] ) );
     
-    this.name  (obj.name);
+    this.text = function () {
+
+        var buffer = [];
+
+        if (this.isExported()) {
+
+            buffer.push('export ')
+        }
+
+        buffer.push('module ')
+
+        buffer.push(this.name());
+
+        return buffer.join('');
+    }
 
     this.toggle = function () 
     {
@@ -490,7 +524,23 @@ var ScriptModel = function (obj) {
 
     this.expanded   = ko.observable(false);
 
-    for (var n in obj.modules)    this.modules.push    ( new ModuleModel    ( obj.modules    [n] ) );
+    for (var n in obj.modules)    {
+
+        if (obj.modules[n].name.indexOf('\"') != -1) {
+
+            for (var m in obj.modules[n].modules) {
+
+                this.modules.push ( new ModuleModel    ( obj.modules [n].modules[m] ) );
+  
+            }
+
+        } else {
+
+            this.modules.push    ( new ModuleModel    ( obj.modules    [n] ) );
+        }
+
+        
+    }
 
     for (var n in obj.interfaces) this.interfaces.push ( new InterfaceModel ( obj.interfaces [n] ) );
 
@@ -503,8 +553,13 @@ var ScriptModel = function (obj) {
     this.path(obj.path);
 
     this.toggle = function () {
+
         this.expanded(this.expanded() ? false : true);
+
+        load('./' + this.path());
+
     }
+
 }
 
 /////////////////////////////////////////////////////////////////////
