@@ -10,7 +10,7 @@ var appex   = require('appex');
 
 var server  = http.createServer( appex.runtime ( { sourcefile : './program.ts', devmode:true, logging:true } ));
 
-server.listen(port)
+server.listen(port);
 
 console.log('server running on ' + port);
 
