@@ -1,17 +1,10 @@
-﻿declare var JSON;
+﻿/// <reference path="lib.d.ts" />
+/// <reference path="node.d.ts" />
 
-export class Customer {
+/// <reference path="appex/index.ts" />
 
-    public firstName:string;
+import http = require('http');
 
-    public lastName: string;
-
-}
-
-
- 
-
-// http:[host]:[port]/
 export function index (context)  { 
 	
     context.response.writeHead(404, {'content-type' : 'text/plain'});
@@ -21,8 +14,21 @@ export function index (context)  {
     context.response.end();
 }
 
-export function testing(context, request:Customer, callback:(response:Customer) => void) : void {
+export function wildcard(context, path) {
 
-    callback(request); // echo
-
+    context.response.writeHead(404, {'content-type' : 'text/plain'});
+	
+    context.response.write(path + 'not found');
+	
+    context.response.end();
+    
 }
+
+export module data {
+
+    class Customer {
+    
+        public firstName : string;
+    }
+}
+

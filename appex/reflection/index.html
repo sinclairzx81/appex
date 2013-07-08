@@ -139,21 +139,7 @@
                     <li data-bind="template:{name:'template.import', data:$data}" />
 
                 </ul>
-                <ul data-bind="foreach:modules">
-
-                    <li data-bind="template:{name:'template.module', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template:{name:'template.method', data:$data}" />
-
-                </ul>
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template:{name:'template.variable', data:$data}" />
-
-                </ul>
+                
                 <ul data-bind="foreach:interfaces">
 
                     <li data-bind="template:{name:'template.interface', data:$data}" />
@@ -165,6 +151,26 @@
                     <li data-bind="template:{name:'template.class', data:$data}" />
 
                 </ul>
+
+                <ul data-bind="foreach:modules">
+
+                    <li data-bind="template:{name:'template.module', data:$data}" />
+
+                </ul>
+                
+                <ul data-bind="foreach:variables">
+
+                    <li data-bind="template:{name:'template.variable', data:$data}" />
+
+                </ul>
+
+                <ul data-bind="foreach:methods">
+
+                    <li data-bind="template:{name:'template.method', data:$data}" />
+
+                </ul>
+
+
 
             </div>
 
@@ -184,17 +190,6 @@
                     <li data-bind="template:{name:'template.module', data:$data}" />
 
                 </ul>
-                <ul data-bind="foreach:methods">
-
-                    <li data-bind="template:{name:'template.method', data:$data}" />
-
-                </ul>
-
-                <ul data-bind="foreach:variables">
-
-                    <li data-bind="template:{name:'template.variable', data:$data}" />
-
-                </ul>
 
                 <ul data-bind="foreach:interfaces">
 
@@ -205,6 +200,18 @@
                 <ul data-bind="foreach:classes">
 
                     <li data-bind="template:{name:'template.class', data:$data}" />
+
+                </ul>
+
+                <ul data-bind="foreach:variables">
+
+                    <li data-bind="template:{name:'template.variable', data:$data}" />
+
+                </ul>
+
+                <ul data-bind="foreach:methods">
+
+                    <li data-bind="template:{name:'template.method', data:$data}" />
 
                 </ul>
 

@@ -523,24 +523,8 @@ var ScriptModel = function (obj) {
     this.name       = ko.observable();
 
     this.expanded   = ko.observable(false);
-
-    for (var n in obj.modules)    {
-
-        if (obj.modules[n].name.indexOf('\"') != -1) {
-
-            for (var m in obj.modules[n].modules) {
-
-                this.modules.push ( new ModuleModel    ( obj.modules [n].modules[m] ) );
-  
-            }
-
-        } else {
-
-            this.modules.push    ( new ModuleModel    ( obj.modules    [n] ) );
-        }
-
-        
-    }
+    
+    for (var n in obj.modules)    this.modules.push    ( new ModuleModel    ( obj.modules    [n] ) );  
 
     for (var n in obj.interfaces) this.interfaces.push ( new InterfaceModel ( obj.interfaces [n] ) );
 
@@ -572,7 +556,7 @@ var ScriptModel = function (obj) {
 /////////////////////////////////////////////////////////////////////
 var ReflectionModel = function(obj) {
 
-    this.scripts = ko.observableArray([]);
+    this.scripts    = ko.observableArray([]);
 
     this.expanded   = ko.observable(false);
 

@@ -8,7 +8,6 @@ var http    = require('http');
 
 var appex   = require('appex');
 
-
 var server  = http.createServer( appex.runtime ( { sourcefile : './program.ts', devmode:true, logging:true } ));
 
 server.listen(port)
