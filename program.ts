@@ -1,22 +1,28 @@
-﻿/// <reference path="appex/index.ts" />
+﻿declare var JSON;
+
+export class Customer {
+
+    public firstName:string;
+
+    public lastName: string;
+
+}
+
+
+ 
 
 // http:[host]:[port]/
-export function index (context) { 
+export function index (context)  { 
 	
     context.response.writeHead(404, {'content-type' : 'text/plain'});
 	
-    context.response.write('home page');
+    context.response.write(JSON.stringify(context.reflection, null, 4));
 	
     context.response.end();
 }
 
-// http:[host]:[port]/(.*)
-export function wildcard(context, path) {
+export function testing(context, request:Customer, callback:(response:Customer) => void) : void {
 
-	context.response.writeHead(404, {'content-type' : 'text/plain'});
-	
-    context.response.write(path + ' page not found');
-	
-    context.response.end();
+    callback(request); // echo
+
 }
- 
