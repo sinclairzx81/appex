@@ -12,6 +12,8 @@ var TypeModel = function (obj)
 
     this.arrayCount = ko.observable();
 
+    this.scope      = ko.observableArray([])
+
     this.expanded   = ko.observable(false);
 
     this.construct = function(obj) 
@@ -19,6 +21,8 @@ var TypeModel = function (obj)
         this.name (obj.name);
         
         this.arrayCount (obj.arrayCount);
+
+        this.scope (obj.scope);
 
         for (var n in obj.arguments) 
         {
@@ -37,9 +41,16 @@ var TypeModel = function (obj)
 
         var process = function (type) {
             
+            var length = type.scope().length
+
+            for(var i = 0; i < length; i++ ) 
+            { 
+                buffer.push(type.scope()[i], '.')
+            }
+
             buffer.push(type.name());
 
-            var length = type.arguments().length;
+            length = type.arguments().length;
 
             if(length > 0) 
             { 
