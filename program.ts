@@ -19,7 +19,7 @@ export function index (context) {
     context.response.end();
 }
 
-attribute("about", { verbs: ["get", "post", "adas"], roles: ["administrators"] });
+//attribute("about", { verbs: ["get", "post"], roles: ["administrators"] });
 
 export function about (context)  {
     
@@ -34,13 +34,15 @@ attribute("wildcard", { verbs: ["get", "post"], roles: ["administrators"] });
 
 export function wildcard(context, path) {
 
-    context.response.writeHead(404, {'content-type' : 'text/plain'});
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write(path + ' not found');
+    context.response.write('not found');
 	
-    context.response.end();
-    
+    context.response.end();   
 }
+
+
+attribute("admin", {  verbs: ["get"]  } );
 
 export module admin {
 
