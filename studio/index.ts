@@ -1,7 +1,6 @@
 ﻿/// <reference path="references.ts" />
-/// <reference path="static/index.ts" />
 /// <reference path="reflection/index.ts" />
-
+/// <reference path="static/index.ts" />
 
 export module studio {
 

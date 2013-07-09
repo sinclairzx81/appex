@@ -35,12 +35,14 @@ export module studio.static {
                 return;
             }
 
-            var stream = fs.createReadStream(path)
+            fs.readFile(path, (err, data) => {
+                
+                context.response.writeHead(200, {'content-type' : context.mime.lookup(path) });
 
-            context.response.writeHead(200, {'content-type' : 'text/plain'});
+                context.response.write(data);
 
-            stream.pipe(context.response);        
-        
+                context.response.end();
+            });
         }); 
     }
 }

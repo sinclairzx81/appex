@@ -6,20 +6,14 @@ export module studio.reflection {
 
     export function index(context) {
         
-        var stream = fs.createReadStream('./studio/reflection/index.html')
-
-        context.response.writeHead(200, {'content-type' : 'text/html'});
-
-        stream.pipe(context.response);
-    }
-
-    export function script(context) {
+        fs.readFile('./studio/reflection/index.html', (err, data) => {
         
-        var stream = fs.createReadStream('./studio/reflection/script.js')
+            context.response.writeHead(200, {'content-type' : 'text/html'});
 
-        context.response.writeHead(200, {'content-type' : 'text/javascript'});
+            context.response.write(data);
 
-        stream.pipe(context.response);
+            context.response.end();
+        });
     }
 
     export function data (context, request:any, callback:(response:any)=>void) { 

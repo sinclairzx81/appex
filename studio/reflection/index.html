@@ -7,15 +7,15 @@
 			
 	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 
-        <link   type='text/css'        rel ="stylesheet" href="/appex/css/site">
+        <link   type='text/css'        rel ="stylesheet" href="/studio/static/css/site.css">
 
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         
         <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.2.1.js"></script>
         
-        <script type="text/javascript" src="/appex/scripts/api"></script>
+        <script type="text/javascript" src="/studio/static/script/api.js"></script>
 
-        <script type="text/javascript" src="/appex/reflection/script"></script>
+        <script type="text/javascript" src="/studio/static/script/reflection.js"></script>
         
 		<style type="text/css">
 		
@@ -230,7 +230,7 @@
                 
                 appex.headers['appex.path'] = filename;
 
-                appex.get('/appex/reflection/' + filename, function (data) {
+                appex.get('/studio/reflection/' + filename, function (data) {
 
                     $('#source').html(data);
 
@@ -239,7 +239,7 @@
 
             function initialize()  {
 
-                appex.get('/appex/reflection/data', function (data) {
+                appex.get('/studio/reflection/data', function (data) {
 
                     var model = new Model(data);
 
