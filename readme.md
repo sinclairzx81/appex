@@ -289,10 +289,9 @@ will be matched first.
 <a name="exporting_functions" />
 ### exporting functions
 
-appex extends TypeScripts concept of visibility to include visibility over http. From this
-developers and control which functions are exported as http endpoints.  
-
-In order to make a function accessible over http, you must explicitly "export" the function. 
+appex will only export functions prefix with the TypeScript 'export' declaration. Also, exported 
+functions that reside in non exported modules will not be routed. Developers can use this to infer
+notions of public and private at the http level.
 
 consider the following example:
 
