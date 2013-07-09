@@ -37,13 +37,18 @@ export function wildcard(context, path) {
     
 }
 
+declare var console;
+declare var JSON;
+
 export module test {
 
     export function wildcard(context, a, b) {
-    
+        
+        console.log(context)
+
         context.response.writeHead(404, {'content-type' : 'text/plain'});
 	
-        context.response.write('a = ' + a + ' and b = ' + b);
+        context.response.write(context.module.javascript);
 	
         context.response.end();        
     }
