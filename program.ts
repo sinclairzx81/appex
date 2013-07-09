@@ -1,33 +1,51 @@
-﻿/// <reference path="lib.d.ts" />
-/// <reference path="node.d.ts" />
-/// <reference path="appex/index.ts" />
+﻿///// <reference path="lib.d.ts" />
+///// <reference path="node.d.ts" />
+///// <reference path="appex/index.ts" />
 
-import http = require('http');
+//import http = require('http');
 
-export function index (context)  { 
+export function index (context) { 
 	
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write('hello world');
+    context.response.write('home');
 	
     context.response.end();
 }
 
-export function reflection (context)  { 
+export function about (context)  { 
 	
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write(JSON.stringify(context.reflection, null, 4));
+    context.response.write('about');
 	
     context.response.end();
+}
+
+export function method(context, request, callback:(response)=>void)  {
+    
+    callback('asd')
 }
 
 export function wildcard(context, path) {
 
     context.response.writeHead(404, {'content-type' : 'text/plain'});
 	
-    context.response.write(path + 'not found');
+    context.response.write(path + ' not found');
 	
     context.response.end();
     
 }
+
+export module test {
+
+    export function wildcard(context, a, b) {
+    
+        context.response.writeHead(404, {'content-type' : 'text/plain'});
+	
+        context.response.write('a = ' + a + ' and b = ' + b);
+	
+        context.response.end();        
+    }
+}
+

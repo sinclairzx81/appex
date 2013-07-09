@@ -1,17 +1,24 @@
-﻿var port    = 5000;
-
-var devmode = true;
-
-var logging = true;
-
-var http    = require('http');
+﻿var http    = require('http');
 
 var appex   = require('appex');
 
-var server  = http.createServer( appex.runtime ( { sourcefile : './program.ts', devmode:true, logging:true } ));
+//var middleware = appex.middleware ( {   sourcefile : './program.ts', 
+//                                        devmode    : true, 
+//                                        logging    : true,
+//                                        context    : {
+//                                            message: 'hello'
 
-server.listen(port);
-
-console.log('server running on ' + port);
+//                                        }});
 
 
+var server = appex.server({   sourcefile : './program.ts', 
+                              devmode    : true, 
+                              logging    : true,
+                              context    : {
+                                   message: 'hello'
+
+                              }});
+ 
+server.listen(5000);
+
+ 
