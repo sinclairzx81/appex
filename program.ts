@@ -3,7 +3,7 @@
 
 import http = require('http');
 
-export function index (context) { 
+export function indexs (context) { 
 	
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
@@ -22,12 +22,12 @@ export function about (context)  {
 }
 
 
-export function wildcard(context, path) {
+//export function wildcard(context, path) {
 
-    context.response.writeHead(404, {'content-type' : 'text/plain'});
+//    context.response.writeHead(404, {'content-type' : 'text/plain'});
 	
-    context.response.write(path + ' not found');
+//    context.response.write(path + ' not found');
 	
-    context.response.end();
+//    context.response.end();
     
-}
+//}

@@ -1,13 +1,33 @@
-﻿var appex   = require('appex');
+﻿var http    = require('http');
 
-var server = appex.server({   sourcefile : './program.ts', 
-                              devmode    : true, 
-                              logging    : true,
-                              context    : {
-                                   message: 'hello'
+var express = require('express');
 
-                              }});
- 
-server.listen(5000);
+var appex   = require('appex');
+
+var appx = appex({   sourcefile : './program.ts', 
+                      devmode    : true, 
+                      logging    : true,
+                 });
+
+
+//console.log(appx);
+
+var app = express();
+
+app.use( appx  );
+
+//console.log(app);
+
+app.get('/', function(req, res) {
+
+    res.send("respond with a resource");
+
+});
+
+http.createServer(appx).listen(5000, function() {
+
+  console.log("Express server listening on port " + app.get('port'));
+
+});
 
  
