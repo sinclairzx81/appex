@@ -2,8 +2,16 @@
 
 /// <reference path="studio/index.ts" />
 
+declare var attribute;
+
+declare var console;
+
+attribute("index", {  verbs: ["get", "post"], message:"awesome"  });
+
 export function index (context) { 
-	
+    
+    console.log(context.attribute)
+
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
     context.response.write('home');
@@ -11,8 +19,10 @@ export function index (context) {
     context.response.end();
 }
 
-export function about (context)  { 
-	
+attribute("about", { verbs: ["get", "post"], roles: ["administrators"] });
+
+export function about (context)  {
+    
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
     context.response.write('about');
@@ -20,7 +30,7 @@ export function about (context)  {
     context.response.end();
 }
 
-
+attribute("wildcard", { verbs: ["get", "post"], roles: ["administrators"] });
 
 export function wildcard(context, path) {
 
@@ -30,4 +40,18 @@ export function wildcard(context, path) {
 	
     context.response.end();
     
+}
+
+export module admin {
+
+    attribute("admin.index", {  verbs: ["get"]  });
+
+    export function index (context) { 
+    
+        context.response.writeHead(200, {'content-type' : 'text/plain'});
+	
+        context.response.write('home');
+	
+        context.response.end();
+    }
 }
