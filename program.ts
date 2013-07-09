@@ -1,9 +1,8 @@
 ﻿/// <reference path="studio/references.ts" />
+
 /// <reference path="studio/index.ts" />
 
-import http = require('http');
-
-export function indexs (context) { 
+export function index (context) { 
 	
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
@@ -22,12 +21,13 @@ export function about (context)  {
 }
 
 
-//export function wildcard(context, path) {
 
-//    context.response.writeHead(404, {'content-type' : 'text/plain'});
+export function wildcard(context, path) {
+
+    context.response.writeHead(404, {'content-type' : 'text/plain'});
 	
-//    context.response.write(path + ' not found');
+    context.response.write(path + ' not found');
 	
-//    context.response.end();
+    context.response.end();
     
-//}
+}
