@@ -6,7 +6,7 @@ declare var attribute;
 
 declare var console;
 
-attribute("index", {  verbs: ["get", "post"], message:"awesome"  });
+attribute("index", {  verbs: ["get", "post"] });
 
 export function index (context) { 
     
@@ -19,7 +19,7 @@ export function index (context) {
     context.response.end();
 }
 
-attribute("about", { verbs: ["get", "post"], roles: ["administrators"] });
+attribute("about", { verbs: ["get", "post", "adas"], roles: ["administrators"] });
 
 export function about (context)  {
     
