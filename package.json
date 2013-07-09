@@ -16,7 +16,7 @@
     "url": "https://github.com/sinclairzx81/appex"
   },
   "keywords": [
-    "typescript", "web app", "compiler"
+    "typescript", "web api", "reflection", "compiler"
   ],
   "author": "sinclair",
   "licenses": [ {
