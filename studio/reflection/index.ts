@@ -1,24 +1,30 @@
-﻿export module appex.reflection {
+﻿/// <reference path="../references.ts" />
 
-    declare var require;
+import fs = require('fs')
 
-    declare var console;
-
-    declare var JSON;
+export module studio.reflection {
 
     export function index(context) {
         
-        context.response.writeFile('text/html', './appex/reflection/index.html');
+        var stream = fs.createReadStream('./studio/reflection/index.html')
+
+        context.response.writeHead(200, {'content-type' : 'text/html'});
+
+        stream.pipe(context.response);
     }
 
     export function script(context) {
         
-        context.response.writeFile('text/javascript', './appex/reflection/script.js');
+        var stream = fs.createReadStream('./studio/reflection/script.js')
+
+        context.response.writeHead(200, {'content-type' : 'text/javascript'});
+
+        stream.pipe(context.response);
     }
 
     export function data (context, request:any, callback:(response:any)=>void) { 
 
-        callback(context.reflection);
+        callback(context.module.reflection);
     }
 
     export function wildcard (context, path) {

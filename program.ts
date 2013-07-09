@@ -1,8 +1,8 @@
-﻿///// <reference path="lib.d.ts" />
-///// <reference path="node.d.ts" />
-///// <reference path="appex/index.ts" />
+﻿/// <reference path="studio/references.ts" />
 
-//import http = require('http');
+/// <reference path="studio/index.ts" />
+
+import http = require('http');
 
 export function index (context) { 
 	
@@ -22,10 +22,6 @@ export function about (context)  {
     context.response.end();
 }
 
-export function method(context, request, callback:(response)=>void)  {
-    
-    callback('asd')
-}
 
 export function wildcard(context, path) {
 
@@ -36,21 +32,3 @@ export function wildcard(context, path) {
     context.response.end();
     
 }
-
-declare var console;
-declare var JSON;
-
-export module test {
-
-    export function wildcard(context, a, b) {
-        
-        console.log(context)
-
-        context.response.writeHead(404, {'content-type' : 'text/plain'});
-	
-        context.response.write(context.module.javascript);
-	
-        context.response.end();        
-    }
-}
-
