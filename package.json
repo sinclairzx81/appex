@@ -1,6 +1,6 @@
 {
   "name": "appex",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "nodejs web api with typescript",
   "main": "index.js",
   "directories": {
