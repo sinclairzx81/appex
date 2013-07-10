@@ -10,7 +10,7 @@ attribute("index", {  verbs: ["get", "post"] });
 
 export function index (context) { 
     
-    console.log(context.attribute)
+    console.log(context.module);
 
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
@@ -19,8 +19,6 @@ export function index (context) {
     context.response.end();
 }
 
-//attribute("about", { verbs: ["get", "post"], roles: ["administrators"] });
-
 export function about (context)  {
     
     context.response.writeHead(200, {'content-type' : 'text/plain'});
@@ -28,6 +26,13 @@ export function about (context)  {
     context.response.write('about');
 	
     context.response.end();
+}
+
+attribute("data", { verbs: [ "post"], roles: ["administrators"] });
+
+export function data (context, request:any, callback:(response:any)=>void) { 
+
+    callback(context.module.reflection);
 }
 
 attribute("wildcard", { verbs: ["get", "post"], roles: ["administrators"] });
@@ -40,7 +45,6 @@ export function wildcard(context, path) {
 	
     context.response.end();   
 }
-
 
 attribute("admin", {  verbs: ["get"]  } );
 

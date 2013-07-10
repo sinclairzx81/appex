@@ -17,6 +17,7 @@ app.listen(3000);
 // program.ts
 //----------------------------------------------
 
+
 export function index(context) {
 
 	context.response.write('hello world!!');
@@ -43,6 +44,7 @@ reflection / type and interface meta data derived from the languages type system
 * [creating services with typescript](#creating_services)
 	* [context](#context)
 	* [signatures](#signatures)
+	* [attributes](#attributes)
 	* [http handlers](#http_handlers)
 	* [json handlers](#json_handlers)
 	* [index handlers](#index_handlers)
@@ -156,7 +158,9 @@ export function method(context) {
 
 	// context.response   - the http response object.
 
-	// context.module     - meta information about the appex module.
+	// context.attribute  - appex attribute.
+
+	// context.module     - appex module meta data and reflection.
 
 	// context.routes     - appex routing tables.
 
@@ -165,6 +169,107 @@ export function method(context) {
 	// context.???        - user defined [options](#options)
 }
 ```
+
+<a name="attributes" />
+### attributes
+
+appex supports optional declarative attributes on routes defined with appex functions. The concept is analogous to .net 
+attributes where users can define behavioral characteristics on types. However appex restricts this usage
+to exported functions only.
+
+out of the box, appex can enforce HTTP VERB routing rules with attributes.
+
+```javascript
+
+attribute("contact", {  verbs: ["get"]  } );
+
+export function contact(context) {
+
+	// handler will only be invoke on HTTP GET requests
+}
+
+attribute("submit", {  verbs: ["post"]  } );
+
+export function submit(context) {
+
+	handler will only be invoke on HTTP POST requests
+}
+
+```
+
+In addition, users can define their own verbs for more complex behaviour, such as roles.
+
+```javascript
+
+// example assumes a 'user' as has been applied to the context.
+
+function authorize(context) : boolean {
+
+	return context.user.isInRole(context.attribute.roles);
+}
+
+export module admin {
+	
+	attribute("admin.index", {  verbs: ["get"], roles : ['administrators']  } );
+
+	export function index (context) {
+		
+		if(authorize(context))
+
+			// handle request
+		}
+		else 
+		{
+			// access denied
+		}
+	}
+	
+	export module users {
+		
+		attribute("admin.users.delete", {  verbs: ["post"], roles : ['administrators'] } );
+		
+		export function delete(context) {
+		
+			if(authorize(context))
+			{
+				// handle request
+			}
+			else 
+			{
+				// access denied
+			}
+		}	
+	}
+}
+
+```
+
+attributes can also be looked up with attribute().
+
+```javascript
+
+export function index(context) {
+    
+	var info = attribute('other');
+	
+	context.response.write( JSON.stringify(info, null, 4) );
+	
+	context.response.end();	
+}
+
+attribute("other", {  verbs: ["get"], message:'hello' } );
+export function other(context) {
+    
+	context.response.write(context.attribute.message);
+	
+	context.response.end();
+}
+```
+
+
+
+
+
 <a name="signatures" />
 ### signatures
 
