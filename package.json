@@ -6,7 +6,7 @@
   "directories": {
      
   },
-  "dependencies": {"typescript.api": "0.5.2"},
+  "dependencies": {"typescript.api": "0.5.3"},
   "devDependencies": {},
   "scripts": {
     
