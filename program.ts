@@ -1,36 +1,47 @@
-﻿/// <reference path="studio/references.ts" />
-/// <reference path="studio/index.ts" />
+﻿///// <reference path="studio/references.ts" />
+///// <reference path="studio/index.ts" />
 
-attribute("index", {data:10});
-export function index (context) { 
+//import http = require("http");
 
-    console.log(context.attribute)
+declare var console;
 
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-    context.response.write('home');
-	
-    context.response.end();
-}
+export module blog {
 
-export module app {
+    export function wildcard(context, year:number, month:number, day?:number) {
 
-    export function wildcard (context, a, b) {
+        console.log('year : ' + year);
 
+        console.log('month : ' + month);
+
+        console.log('day : ' + day);
+        
         context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-        context.response.write(a + ' - ' + b);
+        context.response.write('m wild');
 	
         context.response.end();
-    }    
+
+    }
 }
 
+//attribute("index", {data:10});
+//export function index (context) { 
 
-export function wildcard (context, path) {
+//    console.log(context.attribute)
+
+//    context.response.writeHead(200, {'content-type' : 'text/plain'});
+	
+//    context.response.write('home');
+	
+//    context.response.end();
+//}
+
+
+export function wildcard (context, a) {
 
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write(path + ' not found');
+    context.response.write('not found');
 	
     context.response.end();
 }

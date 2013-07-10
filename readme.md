@@ -338,14 +338,16 @@ export module blogs {
 <a name="wildcard_handlers" />
 ### wildcard handlers
 
-appex wildcard handlers allow for wildcard routing at a given module scope. In addition, wildcard handlers
-support 'typed' url argument mapping, as denoted by the parameter annotation.
+appex wildcard handlers allow for wildcard routing at a given module scope. Wildcard handlers
+support 'typed' url argument mapping, as denoted by the arguments annotation.
+
+In addition, wildcard handlers also support optional arguments. As specific with TypeScript's ? syntax.
 
 appex wildcard handlers require the following signature:
 
 * name        - 'wildcard'
 * argument[0] - context
-* argument[n] - arguments to be mapped from the url
+* argument[n] - 1 or more arguments to be mapped from the url
 * returns     - void (optional)
 
 ```javascript
@@ -353,10 +355,12 @@ declare var console;
 
 export module blogs {
 	
-	// url : http://[host]:[port]/blogs/2013/1/11  - matched
-	// url : http://[host]:[port]/blogs/2013/01/11 - matched
-	// url : http://[host]:[port]/blogs/fluff/01/11  - not matched
-    export function wildcard(context, year:number, month:number, day:number) {
+	// url : http://[host]:[port]/blogs/2013/1/11   - matched
+	// url : http://[host]:[port]/blogs/2013/01/11  - matched
+	// url : http://[host]:[port]/blogs/2013/01/3rd - not matched - (see number annotation)
+	// url : http://[host]:[port]/blogs/2013/01     - matched     - (see ? annotation)
+	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
+    export function wildcard(context, year:number, month:number, day?:number) {
 		
 		console.log(year); 
 
@@ -370,8 +374,8 @@ export module blogs {
     }
 }
 ```
-note: appex only supports type any (or none), string and number annotations. specifying any other type result 
-in this wildcard not being routed.
+note: appex supports boolean, number, string and any annotations on wildcard arguments. if no annotation
+is specified, appex interprets the argument as a string. the type 'any' is also interpreted as string.
 
 note: wildcard functions should be declared last in any module scope. this ensures other routes
 will be matched first.
@@ -414,6 +418,7 @@ export function public_function   (context) {
 	// private_module.private_method(); // bad
 
 	context.response.write('testing');
+
 	context.response.end();
 }
 ```
@@ -426,24 +431,24 @@ appex creates routes based on module scope and function name. consider the follo
 ```javascript
 
 // url: http://[host]:[port]/
-export function index   (context:any) { }
+export function index   (context:any) { /* handle route */ }
 
 // url: http://[host]:[port]/about
-export function about   (context:any) { }
+export function about   (context:any) { /* handle route */ }
 
 // url: http://[host]:[port]/contact
-export function contact (context:any) { }
+export function contact (context:any) { /* handle route */ }
 
 export module services.customers {
 	
 	// url: http://[host]:[port]/services/customers/insert
-	export function insert(context:any) : void { }
+	export function insert(context:any) : void { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/update
-	export function update(context:any) : void { }
+	export function update(context:any) : void { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/delete
-	export function delete(context:any) : void { }
+	export function delete(context:any) : void { /* handle route */ }
 }
 ```
 
@@ -455,15 +460,21 @@ Use wildcard functions to catch unhandled routes.
 ```javascript
 // http:[host]:[port]/
 export function index   (context) { 
+
 	context.response.writeHead(404, {'content-type' : 'text/plain'});
+
 	context.response.write('home page');
+
 	context.response.end();
 }
 
 // http:[host]:[port]/(.*)
 export function wildcard(context, path) {
+
 	context.response.writeHead(404, {'content-type' : 'text/plain'});
+
 	context.response.write(path + ' page not found');
+	
 	context.response.end();
 }
 ```
