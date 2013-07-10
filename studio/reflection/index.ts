@@ -1,11 +1,7 @@
 ﻿/// <reference path="../references.ts" />
 
-import fs = require('fs')
+var fs = require("fs");
 
-declare var attribute;
-declare var console;
-
-attribute('studio.reflection', { verbs: ['get'] } );
 export module studio.reflection {
 
     export function index(context) {
@@ -43,7 +39,7 @@ export module studio.reflection {
 
         if(path) {
             
-            require('fs').readFile(path, 'utf8', (error, content) => {
+            fs.readFile(path, 'utf8', (error, content) => {
                 
                 if(error) {
                     
