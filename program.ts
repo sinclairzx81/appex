@@ -7,10 +7,10 @@ declare var attribute;
 declare var console;
 
 
-attribute('application', { message:'hello' })
+attribute('application', { verbs: ['post'], message:'hel123lo' })
 export module application {
 
-    attribute('application.index', { verbs: ["post"], message:'hello' })
+    attribute('application.index',  {  verbs: ['get'], message3:'hello' })
     export function index(context) {
 
         context.response.writeHead(200, {'content-type' : 'text/plain'});
@@ -20,7 +20,6 @@ export module application {
         context.response.end();
     }
 }
-
 
 export function index (context) { 
 
