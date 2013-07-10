@@ -181,6 +181,8 @@ out of the box, appex can enforce HTTP VERB routing rules with attributes.
 
 ```javascript
 
+declare var attribute;
+
 attribute("contact", {  verbs: ["get"]  } );
 
 export function contact(context) {
@@ -202,6 +204,8 @@ In addition, users can define their own verbs for more complex behaviour, such a
 ```javascript
 
 // example assumes a 'user' as has been applied to the context.
+
+declare var attribute;
 
 function authorize(context) : boolean {
 
@@ -247,6 +251,8 @@ export module admin {
 attributes can also be looked up with attribute().
 
 ```javascript
+
+declare var attribute;
 
 export function index(context) {
     

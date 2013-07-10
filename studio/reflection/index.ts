@@ -2,6 +2,10 @@
 
 import fs = require('fs')
 
+declare var attribute;
+declare var console;
+
+attribute('studio.reflection', { verbs: ['get'] } );
 export module studio.reflection {
 
     export function index(context) {
@@ -22,7 +26,7 @@ export module studio.reflection {
     }
 
     export function wildcard (context, path) {
-        
+
         if(path) {
             
             require('fs').readFile(path, 'utf8', (error, content) => {

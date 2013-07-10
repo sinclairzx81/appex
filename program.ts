@@ -1,16 +1,28 @@
 ﻿/// <reference path="studio/references.ts" />
 
-/// <reference path="studio/index.ts" />
+// <reference path="studio/index.ts" />
 
 declare var attribute;
 
 declare var console;
 
-attribute("index", {  verbs: ["get", "post"] });
+
+attribute('application', { message:'hello' })
+export module application {
+
+    attribute('application.index', { verbs: ["post"], message:'hello' })
+    export function index(context) {
+
+        context.response.writeHead(200, {'content-type' : 'text/plain'});
+	
+        context.response.write(JSON.stringify(context.attribute, null, 4));
+	
+        context.response.end();
+    }
+}
+
 
 export function index (context) { 
-    
-    console.log(context.module);
 
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
@@ -19,45 +31,22 @@ export function index (context) {
     context.response.end();
 }
 
-export function about (context)  {
+export function data (context) { 
     
+    console.log(context.module);
+
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write('about');
+    context.response.write('data');
 	
     context.response.end();
 }
 
-attribute("data", { verbs: [ "post"], roles: ["administrators"] });
-
-export function data (context, request:any, callback:(response:any)=>void) { 
-
-    callback(context.module.reflection);
-}
-
-attribute("wildcard", { verbs: ["get", "post"], roles: ["administrators"] });
-
-export function wildcard(context, path) {
+export function wildcard (context, path) {
 
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
     context.response.write('not found');
 	
-    context.response.end();   
-}
-
-attribute("admin", {  verbs: ["get"]  } );
-
-export module admin {
-
-    attribute("admin.index", {  verbs: ["get"]  });
-
-    export function index (context) { 
-    
-        context.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-        context.response.write('home');
-	
-        context.response.end();
-    }
+    context.response.end();
 }
