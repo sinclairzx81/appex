@@ -173,11 +173,12 @@ export function method(context) {
 <a name="attributes" />
 ### attributes
 
-appex supports optional declarative attributes on routes defined with appex functions. The concept is analogous to .net 
-attributes where users can define behavioral characteristics on types. However appex restricts this usage
-to exported functions only.
+appex supports optional declarative attributes on 'exported' modules and functions. Attributes are declaritive meta data
+you can associate with appex handlers to describe characteristics on given routes. Attributes are analogous to .net attributes,
+however, they also have a cascading behaviour that can be used to apply metadata for an entire scope. A concept similar to 
+cascading stylesheets rules.
 
-out of the box, appex can enforce HTTP VERB routing rules with attributes.
+By default, appex uses attributes for HTTP VERB matching:
 
 ```javascript
 
@@ -194,61 +195,66 @@ attribute("submit", {  verbs: ["post"]  } );
 
 export function submit(context) {
 
-	handler will only be invoke on HTTP POST requests
+	// handler will only be invoke on HTTP POST requests
 }
 
 ```
 
-In addition, users can define their own verbs for more complex behaviour, such as roles.
+the following demonstrates attribute cascading:
 
 ```javascript
-
-// example assumes a 'user' as has been applied to the context.
-
 declare var attribute;
 
-function authorize(context) : boolean {
+attribute('foo', {a : 10})
+export module foo {
 
-	return context.user.isInRole(context.attribute.roles);
+    attribute('foo.bar', {b : 20})
+    export module bar {
+            
+        attribute('foo.bar.index', {c : 30})
+        export function index(context) {
+        
+            //context.attribute
+            //{
+            //    "a": 10,
+            //    "b": 20,
+            //    "c": 30
+            //}            
+
+            context.response.writeHead(200, {'content-type' : 'text/plain'});
+	
+            context.response.write( JSON.stringify(context.attribute, null, 4) );
+	
+            context.response.end();       
+        }
+    }
 }
 
+```
+
+and for something more practical..
+
+```javascript
+declare var attribute;
+
+attribute('admin', { roles : ['administrators'] )
 export module admin {
 	
-	attribute("admin.index", {  verbs: ["get"], roles : ['administrators']  } );
+	export function index(context) {
+		
+		var user = context.user;
 
-	export function index (context) {
-		
-		if(authorize(context))
+		if(!user.isInRole( context.attribute.roles ) ) {
 
-			// handle request
+			// access denied!
+
 		}
-		else 
-		{
-			// access denied
-		}
-	}
-	
-	export module users {
-		
-		attribute("admin.users.delete", {  verbs: ["post"], roles : ['administrators'] } );
-		
-		export function delete(context) {
-		
-			if(authorize(context))
-			{
-				// handle request
-			}
-			else 
-			{
-				// access denied
-			}
-		}	
 	}
 }
 
 ```
 
-attributes can also be looked up with attribute().
+attributes can also be looked up by calling attribute( qualifier ).
 
 ```javascript
 
@@ -271,10 +277,6 @@ export function other(context) {
 	context.response.end();
 }
 ```
-
-
-
-
 
 <a name="signatures" />
 ### signatures

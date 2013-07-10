@@ -4,22 +4,35 @@
 
 declare var attribute;
 
-declare var console;
+attribute('foo', {a : 10})
+export module foo {
 
+    attribute('foo.bar', {b : 20})
+    export module bar {
+            
+        attribute('foo.bar.index', {c : 30})
+        export function index(context) {
+        
+            // context.attribute
+            //{
+            //    "a": 10,
+            //    "b": 20,
+            //    "c": 30
+            //}            
 
-attribute('application', { verbs: ['post'], message:'hel123lo' })
-export module application {
-
-    attribute('application.index',  {  verbs: ['get'], message3:'hello' })
-    export function index(context) {
-
-        context.response.writeHead(200, {'content-type' : 'text/plain'});
+            context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-        context.response.write(JSON.stringify(context.attribute, null, 4));
+            context.response.write(JSON.stringify(context.attribute, null, 4));
 	
-        context.response.end();
+            context.response.end();
+                
+        }
+
     }
 }
+
+
+
 
 export function index (context) { 
 
@@ -32,8 +45,6 @@ export function index (context) {
 
 export function data (context) { 
     
-    console.log(context.module);
-
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
     context.response.write('data');
