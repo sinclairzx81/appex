@@ -1,41 +1,17 @@
-﻿///// <reference path="studio/references.ts" />
-///// <reference path="studio/index.ts" />
+﻿/// <reference path="studio/references.ts" />
+/// <reference path="studio/index.ts" />
 
-//import http = require("http");
+attribute("index", {data:10});
+export function index (context) { 
 
-declare var console;
+    console.log(context.attribute)
 
-export module blog {
-
-    export function wildcard(context, year:number, month:number, day?:number) {
-
-        console.log('year : ' + year);
-
-        console.log('month : ' + month);
-
-        console.log('day : ' + day);
-        
-        context.response.writeHead(200, {'content-type' : 'text/plain'});
+    context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-        context.response.write('m wild');
+    context.response.write('home');
 	
-        context.response.end();
-
-    }
+    context.response.end();
 }
-
-//attribute("index", {data:10});
-//export function index (context) { 
-
-//    console.log(context.attribute)
-
-//    context.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-//    context.response.write('home');
-	
-//    context.response.end();
-//}
-
 
 export function wildcard (context, a) {
 
