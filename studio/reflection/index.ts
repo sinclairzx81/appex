@@ -20,12 +20,26 @@ export module studio.reflection {
         });
     }
 
-    export function data (context, request:any, callback:(response:any)=>void) { 
+    export function data (context) { 
 
-        callback(context.module.reflection);
+        context.response.writeHead(200, {'content-type' : 'application/json'});
+
+        context.response.write(JSON.stringify(context.module.reflection, null, 4));
+
+        context.response.end();
     }
 
     export function wildcard (context, path) {
+
+        var not_found = () => {
+        
+            context.response.writeHead(404, {'content-type' : 'text/plain'});
+
+            context.response.write('studio reflection asset not found');
+
+            context.response.end();         
+        
+        };
 
         if(path) {
             
@@ -33,7 +47,7 @@ export module studio.reflection {
                 
                 if(error) {
                     
-                    context.response.end(); 
+                    not_found();
 
                     return;      
                 }
@@ -47,8 +61,9 @@ export module studio.reflection {
             });
 
             return;
-        }
+        } else {
 
-        context.response.end(); 
+            not_found();
+        }
     }
 }

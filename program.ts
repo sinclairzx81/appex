@@ -1,53 +1,24 @@
 ﻿/// <reference path="studio/references.ts" />
+/// <reference path="studio/index.ts" />
 
-// <reference path="studio/index.ts" />
 
-declare var attribute;
+export module app {
 
-attribute('foo', {a : 10})
-export module foo {
+    export function wildcard (context, a, b) {
 
-    attribute('foo.bar', {b : 20})
-    export module bar {
-            
-        attribute('foo.bar.index', {c : 30})
-        export function index(context) {
-        
-            // context.attribute
-            //{
-            //    "a": 10,
-            //    "b": 20,
-            //    "c": 30
-            //}            
-
-            context.response.writeHead(200, {'content-type' : 'text/plain'});
+        context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-            context.response.write(JSON.stringify(context.attribute, null, 4));
+        context.response.write(a + ' ' + b);
 	
-            context.response.end();
-                
-        }
-
-    }
+        context.response.end();
+    }    
 }
-
-
-
 
 export function index (context) { 
 
     context.response.writeHead(200, {'content-type' : 'text/plain'});
 	
     context.response.write('home');
-	
-    context.response.end();
-}
-
-export function data (context) { 
-    
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-    context.response.write('data');
 	
     context.response.end();
 }

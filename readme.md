@@ -46,7 +46,6 @@ reflection / type and interface meta data derived from the languages type system
 	* [signatures](#signatures)
 	* [attributes](#attributes)
 	* [http handlers](#http_handlers)
-	* [json handlers](#json_handlers)
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
 	* [exporting functions](#exporting_functions)
@@ -297,28 +296,6 @@ export function method(context) {
 	context.response.write('hello world');
 	
 	context.response.end();
-}
-```
-
-<a name="json_handlers" />
-### json handlers
-
-appex json handlers are geared towards handling json based http requests. appex json handlers
-are invoked via HTTP POST and expect JSON to be submitted with the request. POSTing null or invalid
-JSON results in the request argument being null.
-
-appex json handlers require the following signature:
-
-* argument[0] - the appex context
-* argument[1] - A optionally typed json request object. 
-* argument[2] - a optionally typed typescript callback with a single argument for the object response.
-* returns     - void (optional) 
-
-```javascript
-export function method(context, request, callback:(response) => void) : void {
-
-	callback(request); // echo
-
 }
 ```
 
