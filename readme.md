@@ -505,7 +505,7 @@ export module static {
 	// http:[host]:[port]/static/(.*)
 	export function wildcard(app, path) {
 
-		app.response.serve('./static/, path);
+		app.response.serve('./static/', path);
 	}
 }
 
