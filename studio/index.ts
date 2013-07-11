@@ -4,12 +4,12 @@
 
 export module studio {
 
-    export function index (context) { 
+    export function index (app) { 
 	    
-        context.response.writeHead(200, {'content-type' : 'text/plain'});
+        app.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-        context.response.write('appex-studio');
+        app.response.write('appex-studio');
 	
-        context.response.end();
+        app.response.end();
     }    
 }

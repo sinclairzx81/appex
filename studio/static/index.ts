@@ -6,15 +6,15 @@ export module studio.static {
 
     var static_dir = './studio/static/';
 
-    export function wildcard(context, path) {
+    export function wildcard(app, path) {
         
         var not_found = () => {
 
-            context.response.writeHead(404, {'content-type' : 'text/plain'});
+            app.response.writeHead(404, {'content-type' : 'text/plain'});
 
-            context.response.write(path + ' not found.');
+            app.response.write(path + ' not found.');
 
-            context.response.end();         
+            app.response.end();         
         };
 
         if(path.indexOf('..') !== -1) {
@@ -37,11 +37,11 @@ export module studio.static {
 
             fs.readFile(path, (err, data) => {
                 
-                context.response.writeHead(200, {'content-type' : context.mime.lookup(path) });
+                app.response.writeHead(200, {'content-type' : app.mime.lookup(path) });
 
-                context.response.write(data);
+                app.response.write(data);
 
-                context.response.end();
+                app.response.end();
             });
         }); 
     }

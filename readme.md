@@ -17,13 +17,22 @@ app.listen(3000);
 // program.ts
 //----------------------------------------------
 
-
+// http://localhost:3000/
 export function index(app) {
 
-	app.response.write('hello world!!');
+	app.response.write('home');
 
 	app.response.end();
 }
+
+// http://localhost:3000/about
+export function about(app) {
+
+	app.response.write('about');
+
+	app.response.end();
+}
+
 ```
 ### install
 
@@ -43,13 +52,13 @@ reflection / type and interface meta data derived from the languages type system
 	* [express middleware](#express_middleware)
 * [creating services with typescript](#creating_services)
 	* [app context](#app_context)
-	* [signatures](#signatures)
-	* [attributes](#attributes)
-	* [http handlers](#http_handlers)
+	* [routing handlers](#routing_handlers)
+	* [handler signatures](#handler_signatures)
+	* [named handlers](#named_handlers)
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
+	* [attributes](#attributes)
 	* [exporting functions](#exporting_functions)
-	* [routing functions](#routing_functions)
 	* [handling 404](#handling_404)
 * [developing with appex](#developing_with_appex)
 	* [structuring projects](#structuring_projects)
@@ -169,10 +178,185 @@ export function method(app) {
 }
 ```
 
+<a name="routing_handlers" />
+### routing handlers
+
+appex creates routes based on module scope and function name. consider the following:
+
+```javascript
+export module services.customers {
+	
+	// url: http://[host]:[port]/services/customers/insert
+	export function insert(app) { /* handle route */ }
+	
+	// url: http://[host]:[port]/services/customers/update
+	export function update(app) { /* handle route */ }
+	
+	// url: http://[host]:[port]/services/customers/delete
+	export function delete(app) { /* handle route */ }
+}
+
+// url: http://[host]:[port]/
+export function index   (app) { /* handle route */ }
+
+// url: http://[host]:[port]/about
+export function about   (app) { /* handle route */ }
+
+// url: http://[host]:[port]/contact
+export function contact (app) { /* handle route */ }
+
+// url: http://[host]:[port]/(.*)
+export function wildcard (app, path) { /* handle route */ }
+
+```
+
+<a name="handler_signatures" />
+### handler signatures
+
+appex supports three function signatures for http routing (named, index and wildcard). Functions that
+do not apply these signatures will not be routed.
+
+<a name="http_handlers" />
+### named handlers
+
+Named handlers resolve urls to their current module scope + the name of the function.
+
+Named handlers require the following signature:
+
+* name        - 'anything'
+* argument[0] - app context
+* returns     - void (optional)
+
+```javascript
+
+// http://[host]:[port]/about
+export function about(app) {
+
+	app.response.write('about page');
+	
+	app.response.end();
+}
+
+// http://[host]:[port]/users/login
+export module users {
+
+	export function login(app) {
+		
+		app.response.write('handle login');
+	
+		app.response.end();		
+	}
+}
+
+```
+
+<a name="index_handlers" />
+### index handlers
+
+Index handlers resolve urls to their current module scope.
+
+Index handlers require the following signature:
+
+* name        - 'index'
+* argument[0] - app context
+* returns     - void (optional)
+
+```javascript
+// url: http://[host]:[port]/
+export function index(app) { 
+
+	app.response.write('home page');
+	
+	app.response.end();
+}
+
+export module blogs {
+	
+	// url: http://[host]:[port]/blogs
+	export function index  (app) 
+	{	
+		app.response.write('blog index');
+	
+		app.response.end();
+	}
+}
+```
+
+<a name="wildcard_handlers" />
+### wildcard handlers
+
+Wildcard handlers resolve their urls to their current module scope + url.
+
+appex wildcard handlers allow for wildcard routing at a given module scope. Wildcard handlers
+support 'typed' url argument mapping, as denoted by the arguments annotation.
+
+In addition, wildcard handlers also support optional arguments. As specific with TypeScript's '?' on argument names.
+
+appex wildcard handlers require the following signature:
+
+* name        - 'wildcard'
+* argument[0] - app context
+* argument[n] - 1 or more arguments to be mapped from the url
+* returns     - void (optional)
+
+```javascript
+declare var console;
+
+export module blogs {
+	
+	// url : http://[host]:[port]/blogs/2013/1/11   - matched
+
+	// url : http://[host]:[port]/blogs/2013/01/11  - matched
+
+	// url : http://[host]:[port]/blogs/2013/01/3rd - not matched - (see number annotation)
+
+	// url : http://[host]:[port]/blogs/2013/01     - matched     - (see ? annotation)
+
+	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
+	
+    export function wildcard(app, year:number, month:number, day?:number) {
+		
+		console.log(year); 
+
+		console.log(month);
+
+		console.log(day);
+
+        app.response.write('my blog')
+
+        app.response.end(); 
+    }
+}
+
+// url : http://[host]:[port]/
+export function index(app) {
+
+	app.response.write('home page');
+	
+	app.response.end();
+}
+
+// url : http://[host]:[port]/(.*) 
+export function wildcard(app, path) {
+
+	app.response.writeHead(404, {'content-type' : 'text/plain'});
+	
+	app.response.write(path + ' not found');
+	
+	app.response.end();
+}
+
+```
+note: appex supports boolean, number, string and any annotations on wildcard arguments. if no annotation
+is specified, appex interprets the argument as a string. the type 'any' is also interpreted as string.
+
+note: wildcard functions should be declared last in any module scope. this ensures other routes
+will be matched first.
+
 <a name="attributes" />
 ### attributes
 
-appex supports optional declarative attributes on 'exported' modules and functions. Attributes are declaritive meta data
+appex supports a cascading attributute scheme on modules and functions. Attributes are declaritive meta data
 you can associate with appex handlers to describe characteristics on given routes. Attributes are analogous to .net attributes,
 however, they also have a cascading behaviour that can be used to apply metadata for an entire scope. A concept similar to 
 cascading stylesheets rules.
@@ -199,7 +383,7 @@ export function submit(app) {
 
 ```
 
-the following demonstrates attribute cascading:
+the following demonstrates attribute cascading behavior.
 
 ```javascript
 declare var attribute;
@@ -259,15 +443,6 @@ attributes can also be looked up by calling attribute( qualifier ).
 
 declare var attribute;
 
-export function index(app) {
-    
-	var info = attribute('other');
-	
-	app.response.write( JSON.stringify(info, null, 4) );
-	
-	app.response.end();	
-}
-
 attribute("other", {  verbs: ["get"], message:'hello' } );
 export function other(app) {
     
@@ -275,117 +450,24 @@ export function other(app) {
 	
 	app.response.end();
 }
+
+export function index(app) {
+    
+	var info = attribute('other'); // look up.
+	
+	app.response.write( JSON.stringify(info, null, 4) );
+	
+	app.response.end();	
+}
+
 ```
-
-<a name="signatures" />
-### signatures
-
-appex will only setup http routes to functions which conform to the following function signatures. 
-
-<a name="http_handlers" />
-### http handlers
-
-appex http handlers require the following signature:
-
-* argument[0] - app context
-* returns     - void (optional)
-
-```javascript
-export function method(app) {
-
-	app.response.write('hello world');
-	
-	app.response.end();
-}
-```
-
-<a name="index_handlers" />
-### index handlers
-
-appex index handlers resolve urls to their current module scope. As demonstrated below: 
-
-appex index handlers require the following signature:
-
-* name        - 'index'
-* argument[0] - app context
-* returns     - void (optional)
-
-```javascript
-// url: http://[host]:[port]/
-export function index(app) { 
-
-	app.response.write('home page');
-	
-	app.response.end();
-}
-
-// url: http://[host]:[port]/home
-export function home(app) {
-
-	index(app)
-}
-
-export module blogs {
-	
-	// url: http://[host]:[port]/blogs
-	export function index  (app) { /* handle request */ }
-	
-	// url: http://[host]:[port]/blogs/submit
-	export function submit (app) { /* handle request */ }
-}
-```
-
-<a name="wildcard_handlers" />
-### wildcard handlers
-
-appex wildcard handlers allow for wildcard routing at a given module scope. Wildcard handlers
-support 'typed' url argument mapping, as denoted by the arguments annotation.
-
-In addition, wildcard handlers also support optional arguments. As specific with TypeScript's ? syntax.
-
-appex wildcard handlers require the following signature:
-
-* name        - 'wildcard'
-* argument[0] - app context
-* argument[n] - 1 or more arguments to be mapped from the url
-* returns     - void (optional)
-
-```javascript
-declare var console;
-
-export module blogs {
-	
-	// url : http://[host]:[port]/blogs/2013/1/11   - matched
-	// url : http://[host]:[port]/blogs/2013/01/11  - matched
-	// url : http://[host]:[port]/blogs/2013/01/3rd - not matched - (see number annotation)
-	// url : http://[host]:[port]/blogs/2013/01     - matched     - (see ? annotation)
-	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
-    export function wildcard(app, year:number, month:number, day?:number) {
-		
-		console.log(year); 
-
-		console.log(month);
-
-		console.log(day);
-
-        app.response.write('my blog')
-
-        app.response.end(); 
-    }
-}
-```
-note: appex supports boolean, number, string and any annotations on wildcard arguments. if no annotation
-is specified, appex interprets the argument as a string. the type 'any' is also interpreted as string.
-
-note: wildcard functions should be declared last in any module scope. this ensures other routes
-will be matched first.
 
 <a name="exporting_functions" />
 ### exporting functions
 
-appex will only export functions prefix with the TypeScript 'export' declaration. Also, exported 
-functions that reside in non exported modules will not be routed. Developers can use this to infer
-notions of public and private at the http level.
+appex will only route functions prefix with the TypeScript 'export' declarer. This rule
+also applied to modules. Developers can use this to infer notions of public and private 
+at the http level.
 
 consider the following example:
 
@@ -420,35 +502,6 @@ export function public_function   (app) {
 	app.response.write('testing');
 
 	app.response.end();
-}
-```
-
-<a name="routing_functions" />
-### routing functions
-
-appex creates routes based on module scope and function name. consider the following:
-
-```javascript
-
-// url: http://[host]:[port]/
-export function index   (app) { /* handle route */ }
-
-// url: http://[host]:[port]/about
-export function about   (app) { /* handle route */ }
-
-// url: http://[host]:[port]/contact
-export function contact (app) { /* handle route */ }
-
-export module services.customers {
-	
-	// url: http://[host]:[port]/services/customers/insert
-	export function insert(app) { /* handle route */ }
-	
-	// url: http://[host]:[port]/services/customers/update
-	export function update(app) { /* handle route */ }
-	
-	// url: http://[host]:[port]/services/customers/delete
-	export function delete(app) { /* handle route */ }
 }
 ```
 

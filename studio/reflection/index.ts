@@ -4,36 +4,36 @@ var fs = require("fs");
 
 export module studio.reflection {
 
-    export function index(context) {
+    export function index(app) {
         
         fs.readFile('./studio/reflection/index.html', (err, data) => {
         
-            context.response.writeHead(200, {'content-type' : 'text/html'});
+            app.response.writeHead(200, {'content-type' : 'text/html'});
 
-            context.response.write(data);
+            app.response.write(data);
 
-            context.response.end();
+            app.response.end();
         });
     }
 
-    export function data (context) { 
+    export function data (app) { 
 
-        context.response.writeHead(200, {'content-type' : 'application/json'});
+        app.response.writeHead(200, {'content-type' : 'application/json'});
 
-        context.response.write(JSON.stringify(context.module.reflection, null, 4));
+        app.response.write(JSON.stringify(app.module.reflection, null, 4));
 
-        context.response.end();
+        app.response.end();
     }
 
-    export function wildcard (context, path) {
+    export function wildcard (app, path) {
 
         var not_found = () => {
         
-            context.response.writeHead(404, {'content-type' : 'text/plain'});
+            app.response.writeHead(404, {'content-type' : 'text/plain'});
 
-            context.response.write('studio reflection asset not found');
+            app.response.write('studio reflection asset not found');
 
-            context.response.end();         
+            app.response.end();         
         
         };
 
@@ -48,17 +48,18 @@ export module studio.reflection {
                     return;      
                 }
                 
-                context.response.writeHead(200, {'content-type' : 'application/json'});
+                app.response.writeHead(200, {'content-type' : 'application/json'});
 
-                context.response.write(JSON.stringify(content));
+                app.response.write(JSON.stringify(content));
 
-                context.response.end();   
+                app.response.end();   
                 
             });
 
             return;
-        } else {
-
+        } 
+        else 
+        {
             not_found();
         }
     }
