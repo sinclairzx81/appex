@@ -216,7 +216,7 @@ export function wildcard (app, path) { /* handle route */ }
 appex supports three function signatures for http routing (named, index and wildcard). Functions that
 do not apply these signatures will not be routed.
 
-<a name="http_handlers" />
+<a name="named_handlers" />
 ### named handlers
 
 Named handlers resolve urls to their current module scope + the name of the function.
