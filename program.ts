@@ -2,22 +2,36 @@
 /// <reference path="studio/index.ts" />
 
 attribute("index", {data:10});
-export function index (context) { 
+export function index (app) { 
 
-    console.log(context.attribute)
+    console.log(app.attribute)
 
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
+    app.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write('home');
+    app.response.write('home');
 	
-    context.response.end();
+    app.response.end();
 }
 
-export function wildcard (context, a) {
+attribute("about", {data:10});
+export function about(app) {
 
-    context.response.writeHead(200, {'content-type' : 'text/plain'});
+    app.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-    context.response.write('not found');
+    app.response.write('about');
 	
-    context.response.end();
+    app.response.end();
+    
+}
+
+attribute("Wildcard", {data:10});
+export function wildcard (app, a) {
+    
+    index(app);
+    
+    app.response.writeHead(200, {'content-type' : 'text/plain'});
+	
+    app.response.write('not found');
+	
+    app.response.end();
 }

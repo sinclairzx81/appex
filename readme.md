@@ -18,11 +18,11 @@ app.listen(3000);
 //----------------------------------------------
 
 
-export function index(context) {
+export function index(app) {
 
-	context.response.write('hello world!!');
+	app.response.write('hello world!!');
 
-	context.response.end();
+	app.response.end();
 }
 ```
 ### install
@@ -42,7 +42,7 @@ reflection / type and interface meta data derived from the languages type system
 	* [http server](#http_server)
 	* [express middleware](#express_middleware)
 * [creating services with typescript](#creating_services)
-	* [context](#context)
+	* [app context](#app_context)
 	* [signatures](#signatures)
 	* [attributes](#attributes)
 	* [http handlers](#http_handlers)
@@ -91,7 +91,7 @@ var options = {
 	// (optional) log to stdout. (default:false) 
 	logging    : true,
 
-	// (optional) additional objects added on the [context](#context)
+	// (optional) user defined objects added to the app context.
 	context    : {}
 };
 
@@ -142,30 +142,30 @@ app.listen(3000);
 
 The following section describes how to write http accessible functions with appex.
 
-<a name="context" />
-### context
+<a name="app_context" />
+### app context
 
-All appex functions are passed a context object as the first argument. The context object encapulates
-the http request and response objects issued by the underlying http server, as well as
+All appex functions are passed a application context object as their first argument. The app context object 
+encapulates the http request and response objects issued by the underlying http server, as well as
 additional objects specific to appex. These are listed below:
 
 ```javascript
-// the context object
-export function method(context) {
+// the app context
+export function method(app) {
 	
-	// context.request    - the http request object.
+	// app.request    - the http request object.
 
-	// context.response   - the http response object.
+	// app.response   - the http response object.
 
-	// context.attribute  - appex attribute.
+	// app.attribute  - appex attributes.
 
-	// context.module     - appex module meta data and reflection.
+	// app.module     - appex module reflection and meta data.
 
-	// context.routes     - appex routing tables.
+	// app.routes     - appex routing tables.
 
-	// context.mime       - appex mime utility.
+	// app.mime       - appex mime utility.
 
-	// context.???        - user defined [options](#options)
+	// app.[custom]   - user defined. (see options.context)
 }
 ```
 
@@ -185,14 +185,14 @@ declare var attribute;
 
 attribute("contact", {  verbs: ["get"]  } );
 
-export function contact(context) {
+export function contact(app) {
 
 	// handler will only be invoke on HTTP GET requests
 }
 
 attribute("submit", {  verbs: ["post"]  } );
 
-export function submit(context) {
+export function submit(app) {
 
 	// handler will only be invoke on HTTP POST requests
 }
@@ -211,20 +211,20 @@ export module foo {
     export module bar {
             
         attribute('foo.bar.index', {c : 30})
-        export function index(context) {
+        export function index(app) {
         
-            //context.attribute
+            //app.attribute
             //{
             //    "a": 10,
             //    "b": 20,
             //    "c": 30
             //}            
 
-            context.response.writeHead(200, {'content-type' : 'text/plain'});
+            app.response.writeHead(200, {'content-type' : 'text/plain'});
 	
-            context.response.write( JSON.stringify(context.attribute, null, 4) );
+            app.response.write( JSON.stringify(app.attribute, null, 4) );
 	
-            context.response.end();       
+            app.response.end();       
         }
     }
 }
@@ -239,11 +239,11 @@ declare var attribute;
 attribute('admin', { roles : ['administrators'] )
 export module admin {
 	
-	export function index(context) {
+	export function index(app) {
 		
-		var user = context.user;
+		var user = app.user;
 
-		if(!user.isInRole( context.attribute.roles ) ) {
+		if(!user.isInRole( app.attribute.roles ) ) {
 
 			// access denied!
 
@@ -259,21 +259,21 @@ attributes can also be looked up by calling attribute( qualifier ).
 
 declare var attribute;
 
-export function index(context) {
+export function index(app) {
     
 	var info = attribute('other');
 	
-	context.response.write( JSON.stringify(info, null, 4) );
+	app.response.write( JSON.stringify(info, null, 4) );
 	
-	context.response.end();	
+	app.response.end();	
 }
 
 attribute("other", {  verbs: ["get"], message:'hello' } );
-export function other(context) {
+export function other(app) {
     
-	context.response.write(context.attribute.message);
+	app.response.write(app.attribute.message);
 	
-	context.response.end();
+	app.response.end();
 }
 ```
 
@@ -287,15 +287,15 @@ appex will only setup http routes to functions which conform to the following fu
 
 appex http handlers require the following signature:
 
-* argument[0] - context
+* argument[0] - app context
 * returns     - void (optional)
 
 ```javascript
-export function method(context) {
+export function method(app) {
 
-	context.response.write('hello world');
+	app.response.write('hello world');
 	
-	context.response.end();
+	app.response.end();
 }
 ```
 
@@ -307,31 +307,31 @@ appex index handlers resolve urls to their current module scope. As demonstrated
 appex index handlers require the following signature:
 
 * name        - 'index'
-* argument[0] - context
+* argument[0] - app context
 * returns     - void (optional)
 
 ```javascript
 // url: http://[host]:[port]/
-export function index(context) { 
+export function index(app) { 
 
-	context.response.write('home page');
+	app.response.write('home page');
 	
-	context.response.end();
+	app.response.end();
 }
 
 // url: http://[host]:[port]/home
-export function home(context) {
+export function home(app) {
 
-	index(context)
+	index(app)
 }
 
 export module blogs {
 	
 	// url: http://[host]:[port]/blogs
-	export function index  (context) { /* handle request */ }
+	export function index  (app) { /* handle request */ }
 	
 	// url: http://[host]:[port]/blogs/submit
-	export function submit (context) { /* handle request */ }
+	export function submit (app) { /* handle request */ }
 }
 ```
 
@@ -346,7 +346,7 @@ In addition, wildcard handlers also support optional arguments. As specific with
 appex wildcard handlers require the following signature:
 
 * name        - 'wildcard'
-* argument[0] - context
+* argument[0] - app context
 * argument[n] - 1 or more arguments to be mapped from the url
 * returns     - void (optional)
 
@@ -360,7 +360,7 @@ export module blogs {
 	// url : http://[host]:[port]/blogs/2013/01/3rd - not matched - (see number annotation)
 	// url : http://[host]:[port]/blogs/2013/01     - matched     - (see ? annotation)
 	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
-    export function wildcard(context, year:number, month:number, day?:number) {
+    export function wildcard(app, year:number, month:number, day?:number) {
 		
 		console.log(year); 
 
@@ -368,9 +368,9 @@ export module blogs {
 
 		console.log(day);
 
-        context.response.write('my blog')
+        app.response.write('my blog')
 
-        context.response.end(); 
+        app.response.end(); 
     }
 }
 ```
@@ -406,7 +406,7 @@ module private_module {
 function private_function() { }
 
 // function is exported, and therefore publically accessible.
-export function public_function   (context) { 
+export function public_function   (app) { 
 	
 	// this function can invoke private functions.
 	private_function(); // ok
@@ -417,9 +417,9 @@ export function public_function   (context) {
 	// calling non exported method in private module
 	// private_module.private_method(); // bad
 
-	context.response.write('testing');
+	app.response.write('testing');
 
-	context.response.end();
+	app.response.end();
 }
 ```
 
@@ -431,24 +431,24 @@ appex creates routes based on module scope and function name. consider the follo
 ```javascript
 
 // url: http://[host]:[port]/
-export function index   (context:any) { /* handle route */ }
+export function index   (app) { /* handle route */ }
 
 // url: http://[host]:[port]/about
-export function about   (context:any) { /* handle route */ }
+export function about   (app) { /* handle route */ }
 
 // url: http://[host]:[port]/contact
-export function contact (context:any) { /* handle route */ }
+export function contact (app) { /* handle route */ }
 
 export module services.customers {
 	
 	// url: http://[host]:[port]/services/customers/insert
-	export function insert(context:any) : void { /* handle route */ }
+	export function insert(app) { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/update
-	export function update(context:any) : void { /* handle route */ }
+	export function update(app) { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/delete
-	export function delete(context:any) : void { /* handle route */ }
+	export function delete(app) { /* handle route */ }
 }
 ```
 
@@ -459,23 +459,23 @@ Use wildcard functions to catch unhandled routes.
 
 ```javascript
 // http:[host]:[port]/
-export function index   (context) { 
+export function index   (app) { 
 
-	context.response.writeHead(404, {'content-type' : 'text/plain'});
+	app.response.writeHead(404, {'content-type' : 'text/plain'});
 
-	context.response.write('home page');
+	app.response.write('home page');
 
-	context.response.end();
+	app.response.end();
 }
 
 // http:[host]:[port]/(.*)
-export function wildcard(context, path) {
+export function wildcard(app, path) {
 
-	context.response.writeHead(404, {'content-type' : 'text/plain'});
+	app.response.writeHead(404, {'content-type' : 'text/plain'});
 
-	context.response.write(path + ' page not found');
+	app.response.write(path + ' page not found');
 	
-	context.response.end();
+	app.response.end();
 }
 ```
 
@@ -514,13 +514,13 @@ app.listen(3000);
 //---------------------------------------------------
 
 // http://[host]:[port]/
-export function index   (context) { /* handle request */ }
+export function index   (app) { /* handle request */ }
 
 // http://[host]:[port]/about
-export function about   (context) { /* handle request */ }
+export function about   (app) { /* handle request */ }
 
 // http://[host]:[port]/contact
-export function contact (context) { /* handle request */ }
+export function contact (app) { /* handle request */ }
 
 //---------------------------------------------------	
 // file: users.ts
@@ -529,10 +529,10 @@ export function contact (context) { /* handle request */ }
 export module users {
 	
 	// http://[host]:[port]/users/login
-	export function login  (context) { /* handle request */ }
+	export function login  (app) { /* handle request */ }
 	
 	// http://[host]:[port]/users/logout
-	export function logout (context) { /* handle request */ }
+	export function logout (app) { /* handle request */ }
 }
 
 ```

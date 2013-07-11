@@ -4,6 +4,8 @@ var app = appex({ program : './program.ts', devmode : true, logging : true });
 
 app.listen(5000);
 
+console.log(appex);
+
 var units = ["studio\references.ts",
             "studio\references\lib.d.ts",
             "studio\references\node.d.ts",
