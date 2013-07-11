@@ -20,17 +20,19 @@ app.listen(3000);
 // http://localhost:3000/
 export function index(app) {
 
-	app.response.write('home');
-
-	app.response.end();
+	app.response.send('home');
 }
 
 // http://localhost:3000/about
 export function about(app) {
 
-	app.response.write('about');
+	app.response.send('about');
+}
 
-	app.response.end();
+// http://localhost:3000/(.*)
+export function wildcard (app, path) {
+    
+    app.response.send(404, path + "not found");
 }
 
 ```
@@ -60,6 +62,7 @@ reflection / type and interface meta data derived from the languages type system
 	* [attributes](#attributes)
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
+	* [serving static files](#serving_static_files)
 * [developing with appex](#developing_with_appex)
 	* [structuring projects](#structuring_projects)
 * [additional resources](#resources)
@@ -232,9 +235,7 @@ Named handlers require the following signature:
 // http://[host]:[port]/about
 export function about(app) {
 
-	app.response.write('about page');
-	
-	app.response.end();
+	app.response.send('about page');
 }
 
 // http://[host]:[port]/users/login
@@ -242,9 +243,7 @@ export module users {
 
 	export function login(app) {
 		
-		app.response.write('handle login');
-	
-		app.response.end();		
+		app.response.send('handle login');	
 	}
 }
 
@@ -265,9 +264,7 @@ Index handlers require the following signature:
 // url: http://[host]:[port]/
 export function index(app) { 
 
-	app.response.write('home page');
-	
-	app.response.end();
+	app.response.send('home page');
 }
 
 export module blogs {
@@ -275,9 +272,7 @@ export module blogs {
 	// url: http://[host]:[port]/blogs
 	export function index  (app) 
 	{	
-		app.response.write('blog index');
-	
-		app.response.end();
+		app.response.send('blog index');
 	}
 }
 ```
@@ -315,35 +310,21 @@ export module blogs {
 	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
 	
     export function wildcard(app, year:number, month:number, day?:number) {
-		
-		console.log(year); 
 
-		console.log(month);
-
-		console.log(day);
-
-        app.response.write('my blog')
-
-        app.response.end(); 
+        app.response.json({ year: year, month: month, day: day})
     }
 }
 
 // url : http://[host]:[port]/
 export function index(app) {
 
-	app.response.write('home page');
-	
-	app.response.end();
+	app.response.send('home');
 }
 
 // url : http://[host]:[port]/(.*) 
 export function wildcard(app, path) {
 
-	app.response.writeHead(404, {'content-type' : 'text/plain'});
-	
-	app.response.write(path + ' not found');
-	
-	app.response.end();
+	app.response.send(404, 'not found');
 }
 
 ```
@@ -371,14 +352,14 @@ attribute("contact", {  verbs: ["get"]  } );
 
 export function contact(app) {
 
-	// handler will only be invoke on HTTP GET requests
+	app.response.json(app.attribute);
 }
 
 attribute("submit", {  verbs: ["post"]  } );
 
 export function submit(app) {
 
-	// handler will only be invoke on HTTP POST requests
+	app.response.json(app.attribute);
 }
 
 ```
@@ -402,13 +383,9 @@ export module foo {
             //    "a": 10,
             //    "b": 20,
             //    "c": 30
-            //}            
+            //}
 
-            app.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-            app.response.write( JSON.stringify(app.attribute, null, 4) );
-	
-            app.response.end();       
+            app.response.json(app.attribute);       
         }
     }
 }
@@ -446,18 +423,14 @@ declare var attribute;
 attribute("other", {  verbs: ["get"], message:'hello' } );
 export function other(app) {
     
-	app.response.write(app.attribute.message);
-	
-	app.response.end();
+	app.response.send(app.attribute.message);
 }
 
 export function index(app) {
     
 	var info = attribute('other'); // look up.
 	
-	app.response.write( JSON.stringify(info, null, 4) );
-	
-	app.response.end();	
+	app.response.json(info);
 }
 
 ```
@@ -499,9 +472,7 @@ export function public_function   (app) {
 	// calling non exported method in private module
 	// private_module.private_method(); // bad
 
-	app.response.write('testing');
-
-	app.response.end();
+	app.response.send('public_function');
 }
 ```
 
@@ -512,23 +483,42 @@ Use wildcard functions to catch unhandled routes.
 
 ```javascript
 // http:[host]:[port]/
-export function index   (app) { 
+export function index (app) { 
 
-	app.response.writeHead(404, {'content-type' : 'text/plain'});
+	app.response.send('home page');
+}
 
-	app.response.write('home page');
+// http:[host]:[port]/(.*)
+export function wildcard (app, path) {
 
-	app.response.end();
+	app.response.send(404, path + ' not found');
+}
+```
+<a name="serving_static_files" />
+## serving static files
+
+Use wildcard functions with app.response.serve() to serve static content.
+
+```javascript
+export module static {
+	
+	// http:[host]:[port]/static/(.*)
+	export function wildcard(app, path) {
+
+		app.response.serve('./static/, path);
+	}
+}
+
+// http:[host]:[port]/
+export function index (app) {
+
+	app.response.send('home page');
 }
 
 // http:[host]:[port]/(.*)
 export function wildcard(app, path) {
 
-	app.response.writeHead(404, {'content-type' : 'text/plain'});
-
-	app.response.write(path + ' page not found');
-	
-	app.response.end();
+	app.response.send(404, path + ' not found');
 }
 ```
 
@@ -559,21 +549,8 @@ app.listen(3000);
 // file: index.ts
 //---------------------------------------------------
 
-/// <reference path="pages.ts" />
 /// <reference path="users.ts" />
-
-//---------------------------------------------------	
-// file: pages.ts
-//---------------------------------------------------
-
-// http://[host]:[port]/
-export function index   (app) { /* handle request */ }
-
-// http://[host]:[port]/about
-export function about   (app) { /* handle request */ }
-
-// http://[host]:[port]/contact
-export function contact (app) { /* handle request */ }
+/// <reference path="pages.ts" />
 
 //---------------------------------------------------	
 // file: users.ts
@@ -582,11 +559,26 @@ export function contact (app) { /* handle request */ }
 export module users {
 	
 	// http://[host]:[port]/users/login
-	export function login  (app) { /* handle request */ }
+	export function login  (app) { app.response.send('users.login') }
 	
 	// http://[host]:[port]/users/logout
-	export function logout (app) { /* handle request */ }
+	export function logout (app) { app.response.send('users.logout') }
 }
+
+//---------------------------------------------------	
+// file: pages.ts
+//---------------------------------------------------
+
+// http://[host]:[port]/
+export function index   (app) { app.response.send('home') }
+
+// http://[host]:[port]/about
+export function about   (app) { app.response.send('about') }
+
+// http://[host]:[port]/contact
+export function contact (app) { app.response.send('contact') }
+
+export function wildcard (app, path) { app.response.send(404, ' not found') }
 
 ```
 

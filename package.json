@@ -6,7 +6,8 @@
   "directories": {
      
   },
-  "dependencies": {"typescript.api": "0.5.4"},
+  "dependencies": {"typescript.api": "0.5.4", 
+				   "cookie"        : "0.1.0"},
   "devDependencies": {},
   "scripts": {
     

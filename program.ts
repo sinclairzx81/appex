@@ -1,37 +1,16 @@
-﻿/// <reference path="studio/references.ts" />
-/// <reference path="studio/index.ts" />
+﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
-attribute("index", {data:10});
-export function index (app) { 
-
-    console.log(app.attribute)
-
-    app.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-    app.response.write('home');
-	
-    app.response.end();
+export function index (app:appex.web.app.IApp) { 
+    
+    app.response.send(200, 'hello');
 }
 
-attribute("about", {data:10});
-export function about(app) {
-
-    app.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-    app.response.write('about');
-	
-    app.response.end();
+export function about(app:appex.web.app.IApp) {
     
+    app.response.jsonp(app.request.method());
 }
 
-attribute("Wildcard", {data:10});
-export function wildcard (app, a) {
+export function wildcard (app:appex.web.app.IApp, path) {
     
-    index(app);
-    
-    app.response.writeHead(200, {'content-type' : 'text/plain'});
-	
-    app.response.write('not found');
-	
-    app.response.end();
+    app.response.serve("./", path);
 }
