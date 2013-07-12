@@ -65,6 +65,8 @@ reflection / type and interface meta data derived from the languages type system
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
+* [reflection](#reflection)
+	* [access type information](#access_type_information)
 * [developing with appex](#developing_with_appex)
 	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
@@ -531,6 +533,19 @@ export function wildcard(context, path) {
 	context.response.send(404, path + ' not found');
 }
 ```
+
+<a name="reflection" />
+## reflection
+
+appex provides a reflection api derived from TypeScript's type system that developers can 
+use to reflect type information declared in their appex built modules. 
+
+the following section outlines how to use the reflection api.
+
+<a name="access_type_information" />
+### access type information
+
+
 
 <a name="developing_with_appex" />
 ## developing with appex

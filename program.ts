@@ -2,7 +2,13 @@
 
 export module models {
     
-    export class Customer {
+    export class Base {
+        
+        public id:string;
+        
+    }
+
+    export class Customer extends Base {
 
         public firstname : string;
 
@@ -12,7 +18,5 @@ export module models {
 
 export function index (context:appex.web.Context) {
     
-
-
-    context.response.json(context.module.reflection.get('models.Customer'));
+    context.response.json( context.module.reflection.get('index') );
 }
