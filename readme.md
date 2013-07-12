@@ -44,8 +44,8 @@ npm install appex
 ## overview
 
 appex is a nodejs web api framework built on top of the TypeScript programming language. It enables
-developers to develop RESTful service endpoints by writing TypeScript functions, as well as providing
-reflection / type and interface meta data derived from the languages type system.
+developers to create RESTful service endpoints by writing TypeScript functions, as well as providing
+reflection / type meta data derived from the languages type system.
 
 * [getting started](#getting_started)
 	* [application](#application)
@@ -284,7 +284,8 @@ Wildcard handlers resolve their urls to their current module scope + url.
 appex wildcard handlers allow for wildcard routing at a given module scope. Wildcard handlers
 support 'typed' url argument mapping, as denoted by the arguments annotation.
 
-In addition, wildcard handlers also support optional arguments. As specific with TypeScript's '?' on argument names.
+In addition, wildcard handlers also support optional arguments which can be specified with TypeScript's '?' 
+on argument names.
 
 appex wildcard handlers require the following signature:
 
@@ -339,7 +340,7 @@ will be matched first.
 appex supports a cascading attribute scheme on modules and functions. With this, developers can apply
 arbituary meta data for modules and functions that will propagate through scope. appex has two special
 cascade properties for middleware and http verb matching, which are described below, however consider
-the following code which illistrates the concept.
+the following code which illustrates the concept.
 
 ```javascript
 declare function cascade (qualifier:string, obj:any);
@@ -538,19 +539,83 @@ export function wildcard(context, path) {
 ## reflection
 
 appex provides a reflection api derived from TypeScript's type system that developers can 
-use to reflect type information declared in their appex built modules. 
+leverage to reflect type information declared throughout their appex modules. 
 
 the following section outlines how to use the reflection api.
 
-<a name="access_type_information" />
-### access type information
+<a name="reflect_everying" />
+### reflect everything
 
+the appex reflection api is passed on the context.module.reflection property and is available to all
+appex handler methods. The following code will JSON serialize everything declared in your appex
+project and write it to the http response. 
 
+```javascript
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection );
+}
+```
+
+### reflect specific types
+
+In typical scenarios, developers will want to leverage reflection meta data to generate
+service contacts and client side models. the reflection api lets you access meta data 
+for the following types declared in your project. 
+
+* modules
+* imports
+* classes
+* interfaces
+* functions
+* variables
+
+to access specific type metadata, use the reflection.get([qualifier]) method, as demonstrated below.
+
+```javascript
+export module models {
+    
+    export class Customer {
+
+        public firstname   : string;
+
+        public lastname    : string;
+
+        public age         : number;
+    }
+}
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('models.Customer') );
+}
+```
+and methods..
+
+```javascript
+function some_method(a:string, b:number, c?:boolean) : void { }
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('some_method') );
+}
+```
+
+....and variables...
+
+```javascript
+var some_variable:number = 10;
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('some_variable') );
+}
+```
 
 <a name="developing_with_appex" />
 ## developing with appex
 
-This outlines development with appex.
+This section outlines development with appex.
 
 <a name="appex_declaration" />
 ### appex.d.ts declaration
