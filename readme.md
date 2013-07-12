@@ -1,4 +1,4 @@
-![](https://raw.github.com/sinclairzx81/appex/master/studio/static/diagrams/logo.jpg)
+![](https://raw.github.com/sinclairzx81/appex/master/artifacts/logo.jpg)
 
 ### nodejs web api with [typescript](http://www.typescriptlang.org/)
 
@@ -64,6 +64,7 @@ reflection / type and interface meta data derived from the languages type system
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
 * [developing with appex](#developing_with_appex)
+	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
 * [additional resources](#resources)
 
@@ -470,6 +471,36 @@ export function wildcard(context, path) {
 
 <a name="developing_with_appex" />
 ## developing with appex
+
+This outlines development with appex.
+
+<a name="appex_declaration" />
+### appex.d.ts declaration
+
+If you develop on a TypeScript complicant editor (one that supports TS 0.9), appex comes bundled
+with a declaration file you can reference in your project. If installing appex via npm, your
+reference should be as follows.
+
+```javascript
+/// <reference path="node_modules/appex/appex.d.ts" />
+
+export function index (context:appex.web.IContext) { 
+    
+    context.response.send('hello');
+}
+
+export function wildcard(context:appex.web.IContext, path:string) {
+
+    context.response.serve('./', path);
+}
+```
+
+By referencing this in your project, you get the benefits of code completion and static type checking
+against both appex, and the nodejs core.
+
+![](https://raw.github.com/sinclairzx81/appex/master/artifacts/code-completion.png)
+
+Additional declaration files may be obtained from [here](https://github.com/borisyankov/DefinitelyTyped)
 
 <a name="structuring_projects" />
 ### structuring projects
