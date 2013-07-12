@@ -18,21 +18,21 @@ app.listen(3000);
 //----------------------------------------------
 
 // http://localhost:3000/
-export function index(app) {
+export function index(context) {
 
-	app.response.send('home');
+	context.response.send('home');
 }
 
 // http://localhost:3000/about
-export function about(app) {
+export function about(context) {
 
-	app.response.send('about');
+	context.response.send('about');
 }
 
 // http://localhost:3000/(.*)
-export function wildcard (app, path) {
+export function wildcard (context, path) {
     
-    app.response.send(404, path + "not found");
+    context.response.send(404, path + "not found");
 }
 
 ```
@@ -59,7 +59,7 @@ reflection / type and interface meta data derived from the languages type system
 	* [named handlers](#named_handlers)
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
-	* [attributes](#attributes)
+	* [cascades](#cascades)
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
@@ -163,21 +163,15 @@ additional objects specific to appex. These are listed below:
 
 ```javascript
 // the app context
-export function method(app) {
+export function method(context) {
 	
-	// app.request    - the http request object.
+	// context.request    - the http request object.
 
-	// app.response   - the http response object.
+	// context.response   - the http response object.
 
-	// app.attribute  - appex attributes.
+	// context.cascade    - appex cascade.
 
-	// app.module     - appex module reflection and meta data.
-
-	// app.routes     - appex routing tables.
-
-	// app.mime       - appex mime utility.
-
-	// app.[custom]   - user defined. (see options.context)
+	// context.next       - the next function (express middleware)
 }
 ```
 
@@ -190,26 +184,26 @@ appex creates routes based on module scope and function name. consider the follo
 export module services.customers {
 	
 	// url: http://[host]:[port]/services/customers/insert
-	export function insert(app) { /* handle route */ }
+	export function insert(context) { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/update
-	export function update(app) { /* handle route */ }
+	export function update(context) { /* handle route */ }
 	
 	// url: http://[host]:[port]/services/customers/delete
-	export function delete(app) { /* handle route */ }
+	export function delete(context) { /* handle route */ }
 }
 
 // url: http://[host]:[port]/
-export function index   (app) { /* handle route */ }
+export function index   (context) { /* handle route */ }
 
 // url: http://[host]:[port]/about
-export function about   (app) { /* handle route */ }
+export function about   (context) { /* handle route */ }
 
 // url: http://[host]:[port]/contact
-export function contact (app) { /* handle route */ }
+export function contact (context) { /* handle route */ }
 
 // url: http://[host]:[port]/(.*)
-export function wildcard (app, path) { /* handle route */ }
+export function wildcard (context, path) { /* handle route */ }
 
 ```
 
@@ -233,17 +227,17 @@ Named handlers require the following signature:
 ```javascript
 
 // http://[host]:[port]/about
-export function about(app) {
+export function about(context) {
 
-	app.response.send('about page');
+	context.response.send('about page');
 }
 
 // http://[host]:[port]/users/login
 export module users {
 
-	export function login(app) {
+	export function login(context) {
 		
-		app.response.send('handle login');	
+		context.response.send('handle login');	
 	}
 }
 
@@ -262,17 +256,17 @@ Index handlers require the following signature:
 
 ```javascript
 // url: http://[host]:[port]/
-export function index(app) { 
+export function index(context) { 
 
-	app.response.send('home page');
+	context.response.send('home page');
 }
 
 export module blogs {
 	
 	// url: http://[host]:[port]/blogs
-	export function index  (app) 
+	export function index  (context) 
 	{	
-		app.response.send('blog index');
+		context.response.send('blog index');
 	}
 }
 ```
@@ -309,22 +303,22 @@ export module blogs {
 
 	// url : http://[host]:[port]/blogs/2013        - not matched - (month is required)
 	
-    export function wildcard(app, year:number, month:number, day?:number) {
+    export function wildcard(context, year:number, month:number, day?:number) {
 
-        app.response.json({ year: year, month: month, day: day})
+        context.response.json({ year: year, month: month, day: day})
     }
 }
 
 // url : http://[host]:[port]/
-export function index(app) {
+export function index(context) {
 
-	app.response.send('home');
+	context.response.send('home');
 }
 
 // url : http://[host]:[port]/(.*) 
-export function wildcard(app, path) {
+export function wildcard(context, path) {
 
-	app.response.send(404, 'not found');
+	context.response.send(404, 'not found');
 }
 
 ```
@@ -334,58 +328,37 @@ is specified, appex interprets the argument as a string. the type 'any' is also 
 note: wildcard functions should be declared last in any module scope. this ensures other routes
 will be matched first.
 
-<a name="attributes" />
-### attributes
+<a name="cascades" />
+### cascades
 
-appex supports a cascading attributute scheme on modules and functions. Attributes are declaritive meta data
-you can associate with appex handlers to describe characteristics on given routes. Attributes are analogous to .net attributes,
-however, they also have a cascading behaviour that can be used to apply metadata for an entire scope. A concept similar to 
-cascading stylesheets rules.
+appex supports a cascading attribute scheme on modules and functions. With this, developers can apply
+arbituary meta data for modules and functions that will propagate through scope.
 
-By default, appex uses attributes for HTTP VERB matching:
+the following demonstrates how cascades work.
 
 ```javascript
+declare var cascade;
 
-declare var attribute;
+cascade({a: 10}); // global.
 
-attribute("contact", {  verbs: ["get"]  } );
-
-export function contact(app) {
-
-	app.response.json(app.attribute);
-}
-
-attribute("submit", {  verbs: ["post"]  } );
-
-export function submit(app) {
-
-	app.response.json(app.attribute);
-}
-
-```
-
-the following demonstrates attribute cascading behavior.
-
-```javascript
-declare var attribute;
-
-attribute('foo', {a : 10})
+cascade('foo', {b : 20})
 export module foo {
 
-    attribute('foo.bar', {b : 20})
+    cascade('foo.bar', {c : 30})
     export module bar {
             
-        attribute('foo.bar.index', {c : 30})
-        export function index(app) {
+        cascade('foo.bar.index', {d : 40})
+        export function index(context) {
         
-            //app.attribute
+            //context.attribute
             //{
             //    "a": 10,
             //    "b": 20,
-            //    "c": 30
+            //    "c": 30,
+			//    "d": 40
             //}
 
-            app.response.json(app.attribute);       
+            context.response.json( context.attribute );       
         }
     }
 }
@@ -395,42 +368,15 @@ export module foo {
 and for something more practical..
 
 ```javascript
-declare var attribute;
+declare var cascade;
 
-attribute('admin', { roles : ['administrators'] )
+cascade('admin', { roles : ['administrators'] )
 export module admin {
 	
-	export function index(app) {
+	export function index(context) {
 		
-		var user = app.user;
-
-		if(!user.isInRole( app.attribute.roles ) ) {
-
-			// access denied!
-
-		}
+		// validate the user belongs in the role 'administrators'
 	}
-}
-
-```
-
-attributes can also be looked up by calling attribute( qualifier ).
-
-```javascript
-
-declare var attribute;
-
-attribute("other", {  verbs: ["get"], message:'hello' } );
-export function other(app) {
-    
-	app.response.send(app.attribute.message);
-}
-
-export function index(app) {
-    
-	var info = attribute('other'); // look up.
-	
-	app.response.json(info);
 }
 
 ```
@@ -461,7 +407,7 @@ module private_module {
 function private_function() { }
 
 // function is exported, and therefore publically accessible.
-export function public_function   (app) { 
+export function public_function   (context) { 
 	
 	// this function can invoke private functions.
 	private_function(); // ok
@@ -472,7 +418,7 @@ export function public_function   (app) {
 	// calling non exported method in private module
 	// private_module.private_method(); // bad
 
-	app.response.send('public_function');
+	context.response.send('public_function');
 }
 ```
 
@@ -483,42 +429,42 @@ Use wildcard functions to catch unhandled routes.
 
 ```javascript
 // http:[host]:[port]/
-export function index (app) { 
+export function index (context) { 
 
-	app.response.send('home page');
+	context.response.send('home page');
 }
 
 // http:[host]:[port]/(.*)
-export function wildcard (app, path) {
+export function wildcard (context, path) {
 
-	app.response.send(404, path + ' not found');
+	context.response.send(404, path + ' not found');
 }
 ```
 <a name="serving_static_files" />
 ## serving static files
 
-Use wildcard functions with app.response.serve() to serve static content.
+Use wildcard functions with context.response.serve() to serve static content.
 
 ```javascript
 export module static {
 	
 	// http:[host]:[port]/static/(.*)
-	export function wildcard(app, path) {
+	export function wildcard(context, path) {
 
-		app.response.serve('./static/', path);
+		context.response.serve('./static/', path);
 	}
 }
 
 // http:[host]:[port]/
-export function index (app) {
+export function index (context) {
 
-	app.response.send('home page');
+	context.response.send('home page');
 }
 
 // http:[host]:[port]/(.*)
-export function wildcard(app, path) {
+export function wildcard(context, path) {
 
-	app.response.send(404, path + ' not found');
+	context.response.send(404, path + ' not found');
 }
 ```
 
@@ -559,10 +505,10 @@ app.listen(3000);
 export module users {
 	
 	// http://[host]:[port]/users/login
-	export function login  (app) { app.response.send('users.login') }
+	export function login  (context) { context.response.send('users.login') }
 	
 	// http://[host]:[port]/users/logout
-	export function logout (app) { app.response.send('users.logout') }
+	export function logout (context) { context.response.send('users.logout') }
 }
 
 //---------------------------------------------------	
@@ -570,15 +516,15 @@ export module users {
 //---------------------------------------------------
 
 // http://[host]:[port]/
-export function index   (app) { app.response.send('home') }
+export function index   (context) { context.response.send('home') }
 
 // http://[host]:[port]/about
-export function about   (app) { app.response.send('about') }
+export function about   (context) { context.response.send('about') }
 
 // http://[host]:[port]/contact
-export function contact (app) { app.response.send('contact') }
+export function contact (context) { context.response.send('contact') }
 
-export function wildcard (app, path) { app.response.send(404, ' not found') }
+export function wildcard (context, path) { context.response.send(404, ' not found') }
 
 ```
 
