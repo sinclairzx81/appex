@@ -2,18 +2,15 @@
 
 declare var console;
 
-declare var attribute;
+declare var cascade;
 
-attribute('foo', {dasta:102});
+cascade('foo', {a : 102});
 export module foo{
-
-
-    attribute('foo.index', {data:102});
+    
+    cascade('foo.index', {b : 102});
     export function index (context) { 
-    
-    
-
-        context.response.jsonp(context.attribute);
+        
+        context.response.jsonp(context.cascade);
     }
 }
 
