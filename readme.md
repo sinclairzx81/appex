@@ -60,6 +60,8 @@ reflection / type and interface meta data derived from the languages type system
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
 	* [cascades](#cascades)
+	* [http verbs](#http_verbs)
+	* [middleware](#middleware)
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
@@ -333,12 +335,12 @@ will be matched first.
 ### cascades
 
 appex supports a cascading attribute scheme on modules and functions. With this, developers can apply
-arbituary meta data for modules and functions that will propagate through scope.
-
-the following demonstrates how cascades work.
+arbituary meta data for modules and functions that will propagate through scope. appex has two special
+cascade properties for middleware and http verb matching, which are described below, however consider
+the following code which illistrates the concept.
 
 ```javascript
-declare var cascade;
+declare function cascade (qualifier:string, obj:any);
 
 cascade({a: 10}); // global.
 
@@ -366,21 +368,82 @@ export module foo {
 
 ```
 
-and for something more practical..
+<a name="http_verbs" />
+### http verbs
+
+appex handles http verb matching with cascades. appex will recognise the 
+'verbs' property applied to the cascade to match against http verbs.
 
 ```javascript
-declare var cascade;
-
-cascade('admin', { roles : ['administrators'] )
-export module admin {
-	
-	export function index(context) {
-		
-		// validate the user belongs in the role 'administrators'
-	}
+cascade('index', { verbs: ['get'] })
+export function index (context) { 
+        
+    // only allow HTTP GET requests
+    context.response.send('index')
 }
 
+cascade('index', { verbs: ['post', 'put'] })
+export function submit (context) { 
+    
+    // only allow HTTP POST and PUT requests
+    context.response.send('submit')
+}
 ```
+
+
+<a name="middleware" />
+### middleware
+
+appex supports middleware with cascades. appex middleware defined with cascades allows
+developers to scope middleware on single functions, or entire module scopes. appex will 
+recognise the 'use' property applied to the cascade to invoke middleware.
+
+the following demonstrates how one might use middleware to secure a site admin.
+
+note: middleware 'must' call next or handle the request. 
+
+```javascript
+declare function cascade (qualifier:string, obj:any);
+
+declare var console;
+
+function authenticate(context) {
+
+    console.log('authenticate')
+
+	// call next() if authenticated, otherwise, handle the response.
+    context.next(); 
+}
+
+function authorize(context) {
+
+    console.log('authorize')
+
+	// call next() if authorized, otherwise, handle the response.
+    context.next(); 
+}
+
+// apply security middleware to admin scope.
+cascade('admin', {use: [authenticate, authorize]}) 
+export module admin {
+
+    export function index(context) {
+        
+        console.log(context.cascade); // view cascade
+
+        context.response.send('access granted!')
+    }
+}
+
+// index handler has no middleware applied.
+export function index (context) { 
+    
+    console.log(context.cascade); // view cascade
+
+    context.response.send('home')
+}
+```
+
 
 <a name="exporting_functions" />
 ### exporting functions
