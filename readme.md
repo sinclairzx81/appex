@@ -353,7 +353,7 @@ export module foo {
         cascade('foo.bar.index', {d : 40})
         export function index(context) {
         
-            //context.attribute
+            //context.cascade
             //{
             //    "a": 10,
             //    "b": 20,
@@ -361,7 +361,7 @@ export module foo {
 			//    "d": 40
             //}
 
-            context.response.json( context.attribute );       
+            context.response.json( context.cascade );       
         }
     }
 }
