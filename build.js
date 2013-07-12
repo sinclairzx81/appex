@@ -1,4 +1,27 @@
-﻿var typescript = require('typescript.api');
+﻿// Copyright (c) 2013 haydn paterson (sinclair).  All rights reserved.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+/////////////////////////////////////////////////////////////////////
+//
+//  Appex build utility.
+//
+//  for declarations, use:
+//
+//  tsc -out node_modules/appex/index.js node_modules/appex/index.ts -declaration -nolib -comments
+//
+/////////////////////////////////////////////////////////////////////
+
+var typescript = require('typescript.api');
 
 var fs         = require('fs');
 
@@ -25,7 +48,6 @@ function copy(sourcefile, outputfile, callback) {
     readstream.pipe(writestream);
 
     setTimeout(callback, 200)
-
 }
 
 function build(sourcefile, outputfile, callback) {
@@ -63,7 +85,11 @@ build('./node_modules/appex/index.ts', './bin/index.js', function(){
 
     copy('./readme.md',    './bin/readme.md',  function(){});
 
-    copy('./bin/appex.d.ts',    './node_modules/appex/appex.d.ts',  function(){});
+    copy('./node_modules/appex/appex.d.ts', './bin/appex.d.ts',  function(){});
+
+    copy('./node_modules/appex/references/node.d.ts', './bin/references/node.d.ts',  function(){});
+
+    copy('./node_modules/appex/references/typescript.api.d.ts', './bin/references/typescript.api.d.ts',  function(){});
 
     copy('./node_modules/appex/workers/kernel.js', './node_modules/appex/kernel.js', function(){});
 
