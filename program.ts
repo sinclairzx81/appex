@@ -14,6 +14,6 @@ export module models {
 
 export function index (context:appex.web.Context) {
     
-    
+    context.response.write(context.module.reflection);
 }
 

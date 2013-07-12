@@ -66,7 +66,8 @@ reflection / type meta data derived from the languages type system.
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
 * [reflection](#reflection)
-	* [access type information](#access_type_information)
+	* [reflect everything](#reflect_everything)
+	* [reflect specific types](#reflect_specific_types)
 * [developing with appex](#developing_with_appex)
 	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
@@ -543,7 +544,7 @@ leverage to reflect type information declared throughout their appex modules.
 
 the following section outlines how to use the reflection api.
 
-<a name="reflect_everying" />
+<a name="reflect_everything" />
 ### reflect everything
 
 the appex reflection api is passed on the context.module.reflection property and is available to all
@@ -556,7 +557,7 @@ export function index (context:appex.web.Context) {
     context.response.json( context.module.reflection );
 }
 ```
-
+<a name="reflect_specific_types" />
 ### reflect specific types
 
 In typical scenarios, developers will want to leverage reflection meta data to generate
