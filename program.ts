@@ -1,19 +1,24 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
-export function index (app:appex.web.app.IApp) { 
+declare var console;
+
+declare var attribute;
+
+attribute('foo', {dasta:102});
+export module foo{
+
+
+    attribute('foo.index', {data:102});
+    export function index (context) { 
     
     
 
-    app.response.json(app.attribute);
+        context.response.jsonp(context.attribute);
+    }
 }
 
 
-export function about(app:appex.web.app.IApp) {
-    
-    app.response.jsonp(app.request.method());
-}
+export function wildcard(context, path) {
 
-export function wildcard (app:appex.web.app.IApp, path) {
-    
-    app.response.serve("./", path);
+    context.response.serve('./', path);
 }

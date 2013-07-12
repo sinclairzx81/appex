@@ -28,9 +28,9 @@ function copy(sourcefile, outputfile, callback) {
 
 }
 
-function build(sourcefile, outputfile, declfile, callback) {
+function build(sourcefile, outputfile, callback) {
 
-    console.log('building ' + sourcefile + ' to ' + outputfile + ' and ' + declfile);
+    console.log('building ' + sourcefile + ' to ' + outputfile);
 
     typescript.resolve([sourcefile], function(resolved) {
 
@@ -49,19 +49,6 @@ function build(sourcefile, outputfile, declfile, callback) {
             
             writestream.end();
 
-            var writestream = fs.createWriteStream(declfile);
-
-            for (var n in compiled) {
-
-                 var pattern = /\/\/\/ <reference path="(.*?)" \/>/g;
-
-                 var content = compiled[n].declaration.replace(pattern, '');
-
-                 writestream.write(content);
-            }
-            
-            writestream.end();
-
             setTimeout(callback, 400);
         });
 
@@ -70,7 +57,7 @@ function build(sourcefile, outputfile, declfile, callback) {
 
 console.log('building appex...')
 
-build('./node_modules/appex/index.ts', './bin/index.js', './bin/appex.d.ts', function(){ 
+build('./node_modules/appex/index.ts', './bin/index.js', function(){ 
 
     copy('./package.json', './bin/package.json', function(){});
 
