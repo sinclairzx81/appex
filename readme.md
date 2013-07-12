@@ -498,7 +498,7 @@ export function wildcard(context:appex.web.IContext, path:string) {
 By referencing this in your project, you get the benefits of code completion and static type checking
 against both appex, and the nodejs core.
 
-![](https://raw.github.com/sinclairzx81/appex/master/artifacts/code-completion.png)
+![](https://raw.github.com/sinclairzx81/appex/master/artifacts/code-completion.jpg)
 
 Additional declaration files may be obtained from [here](https://github.com/borisyankov/DefinitelyTyped)
 
