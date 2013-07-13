@@ -12,8 +12,13 @@ export module models {
     }
 }
 
+/**
+*   this is a method
+*/
 export function index (context:appex.web.Context) {
     
-    context.response.write(context.module.reflection);
+    context.request.cookies.get('name', 'value', {expires: 1000})
+
+    context.response.json(context.module.reflection);
 }
 

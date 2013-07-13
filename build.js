@@ -10,7 +10,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /////////////////////////////////////////////////////////////////////
 //
 //  Appex build utility.
@@ -21,7 +20,7 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-var typescript = require('typescript.api');
+var typescript = require('./node_modules/appex/node_modules/typescript.api/index.js');
 
 var fs         = require('fs');
 
