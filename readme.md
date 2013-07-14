@@ -68,6 +68,7 @@ reflection / type meta data derived from the languages type system.
 * [reflection](#reflection)
 	* [reflect everything](#reflect_everything)
 	* [reflect specific types](#reflect_specific_types)
+	* [json schema](#json_schema)
 * [developing with appex](#developing_with_appex)
 	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
@@ -688,6 +689,49 @@ export function index (context:appex.web.Context) {
     context.response.json( context.module.reflection.get('some_variable') );
 }
 ```
+<a name="json_schema" />
+## json schema
+
+appex supports reflecting back basic JSON schema meta data from class and interface definitions. 
+
+```javascript
+
+export module models {
+
+	export class Address {
+
+		public addressLine1: string;
+		
+        public addressLine2: string;
+		
+        public addressLine3: string;
+	}
+	
+	export class User {
+		
+        public id : string;
+	}
+
+	export class Customer extends User {
+
+		public firstname : string;
+		
+        public lastname  : string;
+		
+        public age       : number;
+		
+        public addresses : Address[];
+	}
+}
+
+export function index (context) {
+    
+    context.response.json( context.module.reflection.schema('models.Customer') );
+}
+
+```
+
+note: this functionality is experimental. 
 
 <a name="developing_with_appex" />
 ## developing with appex
