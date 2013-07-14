@@ -213,7 +213,7 @@ export function index(context) {
 
 	// context.async = passed on the context.
 
-	context.response.write('home page');
+	context.response.send('home page');
 }
 ```
 <a name="routing_handlers" />
