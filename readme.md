@@ -178,8 +178,42 @@ export function method(context) {
 	// context.cascade    - appex cascade.
 
 	// context.next       - the next function (express middleware)
+	
+	// context.router     - the appex router
+	
+	// context.module     - the module being run (this module)
+
+	// context.mime       - a http mime type utility.
 }
 ```
+
+it is possible to extend the default objects passed on the context by adding them on the appex startup options. The 
+following will attach the async module to the context. 
+
+//----------------------------------------------
+// app.js
+//----------------------------------------------
+
+var appex   = require('appex');
+
+var app = appex({ program : './program.ts', 
+				  devmode : true, 
+			      context: {
+						async : require('async')
+				  }});
+
+app.listen(3000);
+
+//----------------------------------------------
+// program.js
+//----------------------------------------------
+
+export function index(context) {
+
+	// context.async = passed on the context.
+
+	context.response.write('home page');
+}
 
 <a name="routing_handlers" />
 ### routing handlers
