@@ -1,6 +1,4 @@
-﻿/*--------------------------------------------------------------------------
-
-The MIT License (MIT)
+﻿The MIT License (MIT)
 
 Copyright (c) 2013 Haydn Paterson (sinclair) <haydn.developer@gmail.com>
 
@@ -21,26 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
----------------------------------------------------------------------------*/
-
-/// <reference path="../references.ts" />
-/// <reference path="IModule.ts" />
-
-module appex.modules {
-
-    /** interface for module exports */
-    export interface IModuleExport  {
-        
-        module      : appex.modules.IModule;
-
-        /** the type of export this is */
-        type        : typescript.api.ReflectedType;
-
-        /** returns the module accessor. */
-        accessor()  : any;
-
-        /** returns cascading attributes on the export */
-        cascade ()  : any;
-    }
-}    

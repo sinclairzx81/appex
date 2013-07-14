@@ -20,8 +20,8 @@
   ],
   "author": "sinclair",
   "licenses": [ {
-    "type": "Apache 2.0",
-    "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    "type": "The MIT License (MIT)",
+    "url": "https://raw.github.com/sinclairzx81/appex/master/license.txt"
   } ],
   "readmeFilename": "readme.md"
 }

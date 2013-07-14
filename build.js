@@ -12,7 +12,7 @@
 
 /////////////////////////////////////////////////////////////////////
 //
-//  Appex build utility.
+//  appex build utility.
 //
 //  for declarations, use:
 //
@@ -63,6 +63,12 @@ function build(sourcefile, outputfile, callback) {
             
             var writestream = fs.createWriteStream(outputfile);
 
+            writestream.write('/*--------------------------------------------------------------------------\n\n');
+
+            writestream.write(fs.readFileSync('./license.txt') + '\n\n');
+
+            writestream.write('--------------------------------------------------------------------------*/\n\n');
+
             for (var n in compiled) {
 
                  writestream.write(compiled[n].content);
@@ -102,5 +108,4 @@ build('./node_modules/appex/index.ts', './bin/index.js', function(){
 
         require('./app.js');
     });
-   
 });
