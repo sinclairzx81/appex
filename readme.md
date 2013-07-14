@@ -190,6 +190,7 @@ export function method(context) {
 it is possible to extend the default objects passed on the context by adding them on the appex startup options. The 
 following will attach the async module to the context. 
 
+```javascript
 //----------------------------------------------
 // app.js
 //----------------------------------------------
@@ -205,7 +206,7 @@ var app = appex({ program : './program.ts',
 app.listen(3000);
 
 //----------------------------------------------
-// program.js
+// program.ts
 //----------------------------------------------
 
 export function index(context) {
@@ -214,7 +215,7 @@ export function index(context) {
 
 	context.response.write('home page');
 }
-
+```
 <a name="routing_handlers" />
 ### routing handlers
 
