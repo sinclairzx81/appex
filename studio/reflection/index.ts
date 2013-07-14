@@ -6,8 +6,6 @@ export module studio.reflection {
 
     export function index(context:appex.web.IContext) {
         
-        console.log('here');
-        
         context.response.serve('./studio/reflection/index.html');
     }
 
