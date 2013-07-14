@@ -16,3 +16,13 @@ appex.get = function (url, callback) {
             }
     });
 }
+appex.load = function (url, callback) {
+ 	$.ajax({url         : url, 
+            type        : 'GET', 
+            headers     : appex.headers,
+            success     : function (data) {
+                appex.headers = {};
+                if (callback) callback(data);
+            }
+    });
+}

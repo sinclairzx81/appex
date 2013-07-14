@@ -230,8 +230,8 @@
                 
                 appex.headers['appex.path'] = filename;
 
-                appex.get('/studio/reflection/' + filename, function (data) {
-
+                appex.load('/studio/reflection/files/' + filename, function (data) {
+                    
                     $('#source').html(data);
 
                 });

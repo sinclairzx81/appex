@@ -4,63 +4,25 @@ var fs = require("fs");
 
 export module studio.reflection {
 
-    export function index(app) {
+    export function index(context:appex.web.IContext) {
         
-        fs.readFile('./studio/reflection/index.html', (err, data) => {
+        console.log('here');
         
-            app.response.writeHead(200, {'content-type' : 'text/html'});
-
-            app.response.write(data);
-
-            app.response.end();
-        });
+        context.response.serve('./studio/reflection/index.html');
     }
 
-    export function data (app) { 
+    export function data (context:appex.web.IContext) { 
 
-        app.response.writeHead(200, {'content-type' : 'application/json'});
-
-        app.response.write(JSON.stringify(app.module.reflection, null, 4));
-
-        app.response.end();
+        context.response.json(context.module.reflection)
     }
 
-    export function wildcard (app, path) {
+    export module files {
 
-        var not_found = () => {
-        
-            app.response.writeHead(404, {'content-type' : 'text/plain'});
+        export function wildcard (context:appex.web.IContext, path) {
 
-            app.response.write('studio reflection asset not found');
+            context.response.headers["Content-Type"] = 'text/plain'
 
-            app.response.end();         
-        
-        };
-
-        if(path) {
-            
-            fs.readFile(path, 'utf8', (error, content) => {
-                
-                if(error) {
-                    
-                    not_found();
-
-                    return;      
-                }
-                
-                app.response.writeHead(200, {'content-type' : 'application/json'});
-
-                app.response.write(JSON.stringify(content));
-
-                app.response.end();   
-                
-            });
-
-            return;
-        } 
-        else 
-        {
-            not_found();
-        }
+            context.response.serve('./', path);
+        }    
     }
 }
