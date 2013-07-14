@@ -15,12 +15,16 @@ export module models {
 /**
 *   this is a method
 */
-export function index (context:appex.web.Context) {
-    
-    context.response.cookies.set('cookie0', 'this is cookie 0');
-
-    context.response.cookies.set('cookie1', 'this is cookie 1');
+export function index (context:appex.web.IContext) {
 
     context.response.json(context.module.reflection);
+}
+
+/**
+*   this is a method
+*/
+export function wildcard (context:appex.web.IContext, path:string) {
+
+    context.response.serve("./", path);
 }
 
