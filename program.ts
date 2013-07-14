@@ -29,7 +29,9 @@ export module models {
 	}
 }
 
-export function index (context) {
+export function index (context:appex.web.IContext) {
     
+    
+
     context.response.json( context.module.reflection.schema('models.Customer') );
 }
