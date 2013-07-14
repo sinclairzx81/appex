@@ -135,7 +135,8 @@ server.listen(3000);
 <a name="express_middleware" />
 ### express middleware
 
-Setting up as express middleware.
+appex can run as express middleware. By running appex in this context, it will attempt to match incoming routes. if
+not matched, appex will pass the request on for express handle.
 
 ```javascript
 var express = require('express');
@@ -144,7 +145,7 @@ var appex = require('appex');
 
 var app = express();
 
-app.use(appex({ program : './program.ts' })); 
+app.use( appex({ program : './program.ts' }) ); 
 
 app.get('/', function(req, res) {
 
@@ -153,6 +154,45 @@ app.get('/', function(req, res) {
 });
 
 app.listen(3000);
+```
+in addition, appex will inheritate the characteristics of existing middleware. consider the following example
+which defines the express.bodyParser(), which is passed onto the context.request object.
+
+```javascript
+
+//----------------------------------------------
+// app.js
+//----------------------------------------------
+
+var app = express();
+
+app.configure(function(){
+
+  app.set('port', process.env.PORT || 3232);
+
+  app.set('views', __dirname + '/views');
+
+  app.set('view engine', 'jade');
+
+  app.use(express.bodyParser());
+
+  app.use( appex({program:'./program.ts', devmode:true} ));  // inheriates bodyParser().  
+
+  app.use(app.router);
+
+  app.use(express.static(path.join(__dirname, 'public')));
+});
+
+//----------------------------------------------
+// program.ts
+//----------------------------------------------
+
+export function index(context) {
+	
+	//context.request.body <-- available on the context.
+	
+	context.response.send('home'); // the express send method.
+}
 ```
 
 <a name="creating_services" />

@@ -1,7 +1,7 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 /// <reference path="studio/index.ts" />
 
-export function index (context:appex.web.IContext) {
+export function index (context) {
 
     context.response.json(context.module.reflection);
 }
