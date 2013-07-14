@@ -17,7 +17,9 @@ export module models {
 */
 export function index (context:appex.web.Context) {
     
-    context.request.cookies.get('name', 'value', {expires: 1000})
+    context.response.cookies.set('cookie0', 'this is cookie 0');
+
+    context.response.cookies.set('cookie1', 'this is cookie 1');
 
     context.response.json(context.module.reflection);
 }
