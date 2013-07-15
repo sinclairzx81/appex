@@ -783,11 +783,7 @@ which generates the following json schema.
                     "type": "string",
                     "description": "suburb"
                 }
-            },
-            "required": [
-                "addressLine1",
-                "addressLine2"
-            ]
+            }
         },
         "customers": {
             "id": "customers",
@@ -812,24 +808,12 @@ which generates the following json schema.
                             "type": "string",
                             "description": "the customers lastname"
                         }
-                    },
-                    "required": [
-                        "id",
-                        "firstname",
-                        "lastname"
-                    ]
+                    }
                 }
             },
             "description": "this employees customers"
         }
-    },
-    "required": [
-        "id",
-        "firstname",
-        "lastname",
-        "address",
-        "customers"
-    ]
+    }
 }
 ```
 
