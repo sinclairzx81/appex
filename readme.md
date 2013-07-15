@@ -137,7 +137,7 @@ server.listen(3000);
 <a name="express_middleware" />
 ### express middleware
 
-appex is designed to allow developers to augment existing express / connect applications by 
+appex is allows developers to augment existing express / connect applications by 
 way of middleware. The following demonstrates setting up appex as express middleware.
 
 ```javascript
