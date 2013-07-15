@@ -44,7 +44,7 @@ export module models {
 
 export function index (context) {
     
-    context.response.json( context.schema.get('models.Employee') );
+    context.response.json( context.schema.get('models.Address') );
 }
 
 
