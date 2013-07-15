@@ -3,15 +3,19 @@
 
 export module models {
 
-	export class Node {
-            
-        public child_nodes: Node[];
+	export class User {
+        
+        public firstname : string;
+        /** users last name */
+        public lastname  : string;
+
+        public friends   : User[];
 	}
 }
 
 export function index (context:appex.web.IContext) {
 
-    context.response.json( context.schema.get('models.Node') );
+    context.response.json( context.schema.get('models.User') );
 }
 
 
