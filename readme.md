@@ -225,6 +225,8 @@ export function method(context) {
 	
 	// context.module     - the module being run (this module)
 
+	// context.schema     - json schema api.
+
 	// context.mime       - a http mime type utility.
 }
 ```
@@ -690,9 +692,10 @@ export function index (context:appex.web.Context) {
 }
 ```
 <a name="json_schema" />
-## json schema
+### json schema
 
-appex supports reflecting back basic JSON schema meta data from class and interface definitions. 
+appex supports reflecting back JSON schema meta data from class and interface type definitions. for example, the following
+will output a json schema on the type 'models.Employee'.
 
 ```javascript
 
@@ -700,38 +703,135 @@ export module models {
 
 	export class Address {
 
+        /** street */
 		public addressLine1: string;
-		
+        /** suburb */		
         public addressLine2: string;
-		
-        public addressLine3: string;
 	}
 	
 	export class User {
-		
+
+		/** this users id */
         public id : string;
 	}
 
-	export class Customer extends User {
+    export class Customer extends User {
+        
+        /** the customers firstname */
+		public firstname  : string;
+		
+        /** the customers lastname */
+        public lastname   : string;
+    }
 
-		public firstname : string;
+	export class Employee extends User {
+
+        /** the employees firstname */
+		public firstname  : string;
 		
-        public lastname  : string;
+        /** the employees lastname */
+        public lastname   : string;
 		
-        public age       : number;
-		
-        public addresses : Address[];
+        /** the employees address */
+        public address  : Address;
+
+        /** this employees customers */
+        public customers : Customer[];
 	}
 }
 
 export function index (context) {
     
-    context.response.json( context.module.reflection.schema('models.Customer') );
+    context.response.json( context.schema.get('models.Employee') );
 }
 
 ```
 
-note: this functionality is experimental. 
+which generates the following json schema.
+
+```javascript
+{
+    "id": "#models.Employee",
+    "type": "object",
+    "properties": {
+        "id": {
+            "id": "id",
+            "type": "string",
+            "description": "this users id"
+        },
+        "firstname": {
+            "id": "firstname",
+            "type": "string",
+            "description": "the employees firstname"
+        },
+        "lastname": {
+            "id": "lastname",
+            "type": "string",
+            "description": "the employees lastname"
+        },
+        "address": {
+            "id": "#models.Address",
+            "type": "object",
+            "properties": {
+                "addressLine1": {
+                    "id": "addressLine1",
+                    "type": "string",
+                    "description": "street"
+                },
+                "addressLine2": {
+                    "id": "addressLine2",
+                    "type": "string",
+                    "description": "suburb"
+                }
+            },
+            "required": [
+                "addressLine1",
+                "addressLine2"
+            ]
+        },
+        "customers": {
+            "id": "customers",
+            "type": "array",
+            "items": {
+                "type": {
+                    "id": "#models.Customer",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "id": "id",
+                            "type": "string",
+                            "description": "this users id"
+                        },
+                        "firstname": {
+                            "id": "firstname",
+                            "type": "string",
+                            "description": "the customers firstname"
+                        },
+                        "lastname": {
+                            "id": "lastname",
+                            "type": "string",
+                            "description": "the customers lastname"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "firstname",
+                        "lastname"
+                    ]
+                }
+            },
+            "description": "this employees customers"
+        }
+    },
+    "required": [
+        "id",
+        "firstname",
+        "lastname",
+        "address",
+        "customers"
+    ]
+}
+```
 
 <a name="developing_with_appex" />
 ## developing with appex
