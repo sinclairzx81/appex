@@ -78,12 +78,12 @@ reflection / type meta data derived from the languages type system.
 <a name="getting_started" />
 ## getting started
 
-The following sections outline configuring appex.
+The following section outlines configuring appex.
 
 <a name="application" />
 ### application
 
-Setting up. 
+setting up. 
 
 ```javascript
 var appex   = require('appex');
@@ -98,7 +98,7 @@ app.listen(3000);
 <a name="options" />
 ### options
 
-appex accepts the following startup options.
+the following lists the appex startup options.
 
 ```javascript
 var options = { 
@@ -121,7 +121,7 @@ var app = appex( options );
 <a name="http_server" />
 ### http server
 
-Setting up appex on a nodejs http server.
+setting up appex on a nodejs http server.
 
 ```javascript
 var http = require('http');
@@ -137,8 +137,8 @@ server.listen(3000);
 <a name="express_middleware" />
 ### express middleware
 
-appex can run as express middleware. By running appex in this context, it will attempt to match incoming routes. if
-not matched, appex will pass the request on for express handle.
+appex is designed to allow developers to augment existing express / connect applications by 
+way of middleware. The following demonstrates setting up appex as express middleware.
 
 ```javascript
 var express = require('express');
@@ -157,8 +157,53 @@ app.get('/', function(req, res) {
 
 app.listen(3000);
 ```
-in addition, appex will inheritate the characteristics of existing middleware. consider the following example
-which defines the express.bodyParser(), which is passed onto the context.request object.
+
+By doing this, appex will attempt to intercept incoming requests. if appex cannot find a matching route for 
+the request, it will automatically call the "next" function to pass the request on to the next middleware or
+express handler.
+
+in addition to this, appex may also function as traditional express middleware. the following example sets up a wildcard
+function (to match all requests), it prints a message to the console on each request and forwards the request on...
+
+```javascript
+
+//----------------------------------------------
+// program.ts
+//----------------------------------------------
+
+// http:[host]:[port]/(.*)
+export function wildcard(context, path) {
+
+	console.log('hello world!!');
+
+	context.next(); // pass it on!
+}
+
+//----------------------------------------------
+// app.js
+//----------------------------------------------
+
+var express = require('express');
+
+var appex = require('appex');
+
+var app = express();
+
+app.use( appex({ program : './program.ts' }) );
+
+app.get('/', function(req, res) {
+
+  res.send('Hello World');
+  
+});
+
+app.listen(3000);
+```
+
+Its important to note that appex will also inheriate the characteristics of the request defined by
+other middleware in the stack, or configurations made to express prior. consider the following example 
+in which the jade view engine is configured. appex will inheritate the response.render() method, passing it on the 
+context.response as follows..
 
 ```javascript
 
@@ -166,34 +211,26 @@ which defines the express.bodyParser(), which is passed onto the context.request
 // app.js
 //----------------------------------------------
 
-var app = express();
-
 app.configure(function(){
 
-  app.set('port', process.env.PORT || 3232);
-
   app.set('views', __dirname + '/views');
-
-  app.set('view engine', 'jade');
-
-  app.use(express.bodyParser());
-
-  app.use( appex({program:'./program.ts', devmode:true} ));  // inheriates bodyParser().  
-
-  app.use(app.router);
-
-  app.use(express.static(path.join(__dirname, 'public')));
+  
+  // set up the jade engine.
+  app.set('view engine', 'jade'); 
+  
+  // bind appex
+  app.use( appex({program:'./program.ts', devmode:true} ));  
 });
 
 //----------------------------------------------
 // program.ts
 //----------------------------------------------
 
+// http:[host]:[port]/
 export function index(context) {
 	
-	//context.request.body <-- available on the context.
-	
-	context.response.send('home'); // the express send method.
+	// jade renderer works!
+	context.response.render('index', { title: 'Express' }); 
 }
 ```
 
@@ -531,7 +568,7 @@ export function index (context) {
 <a name="exporting_functions" />
 ### exporting functions
 
-appex will only route functions prefix with the TypeScript 'export' declarer. This rule
+appex will only route functions prefixed with the TypeScript 'export' declarer. This rule
 also applied to modules. Developers can use this to infer notions of public and private 
 at the http level.
 

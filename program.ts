@@ -47,4 +47,23 @@ export function index (context) {
     context.response.json( context.schema.get('models.Employee') );
 }
 
+export function data(context) {
+
+    var employee = new models.Employee();
+    employee.id                   = "123";
+    employee.firstname            = "dave";
+    employee.lastname             = "smith";
+    employee.address              = new models.Address();
+    employee.address.addressLine1 = "17 wildbird lane";
+    employee.address.addressLine2 = "Duckworth";
+
+    var customer       = new models.Customer();
+    customer.id        = "321";
+    customer.firstname = "sam";
+    customer.lastname  = "fisher";
+    employee.customers = [customer];
+
+    context.response.json(employee);
+}
+
 
