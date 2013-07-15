@@ -22,6 +22,8 @@ export module models {
         public firstname : string;
 
         public address   : Address[];
+
+        public friend : Customer[];
 	}
 }
 
