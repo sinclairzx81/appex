@@ -19,19 +19,15 @@ export module models {
 
 	export class Customer extends User {
 
-		public firstname : string;
-		
-        public lastname  : string;
-		
-        public age       : number;
-		
-        public addresses : Address[];
+        public firstname : string;
+
+        public address   : Address[];
 	}
 }
 
 export function index (context:appex.web.IContext) {
-    
-    
 
-    context.response.json( context.module.reflection.schema('models.Customer') );
+    context.response.json( context.schema.get('models.Customer') );
 }
+
+
