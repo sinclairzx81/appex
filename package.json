@@ -1,12 +1,12 @@
 {
   "name": "appex",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "nodejs web api with typescript",
   "main": "index.js",
   "directories": {
      
   },
-  "dependencies": {"typescript.api": "0.5.8"},
+  "dependencies": {"typescript.api": "0.5.9"},
   "devDependencies": {},
   "scripts": {
     
