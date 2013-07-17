@@ -44,9 +44,9 @@ npm install appex
 ## overview
 
 appex is a nodejs web framework built around the TypeScript programming language and
-compiler. It enables developers to create and route http endpoints with TypeScript 
-modules and functions and also offers nodejs developers reflection and type introspection 
-services found in others platforms such as .net.
+compiler. appex lets developers create and route http endpoints with TypeScript modules and 
+functions, as well as providing nodejs developers reflection and type introspection 
+services found in platforms such as .net.
 
 * [getting started](#getting_started)
 	* [application](#application)
