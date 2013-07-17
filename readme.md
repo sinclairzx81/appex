@@ -32,7 +32,7 @@ export function about(context) {
 // http://localhost:3000/(.*)
 export function wildcard (context, path) {
     
-    context.response.send(404, path + "not found");
+    context.response.send(404, path + " not found");
 }
 
 ```
@@ -43,9 +43,10 @@ npm install appex
 ```
 ## overview
 
-appex is a nodejs web api framework built on top of the TypeScript programming language. It enables
-developers to create RESTful service endpoints by writing TypeScript functions, as well as providing
-reflection / type meta data derived from the languages type system.
+appex is a nodejs web framework built around the TypeScript programming language and
+compiler. It enables developers to create and route http endpoints with TypeScript 
+modules and functions and also offers nodejs developers reflection and type introspection 
+services found in others platforms such as .net.
 
 * [getting started](#getting_started)
 	* [application](#application)
@@ -137,7 +138,7 @@ server.listen(3000);
 <a name="express_middleware" />
 ### express middleware
 
-appex is allows developers to augment existing express / connect applications by 
+appex allows developers to augment existing express / connect applications by 
 way of middleware. The following demonstrates setting up appex as express middleware.
 
 ```javascript
@@ -690,7 +691,7 @@ for the following types declared in your project.
 to access specific type metadata, use the reflection.get([qualifier]) method, as demonstrated below.
 
 ```javascript
-export module models {
+export module model {
     
     export class Customer {
 
@@ -704,7 +705,7 @@ export module models {
 
 export function index (context:appex.web.Context) {
     
-    context.response.json( context.module.reflection.get('models.Customer') );
+    context.response.json( context.module.reflection.get('model.Customer') );
 }
 ```
 and methods..
@@ -731,128 +732,124 @@ export function index (context:appex.web.Context) {
 <a name="json_schema" />
 ### json schema
 
-appex supports reflecting back JSON schema meta data from class and interface type definitions. for example, the following
-will output a json schema on the type 'models.Employee'.
+appex supports reflecting back JSON schema from class and interface type definitions. for example, the following
+will output a json schema on the type 'model.Customer'.
 
 ```javascript
+export module model {
 
-export module models {
-
-	export class Address {
-
-        /** street */
-		public addressLine1: string;
-        /** suburb */		
-        public addressLine2: string;
-	}
-	
-	export class User {
-
-		/** this users id */
-        public id : string;
-	}
-
-    export class Customer extends User {
+    /** a product */
+    export class Product {
         
-        /** the customers firstname */
-		public firstname  : string;
-		
-        /** the customers lastname */
-        public lastname   : string;
+        /** the product name */
+        public name        : string;
+
+        /** the product description */
+        public description : string;
+
+        /** the product cost */
+        public cost        : number;
+    } 
+
+    /** a order */
+    export class Order {
+        
+        /** the product being ordered */
+        public products  : Product;
     }
 
-	export class Employee extends User {
+    /** a customer */
+    export class Customer {
 
-        /** the employees firstname */
-		public firstname  : string;
-		
-        /** the employees lastname */
+        /** the customers firstname */
+        public firstname  : string;
+
+        /** the customers lastname */
         public lastname   : string;
-		
-        /** the employees address */
-        public address  : Address;
 
-        /** this employees customers */
-        public customers : Customer[];
-	}
+        /** orders made by this customer */
+        public orders     : Order[];
+    }
 }
 
-export function index (context) {
-    
-    context.response.json( context.schema.get('models.Employee') );
-}
+export function index (context:appex.web.IContext) {
 
+    var schema = context.schema.get('model.Customer');
+
+    context.response.json(schema);
+}
 ```
 
 which generates the following json schema.
 
 ```javascript
 {
-    "id": "#models.Employee",
+    "id": "model.Customer",
     "type": "object",
+    "description": "a customer",
     "properties": {
-        "id": {
-            "id": "id",
-            "type": "string",
-            "description": "this users id"
-        },
         "firstname": {
-            "id": "firstname",
             "type": "string",
-            "description": "the employees firstname"
+            "description": "the customers firstname",
+            "required": true
         },
         "lastname": {
-            "id": "lastname",
             "type": "string",
-            "description": "the employees lastname"
+            "description": "the customers lastname",
+            "required": true
         },
-        "address": {
-            "id": "#models.Address",
-            "type": "object",
-            "properties": {
-                "addressLine1": {
-                    "id": "addressLine1",
-                    "type": "string",
-                    "description": "street"
-                },
-                "addressLine2": {
-                    "id": "addressLine2",
-                    "type": "string",
-                    "description": "suburb"
-                }
-            }
-        },
-        "customers": {
-            "id": "customers",
+        "orders": {
             "type": "array",
             "items": {
                 "type": {
-                    "id": "#models.Customer",
+                    "id": "model.Order",
                     "type": "object",
+                    "description": "a order",
                     "properties": {
-                        "id": {
-                            "id": "id",
-                            "type": "string",
-                            "description": "this users id"
-                        },
-                        "firstname": {
-                            "id": "firstname",
-                            "type": "string",
-                            "description": "the customers firstname"
-                        },
-                        "lastname": {
-                            "id": "lastname",
-                            "type": "string",
-                            "description": "the customers lastname"
+                        "products": {
+                            "id": "model.Product",
+                            "type": "object",
+                            "description": "a product",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "the product name",
+                                    "required": true
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "the product description",
+                                    "required": true
+                                },
+                                "cost": {
+                                    "type": "number",
+                                    "description": "the product cost",
+                                    "required": true
+                                }
+                            },
+                            "required": true
                         }
                     }
                 }
             },
-            "description": "this employees customers"
+            "description": "orders made by this customer",
+            "required": true
         }
     }
 }
 ```
+a quick note...
+
+when generating schema from classes:
+
+* only public class variables will be emitted.
+* all properties will be marked as "required".
+
+when generating schema from interfaces:
+
+* all properties will be emitted. 
+* all properties will be marked as "required" unless modified with '?'.
+
 
 <a name="developing_with_appex" />
 ## developing with appex

@@ -1,56 +1,53 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 /// <reference path="studio/index.ts" />
 
-export module models {
+export module model {
 
-    export class Address {
+    /** a product */
+    export class Product {
+        
+        /** the name of the product */
+        public name        : string;
 
-        /** street */
-        public addressLine1: string;
-        /** suburb */       
-        public addressLine2: string;
+        /** the product description */
+        public description : string;
+
+        /** the cost of the product */
+        public cost        : number;
+    } 
+
+    /** a order */
+    export class Order {
+        
+        /** the product being ordered */
+        public products  : Product;
     }
 
-    export class User {
-
-        /** this users id */
-        public id : string;
-    }
-
-    export class Customer extends User {
+    /** a customer */
+    export class Customer {
 
         /** the customers firstname */
         public firstname  : string;
 
         /** the customers lastname */
         public lastname   : string;
-    }
 
-    export class Employee extends User {
-
-        /** the employees firstname */
-        public firstname  : string;
-
-        /** the employees lastname */
-        public lastname   : string;
-
-        /** the employees address */
-        public address  : Address;
-
-        /** this employees customers */
-        public customers : Customer[];
+        /** orders made by this customer */
+        public orders     : Order[];
     }
 }
+
 
 export function index (context:appex.web.IContext) {
 
-    context.response.send('hello.');
+    var schema = context.schema.get('model.Customer');
 
+    context.response.json(schema);
 }
 
 export function schema(context:appex.web.IContext) {
-
-    context.response.json(context.schema.get('models.Employee'));
+    
+    
 }
 
 
