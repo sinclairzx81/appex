@@ -6,7 +6,7 @@
 
 appex is a nodejs web framework built around the TypeScript programming language and
 compiler. appex lets developers create and route http endpoints with TypeScript modules and 
-functions, as well as providing nodejs developers reflection and type introspection 
+functions, as well as providing nodejs developers similar reflection and type introspection 
 services found in platforms such as .net.
 
 ```javascript
@@ -51,10 +51,10 @@ npm install appex
 ### contents
 
 * [getting started](#getting_started)
-	* [application](#application)
-	* [options](#options)
-	* [http server](#http_server)
-	* [express middleware](#express_middleware)
+	* [create a application](#application)
+	* [start up options](#options)
+	* [running on an existing http server](#http_server)
+	* [running as express middleware](#express_middleware)
 * [creating services with typescript](#creating_services)
 	* [app context](#app_context)
 	* [routing handlers](#routing_handlers)
@@ -81,12 +81,13 @@ npm install appex
 <a name="getting_started" />
 ## getting started
 
-The following section outlines configuring appex.
+The following sections outline creating appex applications and configuration.
 
 <a name="application" />
-### application
+### create a application
 
-setting up. 
+The following code will create a standalone appex application and 
+http server and listen on port 3000.
 
 ```javascript
 var appex   = require('appex');
@@ -98,13 +99,17 @@ var app   = appex({ program : './program.ts',
 app.listen(3000);
 ```
 
-<a name="options" />
-### options
+note: devmode and logging are optional. however, when developing 
+with appex, it is helpful to have these enabled.
 
-the following lists the appex startup options.
+<a name="options" />
+### start up options
+
+appex accepts the following start up options.
 
 ```javascript
-var options = { 
+var options = {
+
 	// (required) location of source file.
 	program    : './program.ts', 
 
@@ -122,23 +127,34 @@ var app = appex( options );
 ```
 
 <a name="http_server" />
-### http server
+### running on an existing http server
 
-setting up appex on a nodejs http server.
+The following demonstrates setting up appex on an existing nodejs http server. In 
+this example, appex will attempt to handle incoming requests, and if appex cannot
+route the request, will fire the callback.
 
 ```javascript
-var http = require('http');
+var http  = require('http');
 
 var appex = require('appex');
 
 var app = appex({ program : './program.ts' });
 
-var server = http.createServer( app );
+var server = http.createServer(function(req, res){
+
+    app(req, res, function() { // appex handler...
+		
+		// not handled.
+
+	}); 
+});
 
 server.listen(3000);
 ```
+
+
 <a name="express_middleware" />
-### express middleware
+### running as express middleware
 
 appex allows developers to augment existing express / connect applications by 
 way of middleware. The following demonstrates setting up appex as express middleware.
@@ -161,12 +177,13 @@ app.get('/', function(req, res) {
 app.listen(3000);
 ```
 
-By doing this, appex will attempt to intercept incoming requests. if appex cannot find a matching route for 
-the request, it will automatically call the "next" function to pass the request on to the next middleware or
-express handler.
+Like in the "running on an existing http server" example above, appex will attempt to intercept incoming requests. 
+if appex cannot find a matching route for the request, it will automatically call the "next" function to pass the request 
+on to the next middleware or express handler.
 
-in addition to this, appex may also function as traditional express middleware. the following example sets up a wildcard
-function (to match all requests), it prints a message to the console on each request and forwards the request on...
+in addition to this, appex may also act as traditional express middleware. In the example below, a appex wildcard
+function is created which will match "all" incoming requests, the wildcard function simply prints hello world to 
+the console and then calls context.next(), which passes the request on the express handler.
 
 ```javascript
 
@@ -203,13 +220,12 @@ app.get('/', function(req, res) {
 app.listen(3000);
 ```
 
-Its important to note that appex will also inheriate the characteristics of the request defined by
-other middleware in the stack, or configurations made to express prior. consider the following example 
-in which the jade view engine is configured. appex will inheritate the response.render() method, passing it on the 
-context.response as follows..
+Just like traditional express middleware, appex will also inheriate the characteristics of the request.
+
+consider the following example in which the jade view engine is configured for use. appex will inheritate the 
+response.render() method, which is passed to the appex handler as context.response.render()
 
 ```javascript
-
 //----------------------------------------------
 // app.js
 //----------------------------------------------
