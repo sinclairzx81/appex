@@ -2,6 +2,13 @@
 
 ### nodejs web api with [typescript](http://www.typescriptlang.org/)
 
+## overview
+
+appex is a nodejs web framework built around the TypeScript programming language and
+compiler. appex lets developers create and route http endpoints with TypeScript modules and 
+functions, as well as providing nodejs developers reflection and type introspection 
+services found in platforms such as .net.
+
 ```javascript
 //----------------------------------------------
 // app.js
@@ -41,12 +48,7 @@ export function wildcard (context, path) {
 ```javascript
 npm install appex
 ```
-## overview
-
-appex is a nodejs web framework built around the TypeScript programming language and
-compiler. appex lets developers create and route http endpoints with TypeScript modules and 
-functions, as well as providing nodejs developers reflection and type introspection 
-services found in platforms such as .net.
+### contents
 
 * [getting started](#getting_started)
 	* [application](#application)
