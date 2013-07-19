@@ -1,54 +1,47 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 /// <reference path="studio/index.ts" />
 
-export module model {
-
-    /** a product */
-    export class Product {
-        
-        /** the name of the product */
-        public name        : string;
-
-        /** the product description */
-        public description : string;
-
-        /** the cost of the product */
-        public cost        : number;
-    } 
-
-    /** a order */
-    export class Order {
-        
-        /** the product being ordered */
-        public products  : Product;
+class Address {
+       street:string;
+    constructor(){
+        //this.street = '123 somethere'
     }
+}
 
-    /** a customer */
-    export class Customer {
+class Customer {
 
-        /** the customers firstname */
-        public firstname  : string;
-
-        /** the customers lastname */
-        public lastname   : string;
-
-        /** orders made by this customer */
-        public orders     : Order[];
+    public name    : string;
+    public address : Address[];
+    constructor() {
+    
+          this.name = 'dave';        
     }
 }
 
 
 export function index (context:appex.web.IContext) {
 
-    var schema = context.schema.get('model.Customer');
+    var customer = new Customer();
 
-    context.response.json(schema);
-}
+    customer.address = [new Address()];
 
-export function schema(context:appex.web.IContext) {
+    var schema = context.schema.get('Customer');
+
+    var errors = schema.validate(customer);
+
+    var output = JSON.stringify(customer, null, 4) + '\n';
+
+    output += '-------------------------------\n';
+
+    output += JSON.stringify(schema, null, 4) + '\n';
+
+    output += '-------------------------------\n';
     
-    
-}
+    output += JSON.stringify(errors, null, 4) + '\n';
 
+    output += '-------------------------------\n';
+
+    context.response.send(output);
+}
 
 
