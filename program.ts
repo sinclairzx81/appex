@@ -1,48 +1,29 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 /// <reference path="studio/index.ts" />
 
-class Address {
+ 
 
-    street:string;
+interface Customer {
 
-    address:Address[];
+    customers ? : Customer[];
 
-    constructor() {
-        
-    }
-}
-
-class Customer {
-
-    public name    : string[];
     
-    constructor() {
     
-          this.name = [];        
-    }
+   
 }
 
 
 export function index (context:appex.web.IContext) {
 
-    var customer = new Customer();
+    //var customer = new Customer();
 
-    //customer.address.address = new Address();
+    var customer:any = {};//<Customer>{};
 
-    
+    customer.customers = [1];
 
-
-
-    //customer.address.address.street = null;
-
-    var handle:any = customer;
-
-    handle.name.push(123)
-
-    //handle.name = 10;
     var schema = context.schema.get('Customer');
 
-    var errors = schema.validate(customer);
+    var errors = context.schema.validate('Customer', customer);
 
     var output = JSON.stringify(customer, null, 4) + '\n';
 
