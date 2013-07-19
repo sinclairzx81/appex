@@ -2,19 +2,23 @@
 /// <reference path="studio/index.ts" />
 
 class Address {
-       street:string;
-    constructor(){
-        this.street = '123 somethere'
+
+    street:string;
+
+    address:Address[];
+
+    constructor() {
+        
     }
 }
 
 class Customer {
 
-    public name    : string;
-    public address : Address[];
+    public name    : string[];
+    
     constructor() {
     
-          this.name = 'dave';        
+          this.name = [];        
     }
 }
 
@@ -23,11 +27,19 @@ export function index (context:appex.web.IContext) {
 
     var customer = new Customer();
 
-    customer.address = [new Address()];
+    //customer.address.address = new Address();
+
+    
+
+
+
+    //customer.address.address.street = null;
 
     var handle:any = customer;
 
-    handle.name = 10;
+    handle.name.push(123)
+
+    //handle.name = 10;
     var schema = context.schema.get('Customer');
 
     var errors = schema.validate(customer);
