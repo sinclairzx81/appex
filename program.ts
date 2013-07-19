@@ -4,7 +4,7 @@
 class Address {
        street:string;
     constructor(){
-        //this.street = '123 somethere'
+        this.street = '123 somethere'
     }
 }
 
@@ -25,6 +25,9 @@ export function index (context:appex.web.IContext) {
 
     customer.address = [new Address()];
 
+    var handle:any = customer;
+
+    handle.name = 10;
     var schema = context.schema.get('Customer');
 
     var errors = schema.validate(customer);
