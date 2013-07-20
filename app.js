@@ -3,7 +3,7 @@ var http  = require('http');
 
 var appex = require('appex');
 
-var app = appex({ program : './program.ts', devmode : true, logging : true });
+var app = appex({ program : './program.ts', devmode : true, logging : false });
 
 var server = http.createServer(function(req, res){
 
