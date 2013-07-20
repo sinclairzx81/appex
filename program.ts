@@ -2,41 +2,30 @@
 /// <reference path="node_modules/appex/appex.d.ts" />
  
 
-interface Address {
 
-    line1    : string;
-    addresses:Address[];
-}
+interface Customer {
+    
+    firstname ?: string;
 
-class Customer {
+    lastname  : string;
 
-    public address   : Address[];
+    age: number;
 }
 
 export function index (context:appex.web.IContext) {
 
-    var customer = new Customer();
+    var customer     = {};// new Customer();
 
-    var handle:any = customer;
+    var handle:any   = customer;
 
+    handle.firstname = 1;
     
-    handle.address = [{line1:'a', addresses:[1]}];
-
-
-
-
-
-
-
-
-
-
-
+    handle.age       = '123';
 
     //---------------------------------------------
     // output
     //---------------------------------------------
-    var schema = context.schema.get('Customer');
+    var schema = context.schema.generate('Customer');
     var errors = context.schema.validate('Customer', customer);
     var output = JSON.stringify(customer, null, 4) + '\n';
     output += '-------------------------------\n';

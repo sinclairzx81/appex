@@ -14,7 +14,7 @@
 //
 //  appex build utility.
 //
-//  for declarations, use:
+//  for declarations, run the following from the project root:
 //
 //  tsc -out node_modules/appex/index.js node_modules/appex/index.ts -declaration -nolib -comments
 //
