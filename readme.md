@@ -71,7 +71,8 @@ npm install appex
 * [reflection](#reflection)
 	* [reflect everything](#reflect_everything)
 	* [reflect specific types](#reflect_specific_types)
-	* [json schema](#json_schema)
+	* [generating json schema](#generating_json_schema)
+	* [validating json schema](#validating_json_schema)
 * [developing with appex](#developing_with_appex)
 	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
@@ -747,11 +748,10 @@ export function index (context:appex.web.Context) {
     context.response.json( context.module.reflection.get('some_variable') );
 }
 ```
-<a name="json_schema" />
-### json schema
+<a name="generating_json_schema" />
+### generating json schema
 
-appex supports reflecting back JSON schema from class and interface type definitions. for example, the following
-will output a json schema on the type 'model.Customer'.
+appex supports the generation of json schema from class and interface definitions.
 
 ```javascript
 export module model {
@@ -792,7 +792,7 @@ export module model {
 
 export function index (context:appex.web.IContext) {
 
-    var schema = context.schema.get('model.Customer');
+    var schema = context.schema.generate('model.Customer');
 
     context.response.json(schema);
 }
@@ -868,6 +868,62 @@ when generating schema from interfaces:
 * all properties will be emitted. 
 * all properties will be marked as "required" unless modified with '?'.
 
+<a name="validating_json_schema" />
+### validating json schema
+
+appex supports json schema validation from class and interface definitions. consider the following.
+
+```javascript
+interface Customer {
+
+	firstname    : string;
+	lastname     : string;
+	age          : number;
+    emails       : string[];
+	option_a ?   : boolean; // optional
+	option_b ?   : boolean; // optional
+	
+}
+
+export function index(context) {
+
+	var customer = {
+		firstname    : 'dave',
+		age          : '33',
+        emails       : [12345, 'dave@domain.com', true],
+		option_b     : 1
+	}
+
+	var errors = context.schema.validate('Customer', customer);
+
+	if(errors.length > 0) { // there are validation errors
+		
+		context.response.json(errors);
+	}
+}
+```
+
+will output the following.
+
+```javascript
+[
+    {
+        "message": "root.lastname is required."
+    },
+    {
+        "message": "root.age is not a number"
+    },
+    {
+        "message": "root.emails[0] is not a string"
+    },
+    {
+        "message": "root.emails[2] is not a string"
+    },
+    {
+        "message": "root.option_b is not a boolean"
+    }
+]
+```
 
 <a name="developing_with_appex" />
 ## developing with appex
