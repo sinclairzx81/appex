@@ -2,11 +2,15 @@
 /// <reference path="studio/index.ts" />
 
  
+interface Address {
+
+
+}
 
 interface Customer {
 
-    customers ? : Customer[];
-
+    address:string[];
+   
     
     
    
@@ -15,11 +19,13 @@ interface Customer {
 
 export function index (context:appex.web.IContext) {
 
-    //var customer = new Customer();
+    var customer:any = {};
 
-    var customer:any = {};//<Customer>{};
+    customer.address = [1];//'haydn';
 
-    customer.customers = [1];
+    //customer.lastname = 'haydn';
+
+    //customer.address = ['asd'];
 
     var schema = context.schema.get('Customer');
 
