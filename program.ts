@@ -1,31 +1,31 @@
-﻿/// <reference path="node_modules/appex/appex.d.ts" />
-/// <reference path="studio/index.ts" />
-
+﻿/// <reference path="studio/index.ts" />
+/// <reference path="node_modules/appex/appex.d.ts" />
  
+
 interface Address {
 
-
+    line1     : string;
+    address   : Address;
 }
 
-interface Customer {
+class Customer {
 
-    address:string[];
-   
-    
-    
-   
+    public address   : Address;
 }
 
 
 export function index (context:appex.web.IContext) {
 
-    var customer:any = {};
+    var customer = new Customer();
 
-    customer.address = [1];//'haydn';
+    var handle:any = customer;
 
-    //customer.lastname = 'haydn';
+    handle.address = {};
+    handle.address.line1 = 'a';
+    handle.address.address = {};
+    handle.address.address.line1 = ' ';
 
-    //customer.address = ['asd'];
+
 
     var schema = context.schema.get('Customer');
 
