@@ -871,35 +871,50 @@ when generating schema from interfaces:
 <a name="validating_json_schema" />
 ### validating json schema
 
-appex supports json schema validation from class and interface definitions. consider the following.
+appex supports json schema validation from class and interface definitions. consider the following...
 
 ```javascript
 interface Customer {
 
-	firstname    : string;
-	lastname     : string;
-	age          : number;
+    firstname    : string;
+
+    lastname     : string;
+
+    age          : number;
+
     emails       : string[];
-	option_a ?   : boolean; // optional
-	option_b ?   : boolean; // optional
-	
+
+    option_a ?   : boolean; // optional
+
+    option_b ?   : boolean; // optional
+
 }
 
 export function index(context) {
 
-	var customer = {
-		firstname    : 'dave',
-		age          : '33',
+    // a customer with invalid data.
+
+    var customer = {
+
+        firstname    : 'dave',
+
+        age          : '33',
+
         emails       : [12345, 'dave@domain.com', true],
-		option_b     : 1
-	}
 
-	var errors = context.schema.validate('Customer', customer);
+        option_b     : 1,
 
-	if(errors.length > 0) { // there are validation errors
-		
-		context.response.json(errors);
-	}
+        option_c     : 1
+    }
+
+    // do validation.
+
+    var errors = context.schema.validate('Customer', customer);
+
+    if(errors) {
+
+        context.response.json(errors);
+    }
 }
 ```
 
@@ -908,19 +923,22 @@ will output the following.
 ```javascript
 [
     {
-        "message": "root.lastname is required."
+        "message": "instance.lastname is required."
     },
     {
-        "message": "root.age is not a number"
+        "message": "instance.age is not a number"
     },
     {
-        "message": "root.emails[0] is not a string"
+        "message": "instance.emails[0] is not a string"
     },
     {
-        "message": "root.emails[2] is not a string"
+        "message": "instance.emails[2] is not a string"
     },
     {
-        "message": "root.option_b is not a boolean"
+        "message": "instance.option_b is not a boolean"
+    },
+    {
+        "message": "instance.option_c unexpected property"
     }
 ]
 ```

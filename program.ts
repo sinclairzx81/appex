@@ -3,28 +3,44 @@
  
 interface Customer {
 
-	firstname    : string;
-	lastname     : string;
-	age          : number;
+    firstname    : string;
+
+    lastname     : string;
+
+    age          : number;
+
     emails       : string[];
-	option_a ?   : boolean; // optional
-	option_b ?   : boolean; // optional
-	
+
+    option_a ?   : boolean; // optional
+
+    option_b ?   : boolean; // optional
+
 }
 
 export function index(context) {
 
-	var customer = {
-		firstname    : 'dave',
-		age          : '33',
+    // a customer with invalid data.
+
+    var customer = {
+
+        firstname    : 'dave',
+
+        age          : '33',
+
         emails       : [12345, 'dave@domain.com', true],
-		option_b     : 1
-	}
 
-	var errors = context.schema.validate('Customer', customer);
+        option_b     : 1,
 
-	if(errors.length > 0) { // there are validation errors
-		
-		context.response.json(errors);
-	}
+        option_c     : 1
+    }
+
+    // do validation.
+
+    var errors = context.schema.validate('Customer', customer);
+
+    if(errors) {
+
+        context.response.json(errors);
+    }
 }
+
