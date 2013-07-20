@@ -1,0 +1,35 @@
+﻿{
+    "id": "Customer",
+    "type": "object",
+    "properties": {
+        "address": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "required": true
+        }
+    }
+}
+
+{
+    "id": "Customer",
+    "type": "object",
+    "properties": {
+        "address": {
+            "type": "array",
+            "items": {
+                "id": "Address",
+                "type": "object",
+                "properties": {
+                    "line1": {
+                        "type": "string",
+                        "required": true
+                    }
+                }
+            },
+            "required": true
+        }
+    }
+}
+
