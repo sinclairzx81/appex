@@ -1,46 +1,47 @@
 ﻿/// <reference path="studio/index.ts" />
 /// <reference path="node_modules/appex/appex.d.ts" />
  
+interface Address {
+    
+}
+
 interface Customer {
+    
+    firstname ? : string;
 
-    firstname    : string;
+    lastname   : string;
 
-    lastname     : string;
+    address    : any[];
 
-    age          : number;
-
-    emails       : string[];
-
-    option_a ?   : boolean; // optional
-
-    option_b ?   : boolean; // optional
-
+    something  : Date;
 }
 
-export function index(context) {
+export function index (context:appex.web.IContext) {
 
-    // a customer with invalid data.
+    var customer        = {};// new Customer();
 
-    var customer = {
+    var handle:any      = customer;
 
-        firstname    : 'dave',
+    handle.firstname    = 1;
 
-        age          : '33',
+    handle.lastname     = 'smith';
 
-        emails       : [12345, 'dave@domain.com', true],
+    handle.address      = [1];
 
-        option_b     : 1,
+    handle.something = new Date();
 
-        option_c     : 1
-    }
-
-    // do validation.
-
+    //---------------------------------------------
+    // output
+    //---------------------------------------------
+    var schema = context.schema.generate('Customer');
     var errors = context.schema.validate('Customer', customer);
-
-    if(errors) {
-
-        context.response.json(errors);
-    }
+    var output = JSON.stringify(customer, null, 4) + '\n';
+    output += '-------------------------------\n';
+    output += JSON.stringify(schema, null, 4) + '\n';
+    output += '-------------------------------\n';
+    output += JSON.stringify(errors, null, 4) + '\n';
+    output += '-------------------------------\n';
+    context.response.send(output);
 }
+
 
