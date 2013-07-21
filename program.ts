@@ -1,5 +1,4 @@
-﻿/// <reference path="studio/index.ts" />
-/// <reference path="node_modules/appex/appex.d.ts" />
+﻿/// <reference path="node_modules/appex/appex.d.ts" />
  
 
 interface Customer {
