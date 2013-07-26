@@ -692,7 +692,7 @@ Razor templating engine. The following sections outline its use.
 
 the template engine is passed on the appex app context. The following demonstrates
 passing data to, and rendering a template with the engine.
-
+```javascript
 //----------------------------------------------
 // view.txt
 //----------------------------------------------
