@@ -70,7 +70,7 @@ npm install appex
 	* [serving static files](#serving_static_files)
 * [templating](#templating)
 	* [rendering templates](#rendering_templates)
-	* [template context](#template_context)
+	* [context](#template_context)
 	* [layouts](#template_layouts)
 	* [partials](#template_partials)
 	* [caching and devmode](#caching_and_devmode)
@@ -690,20 +690,23 @@ Razor templating engine. The following sections outline its use.
 <a name="rendering_templates" />
 ### rendering templates
 
-the template engine is passed on the appex app context. The following demonstrates
-passing data to, and rendering a template with the engine.
+The appex template engine is available to all handlers by default. it is accessible
+on the context.template property. the following is an example of its use.
+
 ```javascript
 //----------------------------------------------
 // view.txt
 //----------------------------------------------
 
+<ul>
 @for(var n in context.users) {
 
 	@if(context.users[n].online) {
 			
-		@(context.users[n].name)
+		<li>@(context.users[n].name)</li>
 	}
 }
+</ul>
 
 //----------------------------------------------
 // program.ts
@@ -717,31 +720,111 @@ export function index(context) {
                  {name:'alice', online : true}];
 
     var text = context.template.render('./view.txt', { users: users });
+	
+	context.response.headers['Content-Type'] = 'text/html';
 
     context.response.send(text);
 }
 
 ```
-note: appex templates supports two control statements, @if for conditions and @for for iteration.
-
-note: rendering variables are achieved with the @(expression) syntax. i.e. @("hello world") or 
-@(my_var_here).
-
 
 <a name="template_context" />
-### template context
+### context
 
-All user data passed to a template for rendering is passed on the templates 'context'.
+each template is passed a data context. this context allows the caller to 
+send data to the template for rendering. the context parameter is optional.
+the example below is sending the users array to the template context for 
+rendering.
+
+```
+export function index(context) {
+	
+    var users  = [{name:'dave' , online : true}, 
+                 {name:'smith', online : true}, 
+                 {name:'jones', online : false}, 
+                 {name:'alice', online : true}];
+
+    context.response.send(context.template.render('./view.txt', { users: users }));
+}
+```
+
+<a name="template_syntax" />
+### syntax
+
+appex templates support the following statements and syntax
+
+#### if statement
+
+if statments are supported.
+
+```
+@if(expression) {
+	some content
+}
+
+@if(a > 10) {
+	some content
+}
+
+@(user.loggedin) {
+	<span>welcome</span>
+}
+```
+
+#### for statement
+
+the following for loops are supported.
+
+```
+@for(var i = i; i < 100; i++) {
+	@(i)
+}
+
+@for(var n in list) {
+	@(list[n])
+}
+```
+
+#### expressions
+
+will emit the value contained.
+
+```
+@('hello world')
+
+@(123)
+
+@(some_variable)
+```
+
+#### code blocks
+
+code blocks can be useful for adding template side rendering logic.
+
+```
+@{
+	var message = 'hello'
+}
+
+@(message)
+```
+
+#### comments
+```
+@*
+	this comment will not be rendered!
+*@
+```
 
 <a name="layouts" />
-### layouts
+### sections and layouts
 
-appex templates support layouts by way of the @layout and @section statements.
+appex templates support template inheritance.
 
 consider the following where layout.txt defines the sections 'header' and 'content' and the view.txt overrides
 these sections with its own content.
 
-```javascript
+```
 //----------------------------------------------
 // layout.txt
 //----------------------------------------------
@@ -809,17 +892,16 @@ export function index(context) {
 }
 ```
 
-note : it is optional to override content in the view.txt. 
+note : when specifying a layout, the view will only render content within
+the layouts section placeholders. 
 
-note : @sections without a body (like the header above) are treated as placeholders. 
-
-<a name="partials" />
-### partials
+<a name="render" />
+### render
 
 appex templates also allow for partial views with the @render statment. consider the following 
 which renders the nav.txt file into the layout.txt file.
 
-```javascript
+```
 //----------------------------------------------
 // nav.txt
 //----------------------------------------------
@@ -907,6 +989,19 @@ appex templates do inheriate the behaviour of the appex 'devmode' option. settin
 devmode to 'true' will cause template code to be reloaded from disk and code generated with each 
 request. setting devmode to false will load content from disk on first request, and 
 cache the generated template code in memory for the lifetime of the application.
+
+in addition to this, a implementation where the devmode is false can override the caching 
+behaviour with the following.
+
+```javascript
+export function index(context) {
+
+	// manually override the template devmode option.
+	context.template.option.devmode = true; 
+
+	context.response.send(context.template.render('./view.txt'))
+}
+```
 
 <a name="json_schema" />
 ## json schema
