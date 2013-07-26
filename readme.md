@@ -729,7 +729,7 @@ note: rendering variables are achieved with the @(expression) syntax. i.e. @("he
 
 
 <a name="template_context" />
-### template_context
+### template context
 
 All user data passed to a template for rendering is passed on the templates 'context'.
 
@@ -898,7 +898,7 @@ export function index(context) {
 ```
 
 <a name="caching_and_devmode" />
-### caching_and_devmode
+### caching and devmode
 
 appex template content is not cached (the implementor is expected to handle their own caching)
 however the generated template code is. 
@@ -909,7 +909,7 @@ request. setting devmode to false will load content from disk on first request, 
 cache the generated template code in memory for the lifetime of the application.
 
 <a name="json_schema" />
-## json_schema
+## json schema
 
 appex provides functionality for generating json schemas from TypeScript classes
 and interfaces as well as tools for validating json data.
