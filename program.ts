@@ -4,9 +4,9 @@ var fs = require('fs');
 
 
 cascade('index', {verbs:['get', 'post']})
-export function index(context) {
+export function index(context:appex.web.IContext) {
 
-    context.response.send('hello');
+    context.response.send(context.template.render('./app.js'));
 }
 
 export function wildcard(context, path) {
