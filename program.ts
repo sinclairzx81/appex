@@ -4,6 +4,8 @@ export function index(context) {
     
     context.response.headers['Content-Type'] = 'text/html';
 
-    context.response.send('hi terhe');
+    var code = context.template.render('./tdest.txt')
+
+    context.response.send(code);
 }
 
