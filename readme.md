@@ -69,10 +69,11 @@ npm install appex
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
 * [templating](#templating)
-	* [rendering templates](#rendering_templates)
-	* [context](#template_context)
-	* [layouts](#template_layouts)
-	* [partials](#template_partials)
+	* [overview](#template_overview)
+	* [context](#template_context)	
+	* [syntax](#template_syntax)
+	* [layouts and sections](#template_layouts_and_sections)
+	* [render](#template_render)
 	* [caching and devmode](#caching_and_devmode)
 * [json schema](#json_schema)
 	* [generating schema](#generating_schema)
@@ -687,13 +688,13 @@ export function wildcard(context, path) {
 appex comes bundled with a built in template engine which is modelled on the Microsoft 
 Razor templating engine. The following sections outline its use.
 
-<a name="rendering_templates" />
-### rendering templates
+<a name="template_overview" />
+### overview
 
 The appex template engine is available to all handlers by default. it is accessible
 on the context.template property. the following is an example of its use.
 
-```javascript
+```
 //----------------------------------------------
 // view.txt
 //----------------------------------------------
@@ -816,8 +817,8 @@ code blocks can be useful for adding template side rendering logic.
 *@
 ```
 
-<a name="layouts" />
-### sections and layouts
+<a name="template_layouts_and_sections" />
+### layouts and sections
 
 appex templates support template inheritance.
 
