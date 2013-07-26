@@ -6,11 +6,7 @@ var fs = require('fs');
 cascade('index', {verbs:['get', 'post']})
 export function index(context) {
 
-    
-
-     
-
-    context.response.send('home');
+    context.response.send('hello');
 }
 
 export function wildcard(context, path) {
