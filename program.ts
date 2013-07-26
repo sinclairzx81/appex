@@ -1,9 +1,9 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
-export function index(context:appex.web.IContext) {
+export function index(context) {
     
-    var code = context.template.render('./app.js', null);
+    context.response.headers['Content-Type'] = 'text/html';
 
-    context.response.send(code);
+    context.response.send('hi terhe');
 }
 

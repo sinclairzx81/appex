@@ -4,7 +4,7 @@
 
 ## overview
 
-appex is a nodejs web framework built around the TypeScript programming language and
+appex is a nodejs web application framework built around the TypeScript programming language and
 compiler. appex lets developers create and route http endpoints with TypeScript modules and 
 functions, as well as providing nodejs developers similar reflection and type introspection 
 services found in platforms such as .net.
@@ -68,11 +68,18 @@ npm install appex
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
 	* [serving static files](#serving_static_files)
+* [templating](#templating)
+	* [rendering templates](#rendering_templates)
+	* [template context](#template_context)
+	* [layouts](#template_layouts)
+	* [partials](#template_partials)
+	* [caching and devmode](#caching_and_devmode)
+* [json schema](#json_schema)
+	* [generating schema](#generating_schema)
+	* [validating json](#validating_json)
 * [reflection](#reflection)
 	* [reflect everything](#reflect_everything)
 	* [reflect specific types](#reflect_specific_types)
-	* [generating json schema](#generating_json_schema)
-	* [validating json schema](#validating_json_schema)
 * [developing with appex](#developing_with_appex)
 	* [appex.d.ts declaration](#appex_declaration)
 	* [structuring projects](#structuring_projects)
@@ -279,6 +286,8 @@ export function method(context) {
 	// context.next       - the next function (express middleware)
 	
 	// context.router     - the appex router
+
+	// context.template   - the appex template engine.
 	
 	// context.module     - the module being run (this module)
 
@@ -672,86 +681,244 @@ export function wildcard(context, path) {
 }
 ```
 
-<a name="reflection" />
-## reflection
+<a name="templating" />
+## templating
 
-appex provides a reflection api derived from TypeScript's type system that developers can 
-leverage to reflect type information declared throughout their appex modules. 
+appex comes bundled with a built in template engine which is modelled on the Microsoft 
+Razor templating engine. The following sections outline its use.
 
-the following section outlines how to use the reflection api.
+<a name="rendering_templates" />
+### rendering templates
 
-<a name="reflect_everything" />
-### reflect everything
+the template engine is passed on the appex app context. The following demonstrates
+passing data to, and rendering a template with the engine.
 
-the appex reflection api is passed on the context.module.reflection property and is available to all
-appex handler methods. The following code will JSON serialize everything declared in your appex
-project and write it to the http response. 
+//----------------------------------------------
+// view.txt
+//----------------------------------------------
+
+@for(var n in context.users) {
+
+	@if(context.users[n].online) {
+			
+		@(context.users[n].name)
+	}
+}
+
+//----------------------------------------------
+// program.ts
+//----------------------------------------------
+
+export function index(context) {
+	
+    var users = [{name:'dave' , online : true}, 
+                 {name:'smith', online : true}, 
+                 {name:'jones', online : false}, 
+                 {name:'alice', online : true}];
+
+    var text = context.template.render('./view.txt', { users: users });
+
+    context.response.send(text);
+}
+
+```
+note: appex templates supports two control statements, @if for conditions and @for for iteration.
+
+note: rendering variables are achieved with the @(expression) syntax. i.e. @("hello world") or 
+@(my_var_here).
+
+
+<a name="template_context" />
+### template_context
+
+All user data passed to a template for rendering is passed on the templates 'context'.
+
+<a name="layouts" />
+### layouts
+
+appex templates support layouts by way of the @layout and @section statements.
+
+consider the following where layout.txt defines the sections 'header' and 'content' and the view.txt overrides
+these sections with its own content.
 
 ```javascript
-export function index (context:appex.web.Context) {
-    
-    context.response.json( context.module.reflection );
+//----------------------------------------------
+// layout.txt
+//----------------------------------------------
+
+<html>
+
+	<head>
+		
+		@section header
+
+	</head>
+
+	<body>
+
+		@section content {
+		
+			<span>some default content</span>
+			
+		}
+
+	</body>
+	
+</html>
+
+//----------------------------------------------
+// view.txt
+//----------------------------------------------
+
+@layout 'layout.txt'
+
+@section header {
+
+	<title>my page</title>
+}
+
+@section content {
+
+	<p>overriding the layout.txt content section.</p>
+
+	<ul>
+	@for(var n in context.users) {
+
+		@if(context.users[n].online) {
+			
+			<li>@(context.users[n].name)</li>
+		}
+	}
+	</ul>
+}
+
+//----------------------------------------------
+// program.ts
+//----------------------------------------------
+
+export function index(context) {
+	
+    var users = [{name:'dave' , online : true}, 
+                 {name:'smith', online : true}, 
+                 {name:'jones', online : false}, 
+                 {name:'alice', online : true}];
+
+    var text = context.template.render('./view.txt', { users: users });
+
+    context.response.send(text);
 }
 ```
-<a name="reflect_specific_types" />
-### reflect specific types
 
-In typical scenarios, developers will want to leverage reflection meta data to generate
-service contacts and client side models. the reflection api lets you access meta data 
-for the following types declared in your project. 
+note : it is optional to override content in the view.txt. 
 
-* modules
-* imports
-* classes
-* interfaces
-* functions
-* variables
+note : @sections without a body (like the header above) are treated as placeholders. 
 
-to access specific type metadata, use the reflection.get([qualifier]) method, as demonstrated below.
+<a name="partials" />
+### partials
+
+appex templates also allow for partial views with the @render statment. consider the following 
+which renders the nav.txt file into the layout.txt file.
 
 ```javascript
-export module model {
-    
-    export class Customer {
+//----------------------------------------------
+// nav.txt
+//----------------------------------------------
+<ul>
+	<li>home</li>
+	<li>about</li>
+	<li>contact</li>
+</ul>
 
-        public firstname   : string;
+//----------------------------------------------
+// layout.txt
+//----------------------------------------------
 
-        public lastname    : string;
+<html>
+	<head>
+		
+		@section header
 
-        public age         : number;
-    }
+	</head>
+
+	<body>
+		
+		@render 'nav.txt'
+
+		@section content {
+		
+			<span>some default content</span>
+			
+		}
+
+	</body>
+	
+</html>
+
+//----------------------------------------------
+// view.txt
+//----------------------------------------------
+
+@layout 'layout.txt'
+
+@section header {
+
+	<title>my page</title>
 }
 
-export function index (context:appex.web.Context) {
-    
-    context.response.json( context.module.reflection.get('model.Customer') );
+@section content {
+
+	<p>overriding the layout.txt content section.</p>
+
+	<ul>
+	@for(var n in context.users) {
+
+		@if(context.users[n].online) {
+			
+			<li>@(context.users[n].name)</li>
+		}
+	}
+	</ul>
+}
+
+//----------------------------------------------
+// program.ts
+//----------------------------------------------
+
+export function index(context) {
+	
+    var users = [{name:'dave' , online : true}, 
+                 {name:'smith', online : true}, 
+                 {name:'jones', online : false}, 
+                 {name:'alice', online : true}];
+
+    var text = context.template.render('./view.txt', { users: users });
+
+    context.response.send(text);
 }
 ```
-and methods..
 
-```javascript
-function some_method(a:string, b:number, c?:boolean) : void { }
+<a name="caching_and_devmode" />
+### caching_and_devmode
 
-export function index (context:appex.web.Context) {
-    
-    context.response.json( context.module.reflection.get('some_method') );
-}
-```
+appex template content is not cached (the implementor is expected to handle their own caching)
+however the generated template code is. 
 
-....and variables...
+appex templates do inheriate the behaviour of the appex 'devmode' option. setting
+devmode to 'true' will cause template code to be reloaded from disk and code generated with each 
+request. setting devmode to false will load content from disk on first request, and 
+cache the generated template code in memory for the lifetime of the application.
 
-```javascript
-var some_variable:number = 10;
+<a name="json_schema" />
+## json_schema
 
-export function index (context:appex.web.Context) {
-    
-    context.response.json( context.module.reflection.get('some_variable') );
-}
-```
-<a name="generating_json_schema" />
-### generating json schema
+appex provides functionality for generating json schemas from TypeScript classes
+and interfaces as well as tools for validating json data.
 
-appex supports the generation of json schema from class and interface definitions.
+<a name="generating_schema" />
+### generating schema
+
+The following demonstrates generating json schema from the following class
+hierarchy.
 
 ```javascript
 export module model {
@@ -791,7 +958,8 @@ export module model {
 }
 
 export function index (context:appex.web.IContext) {
-
+	
+	// pass the fully qualified name of the type.
     var schema = context.schema.generate('model.Customer');
 
     context.response.json(schema);
@@ -868,8 +1036,8 @@ when generating schema from interfaces:
 * all properties will be emitted. 
 * all properties will be marked as "required" unless modified with '?'.
 
-<a name="validating_json_schema" />
-### validating json schema
+<a name="validating_schema" />
+### validating json
 
 appex supports json schema validation from class and interface definitions. consider the following...
 
@@ -941,6 +1109,84 @@ will output the following.
         "message": "instance.option_c unexpected property"
     }
 ]
+```
+
+<a name="reflection" />
+## reflection
+
+appex provides a reflection api derived from TypeScript's type system that developers can 
+leverage to reflect type information declared throughout their appex modules. 
+
+the following section outlines how to use the reflection api.
+
+<a name="reflect_everything" />
+### reflect everything
+
+the appex reflection api is passed on the context.module.reflection property and is available to all
+appex handler methods. The following code will JSON serialize everything declared in your appex
+project and write it to the http response. 
+
+```javascript
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection );
+}
+```
+
+<a name="reflect_specific_types" />
+### reflect specific types
+
+In typical scenarios, developers will want to leverage reflection meta data to generate
+service contacts and client side models. the reflection api lets you access meta data 
+for the following types declared in your project. 
+
+* modules
+* imports
+* classes
+* interfaces
+* functions
+* variables
+
+to access specific type metadata, use the reflection.get([qualifier]) method, as demonstrated below.
+
+```javascript
+export module model {
+    
+    export class Customer {
+
+        public firstname   : string;
+
+        public lastname    : string;
+
+        public age         : number;
+    }
+}
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('model.Customer') );
+}
+```
+and methods..
+
+```javascript
+function some_method(a:string, b:number, c?:boolean) : void { }
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('some_method') );
+}
+```
+
+....and variables...
+
+```javascript
+var some_variable:number = 10;
+
+export function index (context:appex.web.Context) {
+    
+    context.response.json( context.module.reflection.get('some_variable') );
+}
 ```
 
 <a name="developing_with_appex" />
