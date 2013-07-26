@@ -2,13 +2,20 @@
 
 var fs = require('fs');
 
+
+cascade('index', {verbs:['get', 'post']})
 export function index(context) {
-    
-    
-    context.response.headers['Content-Type'] = 'text/html';
 
-    var code = context.template.render('./tdest.txt')
+    
 
-    context.response.send(code);
+     
+
+    context.response.send('home');
 }
 
+export function wildcard(context, path) {
+   
+
+    context.response.send('not found');    
+
+}
