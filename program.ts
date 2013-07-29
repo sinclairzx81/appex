@@ -1,29 +1,44 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
-declare var cascade;
+export module admin {
 
-cascade({website:'http://mysite.com/'}) // global
+    export function index(context) {
+    
+        context.response.send('admin.index')
+    }
+
+    export function dashboard(context) {
+
+        context.response.send('admin.dashboard')
+    }
+
+    cascade('admin.users', {roles:['users', 'administrators']})
+    export module users {
+        
+        cascade('admin.users.login', {title:'login page'})
+        export function login(context) {
+
+            context.response.send('admin.users.login')
+        }
+
+        export function logout(context) {
+
+            context.response.send('admin.users.logout')
+        }
+    }
+}
+
+
 
 cascade('index', {title:'home page'})
 export function index(context) {
 
-	context.response.send('index')
+    console.log(JSON.stringify(context.sitemap, null, 2))
+
+    context.response.headers['Content-Type'] = 'text/html'
+
+	context.response.send(context.template.render('./test.txt', {sitemap:context.sitemap}))
 }
 
-cascade('about', {title: 'about page'})
-export function about(context) {
 
-	context.response.send('about')
 
-}
-
-function test(context) {
-
-    context.next()
-}
-
-cascade('sitemap', {title: 'sitemap pages', use:[test]})
-export function sitemap(context) {
-
-	context.response.json(context.sitemap)
-}

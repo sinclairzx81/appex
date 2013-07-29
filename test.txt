@@ -1,0 +1,30 @@
+﻿<ul>
+    @{
+        var that = this;
+        
+        var list = function(node) {
+            
+			if(node.urls) {
+
+				that.write("<li><a href='" + node.urls[0] + "'>" + node.name + "</a></li>")
+
+			}
+			else {
+
+				that.write("<li><a href='#'>"+node.name+"</a></li>")
+			}
+
+			that.write("<ul>")
+            
+			for(var n in node.nodes) {
+
+                list(node.nodes[n])
+            }
+
+            that.write("</ul>")
+        }
+
+        list(context.sitemap)
+    }
+	
+</ul>
