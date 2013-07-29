@@ -2,6 +2,8 @@
 
 declare var cascade;
 
+cascade({website:'http://mysite.com/'}) // global
+
 cascade('index', {title:'home page'})
 export function index(context) {
 

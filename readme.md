@@ -1063,22 +1063,20 @@ developers can apply their own metadata for a given handler. as demonstrated bel
 ```javascript
 declare var cascade;
 
+cascade({website:'http://mysite.com/'}) // global
+
 cascade('index', {title:'home page'})
 export function index(context) {
-
 	context.response.send('index')
 }
 
 cascade('about', {title: 'about page'})
 export function about(context) {
-
 	context.response.send('about')
-
 }
 
-cascade('sitemap', {title: 'sitemap page'})
+cascade('sitemap', {title: 'sitemap pages'})
 export function sitemap(context) {
-
 	context.response.json(context.sitemap)
 }
 ```
@@ -1091,6 +1089,7 @@ visiting /sitemap will display the following..
         {
             "name": "index",
             "cascade": {
+                "website": "http://mysite.com/",
                 "title": "home page"
             },
             "urls": [
@@ -1100,6 +1099,7 @@ visiting /sitemap will display the following..
         {
             "name": "about",
             "cascade": {
+                "website": "http://mysite.com/",
                 "title": "about page"
             },
             "urls": [
@@ -1109,7 +1109,8 @@ visiting /sitemap will display the following..
         {
             "name": "sitemap",
             "cascade": {
-                "title": "sitemap page"
+                "website": "http://mysite.com/",
+                "title": "sitemap pages"
             },
             "urls": [
                 "/sitemap"
