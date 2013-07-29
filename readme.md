@@ -55,7 +55,7 @@ npm install appex
 	* [start up options](#options)
 	* [running on an existing http server](#http_server)
 	* [running as express middleware](#express_middleware)
-* [creating services with typescript](#creating_services)
+* [http handlers](#http_handlers)
 	* [app context](#app_context)
 	* [routing handlers](#routing_handlers)
 	* [handler signatures](#handler_signatures)
@@ -75,6 +75,9 @@ npm install appex
 	* [layouts and sections](#template_layouts_and_sections)
 	* [render](#template_render)
 	* [caching and devmode](#caching_and_devmode)
+* [sitemaps](#sitemaps)
+	* [generating](#sitemap_generate)
+	* [metadata](#sitemap_metadata)
 * [json schema](#json_schema)
 	* [generating schema](#generating_schema)
 	* [validating json](#validating_json)
@@ -262,10 +265,10 @@ export function index(context) {
 }
 ```
 
-<a name="creating_services" />
-## creating services with typescript
+<a name="http_handlers" />
+## http handlers
 
-The following section describes how to write http accessible functions with appex.
+The following sections describe how to create http accessible handlers with appex.
 
 <a name="app_context" />
 ### app context
@@ -287,6 +290,8 @@ export function method(context) {
 	// context.next       - the next function (express middleware)
 	
 	// context.router     - the appex router
+
+	// context.sitemap    - the appex sitemap api
 
 	// context.template   - the appex template engine.
 	
@@ -1001,6 +1006,116 @@ export function index(context) {
 	context.template.option.devmode = true; 
 
 	context.response.send(context.template.render('./view.txt'))
+}
+```
+
+<a name="sitemaps" />
+## sitemaps
+
+appex is able to derive sitemap metadata automatically from http endpoints created with
+typescript modules and functions. This metadata is useful to generate sitemap.xml
+files, as well as creating site navigation links automatically.
+
+<a name="sitemap_generate" />
+### generate sitemap
+
+appex sitemaps can be obtained from the context.sitemap property. 
+
+```javascript
+export function index(context) {
+
+	// return all nodes in this site.
+	context.response.json(context.sitemap)
+
+}
+```
+
+Additionally, it may be helpful to isolate branches of the sitemap with the 
+context.sitemap.get([qualifier]) function. as demonstrated below.
+
+```javascript
+export module admin {
+	export function index     (context) { }
+	export function dashboard (context) { }
+	export function content   (context) { }
+	export module users {
+		export function login(context) { }
+		export function logout(context) { }
+	}
+}
+
+export function test(context) {
+	
+	// view all admin sitemap nodes
+	context.response.json(context.sitemap.get('admin'))
+
+	// view all admin.users sitemap nodes
+	//context.response.json(context.sitemap.get('admin.users'))
+}
+```
+
+<a name="sitemap_metadata" />
+### cascade metadata
+
+each node returned in the appex sitemap includes the cascade applied for that handler. With this
+developers can apply their own metadata for a given handler. as demonstrated below.
+
+```javascript
+declare var cascade;
+
+cascade('index', {title:'home page'})
+export function index(context) {
+
+	context.response.send('index')
+}
+
+cascade('about', {title: 'about page'})
+export function about(context) {
+
+	context.response.send('about')
+
+}
+
+cascade('sitemap', {title: 'sitemap page'})
+export function sitemap(context) {
+
+	context.response.json(context.sitemap)
+}
+```
+
+visiting /sitemap will display the following..
+
+```javascript
+{
+    "nodes": [
+        {
+            "name": "index",
+            "cascade": {
+                "title": "home page"
+            },
+            "urls": [
+                "/"
+            ]
+        },
+        {
+            "name": "about",
+            "cascade": {
+                "title": "about page"
+            },
+            "urls": [
+                "/about"
+            ]
+        },
+        {
+            "name": "sitemap",
+            "cascade": {
+                "title": "sitemap page"
+            },
+            "urls": [
+                "/sitemap"
+            ]
+        }
+    ]
 }
 ```
 

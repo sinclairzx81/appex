@@ -1,56 +1,27 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
+declare var cascade;
 
-class User {
+cascade('index', {title:'home page'})
+export function index(context) {
 
-    public firstname:string;
+	context.response.send('index')
 }
 
-export module admin {
+cascade('about', {title: 'about page'})
+export function about(context) {
 
-    export function index(context) {
-    
-    }
+	context.response.send('about')
 
-    export function dashboard(context) {
-        
-
-    }  
-
-    export function modules(xontext){
-    
-    }
-    export function wildcard(context, path, a, b?) {
-
-        context.response.send('not found');    
-    }
-
-    export module users {
-        
-        export function login(context) { }
-
-        export function logout(context) {}
-    }
 }
 
-export module foo {
+function test(context) {
 
-    export function anm(context) { }
+    context.next()
 }
 
+cascade('sitemap', {title: 'sitemap pages', use:[test]})
+export function sitemap(context) {
 
-cascade('index', {verbs:['get', 'post']})
-export function index(context:appex.web.IContext) {
-    
-    context.response.json( context.sitemap );
-}
-
-export function about(contex) {}
-
-export function contact(contex) {}
-
-export function wildcard(context, path, a, b?) {
-
-    context.response.send('not found');    
-
+	context.response.json(context.sitemap)
 }
