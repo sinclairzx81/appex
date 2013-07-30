@@ -1,13 +1,6 @@
 ![](https://raw.github.com/sinclairzx81/appex/master/artifacts/logo.jpg)
 
-### nodejs web api with [typescript](http://www.typescriptlang.org/)
-
-## overview
-
-appex is a nodejs web application framework built around the TypeScript programming language and
-compiler. appex lets developers create and route http endpoints with TypeScript modules and 
-functions, as well as providing nodejs developers similar reflection and type introspection 
-services found in platforms such as .net.
+### develop nodejs web applications with [typescript](http://www.typescriptlang.org/)
 
 ```javascript
 //----------------------------------------------
@@ -163,7 +156,6 @@ var server = http.createServer(function(req, res){
 
 server.listen(3000);
 ```
-
 
 <a name="express_middleware" />
 ### running as express middleware
@@ -611,30 +603,38 @@ consider the following example:
 
 ```javascript
 
-// module is not exported, and is therefore private.
+// module is not exported, and is 
+// therefore private.
 module private_module {
 	
-	// function is exported, yet private as a http endpoint due to the 
+	// function is exported, yet private 
+	// as a http endpoint due to the 
 	// parent module being private.
 	export function public_method () { }
 	
-	// function is not exported, and is private to this module.
+	// function is not exported, and is 
+	// private to this module.
 	function private_method() { }
 }
 
-// function is not exported, and is therefore private.
+// function is not exported, and 
+// is therefore private.
 function private_function() { }
 
-// function is exported, and therefore publically accessible.
+// function is exported, and therefore 
+// publically accessible.
 export function public_function   (context) { 
 	
-	// this function can invoke private functions.
+	// this function can invoke 
+	// private functions.
 	private_function(); // ok
 	
-	// calling exported method in private module
+	// calling exported method in 
+	// private module
 	private_module.public_method(); // ok
 
-	// calling non exported method in private module
+	// calling non exported method 
+	// in private module
 	// private_module.private_method(); // bad
 
 	context.response.send('public_function');
@@ -1014,7 +1014,8 @@ export function index(context) {
 
 appex is able to derive sitemap metadata automatically from http endpoints created with
 typescript modules and functions. This metadata is useful to generate sitemap.xml
-files, as well as creating site navigation links automatically.
+files, as well as helping to create site navigation links when combined a template
+engine.
 
 <a name="sitemap_generate" />
 ### generate sitemap
@@ -1035,11 +1036,17 @@ context.sitemap.get([qualifier]) function. as demonstrated below.
 
 ```javascript
 export module admin {
+
 	export function index     (context) { }
+
 	export function dashboard (context) { }
+
 	export function content   (context) { }
+
 	export module users {
+
 		export function login(context) { }
+
 		export function logout(context) { }
 	}
 }
@@ -1057,8 +1064,8 @@ export function test(context) {
 <a name="sitemap_metadata" />
 ### cascade metadata
 
-each node returned in the appex sitemap includes the cascade applied for that handler. With this
-developers can apply their own metadata for a given handler. as demonstrated below.
+each sitemap node contains the cascade applied to the handler for which the node applies. With this
+developers can apply custom metadata for a given node. as demonstrated below.
 
 ```javascript
 declare var cascade;
@@ -1067,54 +1074,52 @@ cascade({website:'http://mysite.com/'}) // global
 
 cascade('index', {title:'home page'})
 export function index(context) {
+
 	context.response.send('index')
 }
 
 cascade('about', {title: 'about page'})
 export function about(context) {
+
 	context.response.send('about')
 }
 
-cascade('sitemap', {title: 'sitemap pages'})
+cascade('sitemap', {title: 'sitemap page'})
 export function sitemap(context) {
+
 	context.response.json(context.sitemap)
 }
 ```
 
-visiting /sitemap will display the following..
+visiting /sitemap will output the following.
 
 ```javascript
 {
+    "name": "sitemap",
     "nodes": [
         {
             "name": "index",
-            "cascade": {
-                "website": "http://mysite.com/",
-                "title": "home page"
-            },
             "urls": [
                 "/"
-            ]
+            ],
+            "website": "http://mysite.com/",
+            "title": "home page"
         },
         {
             "name": "about",
-            "cascade": {
-                "website": "http://mysite.com/",
-                "title": "about page"
-            },
             "urls": [
                 "/about"
-            ]
+            ],
+            "website": "http://mysite.com/",
+            "title": "about page"
         },
         {
             "name": "sitemap",
-            "cascade": {
-                "website": "http://mysite.com/",
-                "title": "sitemap pages"
-            },
             "urls": [
                 "/sitemap"
-            ]
+            ],
+            "website": "http://mysite.com/",
+            "title": "sitemap page"
         }
     ]
 }

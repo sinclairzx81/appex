@@ -1,7 +1,7 @@
 {
   "name": "appex",
-  "version": "0.5.5",
-  "description": "nodejs web api with typescript",
+  "version": "0.5.6",
+  "description": "develop nodejs web applications with typescript",
   "main": "index.js",
   "directories": {
      
@@ -16,7 +16,7 @@
     "url": "https://github.com/sinclairzx81/appex"
   },
   "keywords": [
-    "typescript", "web api", "reflection", "compiler", "schema"
+    "typescript", "web api", "reflection", "compiler", "schema", "templates", "sitemap"
   ],
   "author": "sinclair",
   "licenses": [ {
