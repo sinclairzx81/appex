@@ -74,6 +74,7 @@ npm install appex
 * [json schema](#json_schema)
 	* [generating schema](#generating_schema)
 	* [validating json](#validating_json)
+	* [web service descriptions](#web_service_descriptions)
 * [reflection](#reflection)
 	* [reflect everything](#reflect_everything)
 	* [reflect specific types](#reflect_specific_types)
@@ -1327,6 +1328,98 @@ will output the following.
     }
 ]
 ```
+
+<a name="web_service_descriptions">
+### web service descriptions
+
+For those using appex for web services, developers can leverage appex json schema generation
+to generate endpoint metadata (think wsdl). Consider the following which leverages both appex 
+schema generation and cascades to produce a metadata endpoint consumers of your
+api can use to see what data the endpoint http://example.com/customer/create accepts 
+and returns.
+
+```javascript
+class Request {
+
+    /** the customers firstname */
+    firstname : string;
+
+    /** the customers lastname */
+    lastname  : string;
+
+	/** the customers lastname */
+}
+
+class Response {
+
+    /** true on success  */
+    success:boolean;
+    
+    /** an array of validation errors  */
+    errors : string[];
+}
+
+cascade('metadata', {input  : 'Request', output : 'Response'})
+export function metadata(context:appex.web.IContext) {
+
+    var metadata = {
+        
+		endpoint : 'http://example.com/customer/create',
+
+        input    : context.schema.generate(context.cascade.input),
+
+        output   : context.schema.generate(context.cascade.output)
+    }
+
+    context.response.json(metadata)
+}
+```
+
+which outputs the following.
+
+```javascript
+{
+    "endpoint": "http://example.com/customer/create",
+    "input": {
+        "id": "Request",
+        "type": "object",
+        "properties": {
+            "firstname": {
+                "type": "string",
+                "description": "the customers firstname",
+                "required": true
+            },
+            "lastname": {
+                "type": "string",
+                "description": "the customers lastname",
+                "required": true
+            }
+        }
+    },
+    "output": {
+        "id": "Response",
+        "type": "object",
+        "properties": {
+            "success": {
+                "type": "boolean",
+                "description": "true on success",
+                "required": true
+            },
+            "errors": {
+                "type": "array",
+                "description": "an array of validation errors",
+                "items": {
+                    "type": "string"
+                },
+                "required": true
+            }
+        }
+    }
+}
+```
+tip: use the appex sitemap metadata to produce a metadata endpoint for all service methods 
+in your application.
+
 
 <a name="reflection" />
 ## reflection
