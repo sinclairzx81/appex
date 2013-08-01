@@ -6,6 +6,7 @@ cascade({website:'http://mysite.com/'}) // global
 
 cascade('index', {title:'home page'})
 export function index(context) {
+
 	context.response.send('index')
 }
 
