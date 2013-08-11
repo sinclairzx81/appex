@@ -1,13 +1,17 @@
 ﻿/// <reference path="node_modules/appex/appex.d.ts" />
 
+interface Customer {
 
-cascade({website:'http://mysite.com/'}) // global
+    firstname?:string;
+}
 
-export function index(context) {
+
+cascade('index', {foo:10})
+export function index(context:appex.web.IContext) {
 
     console.log(context.cascade)
 
-	context.response.send('index')
+	context.response.json(context.module.reflection)
 }
 
 export function about(context) {
