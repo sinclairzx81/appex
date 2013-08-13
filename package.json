@@ -1,27 +1,38 @@
 {
-  "name": "appex",
-  "version": "0.5.7",
-  "description": "develop nodejs web applications with typescript",
-  "main": "index.js",
-  "directories": {
-     
-  },
-  "dependencies": {"typescript.api": "0.6.1"},
-  "devDependencies": {},
-  "scripts": {
+  "name"            : "appex",
+
+  "version"         : "0.6.0",
+
+  "description"     : "develop nodejs web applications with typescript",
+
+  "main"            : "index.js",
+
+  "directories"     : { },
+  
+  "dependencies"    : {"typescript.api": "0.7.0"},
+  
+  "devDependencies" : {},
+  
+  "scripts"         : {},
+
+  "repository"      : {
     
+	"type": "git",
+    
+	"url": "https://github.com/sinclairzx81/appex"
+
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sinclairzx81/appex"
-  },
-  "keywords": [
-    "typescript", "web api", "reflection", "compiler", "schema", "templates", "sitemap"
-  ],
-  "author": "sinclair",
+
+  "keywords": [ "typescript", "web api", "reflection", "compiler", "schema", "templates", "sitemap"],
+  
+  "author"  : "sinclair",
+  
   "licenses": [ {
-    "type": "The MIT License (MIT)",
-    "url": "https://raw.github.com/sinclairzx81/appex/master/license.txt"
+    
+	"type" : "The MIT License (MIT)",
+
+    "url"  : "https://raw.github.com/sinclairzx81/appex/master/license.txt"
   } ],
+
   "readmeFilename": "readme.md"
 }
