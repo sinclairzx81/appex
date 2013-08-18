@@ -50,6 +50,8 @@ npm install appex
 	* [running as express middleware](#express_middleware)
 * [http handlers](#http_handlers)
 	* [app context](#app_context)
+	* [request methods](#request_methods)
+	* [response methods](#response_methods)
 	* [routing handlers](#routing_handlers)
 	* [handler signatures](#handler_signatures)
 	* [named handlers](#named_handlers)
@@ -325,6 +327,79 @@ export function index(context) {
 	context.response.send('home page');
 }
 ```
+<a name="request_methods" />
+### request methods
+
+appex provides some utility methods for reading in http request data. 
+
+note: if appex detects that express or connect middleware has already been applied
+to the request object, appex will use those instead.
+
+```javascript
+//----------------------------------------------
+// receive request as a string
+//----------------------------------------------
+export function submit(context) {
+
+	context.request.body.recv((str) => {
+
+		// do something with str
+	})
+}
+```
+```javascript
+//----------------------------------------------
+// receive a form post
+//----------------------------------------------
+export function submit(context) {
+
+	context.request.body.post((obj) => {
+
+		// do something with obj
+	})
+}
+```
+```javascript
+//----------------------------------------------
+// receive a json post
+//----------------------------------------------
+export function submit(context) {
+
+	context.request.body.json((obj) => {
+		
+		// do something with obj
+	})
+}
+```
+<a name="response_methods" />
+### response methods
+
+appex provides some utility methods for writing in http responses.
+
+note: if appex detects that express or connect middleware has already been applied
+to for any of the following response methods, appex will use those instead.
+
+```js
+//----------------------------------------------
+// the nodejs response has been extended with the following
+// signatures.
+//----------------------------------------------
+export interface IResponse extends http.ServerResponse {
+	headers : any;
+	send (data     : string): void;
+	send (data     : NodeBuffer): void;
+	send (status   : number, data : string): void;
+	serve (filepath: string): void;
+	serve (root : string, filepath: string): void;
+	serve (root : string, filepath: string, mime:string): void;
+	json (obj      : any): void;
+	json (status   : number, obj : any): void;
+	jsonp (obj     : any): void;
+	jsonp (status  : number, obj : any): void;
+	jsonp (status  : number, obj : any, callback: string): void;
+}
+```
+
 <a name="routing_handlers" />
 ### routing handlers
 

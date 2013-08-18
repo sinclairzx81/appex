@@ -9,7 +9,7 @@
 
   "directories"     : { },
   
-  "dependencies"    : {"typescript.api": "0.7.0"},
+  "dependencies"    : {"typescript.api": "0.7.1"},
   
   "devDependencies" : {},
   
