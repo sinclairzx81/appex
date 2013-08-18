@@ -17,20 +17,22 @@ app.listen(3000);
 // program.ts
 //----------------------------------------------
 
+/// <reference path="node_modules/appex/appex.d.ts" />
+
 // http://localhost:3000/
-export function index(context) {
+export function index(context:appex.web.IContext) {
 
 	context.response.send('home');
 }
 
 // http://localhost:3000/about
-export function about(context) {
+export function about(context:appex.web.IContext) {
 
 	context.response.send('about');
 }
 
 // http://localhost:3000/(.*)
-export function wildcard (context, path) {
+export function wildcard (context:appex.web.IContext, path:string) {
     
     context.response.send(404, path + " not found");
 }
@@ -385,17 +387,27 @@ to for any of the following response methods, appex will use those instead.
 // signatures.
 //----------------------------------------------
 export interface IResponse extends http.ServerResponse {
-	headers : any;
+
 	send (data     : string): void;
+
 	send (data     : NodeBuffer): void;
+
 	send (status   : number, data : string): void;
+
 	serve (filepath: string): void;
+
 	serve (root : string, filepath: string): void;
+
 	serve (root : string, filepath: string, mime:string): void;
+
 	json (obj      : any): void;
+
 	json (status   : number, obj : any): void;
+
 	jsonp (obj     : any): void;
+
 	jsonp (status  : number, obj : any): void;
+
 	jsonp (status  : number, obj : any, callback: string): void;
 }
 ```
