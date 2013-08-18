@@ -330,7 +330,7 @@ export function index(context) {
 <a name="request_methods" />
 ### request methods
 
-appex provides some utility methods for reading in http request data. 
+appex provides some utility methods for reading http request data. 
 
 note: if appex detects that express or connect middleware has already been applied
 to the request object, appex will use those instead.
@@ -374,7 +374,7 @@ export function submit(context) {
 <a name="response_methods" />
 ### response methods
 
-appex provides some utility methods for writing in http responses.
+appex provides some utility methods for writing http responses.
 
 note: if appex detects that express or connect middleware has already been applied
 to for any of the following response methods, appex will use those instead.
