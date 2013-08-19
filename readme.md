@@ -281,6 +281,8 @@ export function method(context) {
 	// context.request    - the http request object.
 
 	// context.response   - the http response object.
+	
+	// context.body       - utility methods for http request/response data
 
 	// context.cascade    - appex cascade.
 
@@ -355,7 +357,7 @@ export function submit(context) {
 //----------------------------------------------
 export function submit(context) {
 
-	context.request.body.post((obj) => {
+	context.request.body.form((obj) => {
 
 		// do something with obj
 	})
