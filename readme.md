@@ -330,13 +330,16 @@ export function index(context) {
 }
 ```
 <a name="request_methods" />
-### request methods
+### requests
 
-appex provides some utility methods for reading http request data. 
+The appex request is a nodejs http request issued by the underlying node http server. 
+appex extends the request with convenience methods for reading http request data. These
+are outlined below.
 
 note: if appex detects that express or connect middleware has already been applied
 to the request object, appex will use those instead.
 
+reading a posted string. 
 ```javascript
 //----------------------------------------------
 // receive request as a string
@@ -349,18 +352,20 @@ export function submit(context) {
 	})
 }
 ```
+reading posted form data as json object.
 ```javascript
 //----------------------------------------------
 // receive a form post
 //----------------------------------------------
 export function submit(context) {
 
-	context.request.body.post((obj) => {
+	context.request.body.form((obj) => {
 
 		// do something with obj
 	})
 }
 ```
+reading posted json data as a json object.
 ```javascript
 //----------------------------------------------
 // receive a json post
@@ -373,10 +378,12 @@ export function submit(context) {
 	})
 }
 ```
+
 <a name="response_methods" />
 ### response methods
 
-appex provides some utility methods for writing http responses.
+The appex response is a nodejs http response issued by the underlying node http server. 
+appex provides some utility methods for writing http responses. These are outlined below.
 
 note: if appex detects that express or connect middleware has already been applied
 to for any of the following response methods, appex will use those instead.
