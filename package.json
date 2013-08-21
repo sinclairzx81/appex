@@ -1,7 +1,7 @@
 {
   "name"            : "appex",
 
-  "version"         : "0.6.2",
+  "version"         : "0.6.3",
 
   "description"     : "develop nodejs web applications with typescript",
 
@@ -9,7 +9,7 @@
 
   "directories"     : { },
   
-  "dependencies"    : {"typescript.api": "0.7.1"},
+  "dependencies"    : {"typescript.api": "0.7.2"},
   
   "devDependencies" : {},
   
