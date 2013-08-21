@@ -281,6 +281,8 @@ export function method(context) {
 	// context.request    - the http request object.
 
 	// context.response   - the http response object.
+	
+	// context.body       - utility methods for http request/response data
 
 	// context.cascade    - appex cascade.
 
