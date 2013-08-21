@@ -51,11 +51,11 @@ npm install appex
 	* [running on an existing http server](#http_server)
 	* [running as express middleware](#express_middleware)
 * [http handlers](#http_handlers)
-	* [app context](#app_context)
-	* [request methods](#request_methods)
-	* [response methods](#response_methods)
-	* [routing handlers](#routing_handlers)
-	* [handler signatures](#handler_signatures)
+	* [context](#context)
+	* [request](#request)
+	* [response](#response)
+	* [routing](#routing)
+	* [signatures](#signatures)
 	* [named handlers](#named_handlers)
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
@@ -267,8 +267,8 @@ export function index(context) {
 
 The following sections describe how to create http accessible handlers with appex.
 
-<a name="app_context" />
-### app context
+<a name="context" />
+### context
 
 All appex functions are passed a application context object as their first argument. The app context object 
 encapulates the http request and response objects issued by the underlying http server, as well as
@@ -329,15 +329,12 @@ export function index(context) {
 	context.response.send('home page');
 }
 ```
-<a name="request_methods" />
-### requests
+<a name="request" />
+### request
 
 The appex request is a nodejs http request issued by the underlying node http server. 
 appex extends the request with convenience methods for reading http request data. These
 are outlined below.
-
-note: if appex detects that express or connect middleware has already been applied
-to the request object, appex will use those instead.
 
 reading a posted string. 
 ```javascript
@@ -379,14 +376,14 @@ export function submit(context) {
 }
 ```
 
-<a name="response_methods" />
-### response methods
+note: if appex detects that express or connect middleware has already been applied
+to the request object, appex will use those instead.
+
+<a name="response" />
+### response
 
 The appex response is a nodejs http response issued by the underlying node http server. 
 appex provides some utility methods for writing http responses. These are outlined below.
-
-note: if appex detects that express or connect middleware has already been applied
-to for any of the following response methods, appex will use those instead.
 
 ```js
 //----------------------------------------------
@@ -419,8 +416,11 @@ export interface IResponse extends http.ServerResponse {
 }
 ```
 
-<a name="routing_handlers" />
-### routing handlers
+note: if appex detects that express or connect middleware has already been applied
+to for any of the following response methods, appex will use those instead.
+
+<a name="routing" />
+### routing
 
 appex creates routes based on module scope and function name. consider the following:
 
@@ -428,31 +428,52 @@ appex creates routes based on module scope and function name. consider the follo
 export module services.customers {
 	
 	// url: http://[host]:[port]/services/customers/insert
-	export function insert(context) { /* handle route */ }
+	export function insert(context) {
+
+		context.response.send('services.customers.insert')
+    }
 	
 	// url: http://[host]:[port]/services/customers/update
-	export function update(context) { /* handle route */ }
+	export function update(context) { 
+		
+		context.response.send('services.customers.update')
+    }
 	
 	// url: http://[host]:[port]/services/customers/delete
-	export function delete(context) { /* handle route */ }
+	export function delete(context) { 
+
+		context.response.send('services.customers.delete')
+	}
 }
 
 // url: http://[host]:[port]/
-export function index   (context) { /* handle route */ }
+export function index   (context) { 
+
+	context.response.send('home page')
+}
 
 // url: http://[host]:[port]/about
-export function about   (context) { /* handle route */ }
+export function about   (context) { 
+
+	context.response.send('about page')
+}
 
 // url: http://[host]:[port]/contact
-export function contact (context) { /* handle route */ }
+export function contact (context) { 
+
+	context.response.send('contact page')
+}
 
 // url: http://[host]:[port]/(.*)
-export function wildcard (context, path) { /* handle route */ }
+export function wildcard (context, path) {
+
+	context.response.send(404, path + ' not found')
+}
 
 ```
 
-<a name="handler_signatures" />
-### handler signatures
+<a name="signatures" />
+### signatures
 
 appex supports three function signatures for http routing (named, index and wildcard). Functions that
 do not apply these signatures will not be routed.
@@ -1348,7 +1369,7 @@ when generating schema from interfaces:
 * all properties will be emitted. 
 * all properties will be marked as "required" unless modified with '?'.
 
-<a name="validating_schema" />
+<a name="validating_json" />
 ### validating json
 
 appex supports json schema validation from class and interface definitions. consider the following...
