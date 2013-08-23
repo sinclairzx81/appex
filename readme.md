@@ -391,7 +391,7 @@ appex provides some utility methods for writing http responses. These are outlin
 // signatures.
 //----------------------------------------------
 export interface IResponse extends http.ServerResponse {
-
+	
 	send (data     : string): void;
 
 	send (data     : NodeBuffer): void;
