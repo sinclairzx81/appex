@@ -59,8 +59,9 @@ npm install appex
 	* [named handlers](#named_handlers)
 	* [index handlers](#index_handlers)
 	* [wildcard handlers](#wildcard_handlers)
-	* [cascades](#cascades)
-	* [http verbs](#http_verbs)
+	* [attributes](#attributes)
+	* [verbs](#verbs)
+	* [url rewrite](#url_rewrite)
 	* [middleware](#middleware)
 	* [exporting functions](#exporting_functions)
 	* [handling 404](#handling_404)
@@ -282,7 +283,7 @@ export function method(context) {
 
 	// context.response   - the http response object.
 
-	// context.cascade    - appex cascade.
+	// context.attribute    - appex attribute.
 
 	// context.next       - the next function (express middleware)
 	
@@ -594,29 +595,33 @@ is specified, appex interprets the argument as a string. the type 'any' is also 
 note: wildcard functions should be declared last in any module scope. this ensures other routes
 will be matched first.
 
-<a name="cascades" />
-### cascades
+<a name="attributes" />
+### attributes
 
-appex supports a cascading attribute scheme on modules and functions. With this, developers can apply
-arbituary meta data for modules and functions that will propagate through scope. appex has two special
-cascade properties for middleware and http verb matching, which are described below, however consider
-the following code which illustrates the concept.
+appex supports a attribute scheme which developers can use to decorate modules and functions with 
+declaritive metadata. appex attributes can set by calling the attribute('qualifier', data)
+function which is passed to the appex module on the global scope.
+
+unlike traditional attributes (in languages like C sharp) appex attributes have a cascading behaviour
+which allows developers to apply metadata at a lexical scope, and have it cascade through to descendant scopes.
+
+The follow overviews this behavour.
 
 ```javascript
-declare function cascade (qualifier:string, obj:any);
+/// <reference path="node_modules/appex/appex.d.ts" />
 
-cascade({a: 10}); // global.
+attribute({a: 10}); // global.
 
-cascade('foo', {b : 20})
+attribute('foo', {b : 20})
 export module foo {
 
-    cascade('foo.bar', {c : 30})
+    attribute('foo.bar', {c : 30})
     export module bar {
             
-        cascade('foo.bar.index', {d : 40})
+        attribute('foo.bar.index', {d : 40})
         export function index(context) {
         
-            //context.cascade
+            //context.attribute
             //{
             //    "a": 10,
             //    "b": 20,
@@ -624,28 +629,55 @@ export module foo {
 			//    "d": 40
             //}
 
-            context.response.json( context.cascade );       
+            context.response.json( context.attribute );       
         }
     }
 }
 
 ```
 
-<a name="http_verbs" />
-### http verbs
-
-appex handles http verb matching with cascades. appex will recognise the 
-'verbs' property applied to the cascade to match against http verbs.
+in addition, appex recognizes three types of attributes. developers can use these to override the default 
+bahavour of the appex router and apply url rewriting (urls), verb matching (verbs) and middleware (use),
+as demonstrated below.
 
 ```javascript
-cascade('index', { verbs: ['get'] })
+/// <reference path="node_modules/appex/appex.d.ts" />
+
+function logger(context) {
+	console.log('logging')
+	context.next()
+}
+
+// invoke 'logger' middleware.
+attribute('index', {use   : [logger]})   
+
+// override the default route.
+attribute('index', {urls  : ['/', '/home']})  
+
+// only accept GET requests.
+attribute('index', {verbs : ['GET']})    
+
+export function index(context:appex.web.IContext) {
+	
+	context.response.send('home page')
+}
+```
+
+<a name="verbs" />
+### verbs
+
+appex handles http verb matching with attributes. appex will recognise the 
+'verbs' property applied to the attribute to match against http verbs.
+
+```javascript
+attribute('index', { verbs: ['GET'] })
 export function index (context) { 
         
     // only allow HTTP GET requests
     context.response.send('index')
 }
 
-cascade('index', { verbs: ['post', 'put'] })
+attribute('index', { verbs: ['POST', 'PUT'] })
 export function submit (context) { 
     
     // only allow HTTP POST and PUT requests
@@ -653,20 +685,35 @@ export function submit (context) {
 }
 ```
 
+<a name="url_rewrite" />
+### url rewrite
+
+developers can rewrite the default route given to exported functions with the 'urls' property applied
+to the attribute.
+
+```javascript
+attribute('index', { urls: ['/', '/home', 'home.html'] })
+export function index (context) { 
+        
+    // only allow HTTP GET requests
+    context.response.send('index')
+}
+```
+note: url rewriting is only available on index and named routes. 
 
 <a name="middleware" />
 ### middleware
 
-appex supports middleware with cascades. appex middleware defined with cascades allows
+appex supports middleware with attributes. appex middleware defined with attributes allows
 developers to scope middleware on single functions, or entire module scopes. appex will 
-recognise the 'use' property applied to the cascade to invoke middleware.
+recognise the 'use' property applied to the attribute to invoke middleware.
 
 the following demonstrates how one might use middleware to secure a site admin.
 
 note: middleware 'must' call next or handle the request. 
 
 ```javascript
-declare function cascade (qualifier:string, obj:any);
+declare function attribute (qualifier:string, obj:any);
 
 declare var console;
 
@@ -687,12 +734,12 @@ function authorize(context) {
 }
 
 // apply security middleware to admin scope.
-cascade('admin', {use: [authenticate, authorize]}) 
+attribute('admin', {use: [authenticate, authorize]}) 
 export module admin {
 
     export function index(context) {
         
-        console.log(context.cascade); // view cascade
+        console.log(context.attribute); // view attribute
 
         context.response.send('access granted!')
     }
@@ -701,7 +748,7 @@ export module admin {
 // index handler has no middleware applied.
 export function index (context) { 
     
-    console.log(context.cascade); // view cascade
+    console.log(context.attribute); // view attribute
 
     context.response.send('home')
 }
@@ -1178,29 +1225,29 @@ export function test(context) {
 ```
 
 <a name="sitemap_metadata" />
-### cascade metadata
+### attribute metadata
 
-each sitemap node contains the cascade applied to the handler for which the node applies. With this
+each sitemap node contains the attribute applied to the handler for which the node applies. With this
 developers can apply custom metadata for a given node. as demonstrated below.
 
 ```javascript
-declare var cascade;
+declare var attribute;
 
-cascade({website:'http://mysite.com/'}) // global
+attribute({website:'http://mysite.com/'}) // global
 
-cascade('index', {title:'home page'})
+attribute('index', {title:'home page'})
 export function index(context) {
 
 	context.response.send('index')
 }
 
-cascade('about', {title: 'about page'})
+attribute('about', {title: 'about page'})
 export function about(context) {
 
 	context.response.send('about')
 }
 
-cascade('sitemap', {title: 'sitemap page'})
+attribute('sitemap', {title: 'sitemap page'})
 export function sitemap(context) {
 
 	context.response.json(context.sitemap)
@@ -1449,7 +1496,7 @@ will output the following.
 
 For those using appex for web services, developers can leverage appex json schema generation
 to generate endpoint metadata (think wsdl). Consider the following which leverages both appex 
-schema generation and cascades to produce a metadata endpoint consumers of your
+schema generation and attributes to produce a metadata endpoint consumers of your
 api can use to see what data the endpoint http://example.com/customer/create accepts 
 and returns.
 
@@ -1474,16 +1521,16 @@ class Response {
     errors : string[];
 }
 
-cascade('metadata', {input  : 'Request', output : 'Response'})
+attribute('metadata', {input  : 'Request', output : 'Response'})
 export function metadata(context:appex.web.IContext) {
 
     var metadata = {
         
 		endpoint : 'http://example.com/customer/create',
 
-        input    : context.schema.generate(context.cascade.input),
+        input    : context.schema.generate(context.attribute.input),
 
-        output   : context.schema.generate(context.cascade.output)
+        output   : context.schema.generate(context.attribute.output)
     }
 
     context.response.json(metadata)
