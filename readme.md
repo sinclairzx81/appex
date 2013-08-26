@@ -605,7 +605,7 @@ function which is passed to the appex module on the global scope.
 unlike traditional attributes (in languages like C sharp) appex attributes have a cascading behaviour
 which allows developers to apply metadata at a lexical scope, and have it cascade through to descendant scopes.
 
-The follow overviews this behavour.
+The following outlines this behavour.
 
 ```javascript
 /// <reference path="node_modules/appex/appex.d.ts" />
