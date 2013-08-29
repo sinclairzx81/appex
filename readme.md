@@ -686,17 +686,18 @@ export function submit (context) {
 ### url rewrite
 
 developers can rewrite the default route given to exported functions with the 'urls' property applied
-to the attribute.
+to the attribute. 
 
 ```javascript
 attribute('index', { urls: ['/', '/home', 'home.html'] })
 export function index (context) { 
-        
-    // only allow HTTP GET requests
+    
     context.response.send('index')
 }
 ```
-note: url rewriting is only available on index and named routes. 
+note: url rewriting is only available on index and named routes.
+
+note: rewriting with regular expressions is currently not supported.
 
 <a name="middleware" />
 ### middleware
