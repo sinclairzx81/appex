@@ -19,19 +19,16 @@ app.listen(3000);
 
 /// <reference path="node_modules/appex/appex.d.ts" />
 
-// http://localhost:3000/
 export function index(context:appex.web.IContext) {
-
-	context.response.send('home');
+	
+	context.response.send('home page');
 }
 
-// http://localhost:3000/about
 export function about(context:appex.web.IContext) {
-
-	context.response.send('about');
+	
+	context.response.send('about page');
 }
 
-// http://localhost:3000/(.*)
 export function wildcard (context:appex.web.IContext, path:string) {
     
     context.response.send(404, path + " not found");
