@@ -2,6 +2,7 @@
 
 ### develop nodejs web applications with [typescript](http://www.typescriptlang.org/)
 
+
 ```javascript
 //----------------------------------------------
 // app.js
@@ -674,7 +675,7 @@ export function index (context) {
     context.response.send('index')
 }
 
-attribute('index', { verbs: ['POST', 'PUT'] })
+attribute('submit', { verbs: ['POST', 'PUT'] })
 export function submit (context) { 
     
     // only allow HTTP POST and PUT requests
