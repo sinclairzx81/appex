@@ -56,7 +56,7 @@ function build(sourcefile, outputfile, callback) {
     typescript.resolve([sourcefile], function(resolved) {
 
         error_handler(resolved)
-
+        
         typescript.compile(resolved, function(compiled) {
         
             error_handler(compiled)
