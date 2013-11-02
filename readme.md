@@ -3,7 +3,7 @@
 ### develop nodejs web applications with [typescript](http://www.typescriptlang.org/)
 
 
-```javascript
+```typescript
 //----------------------------------------------
 // app.js
 //----------------------------------------------
