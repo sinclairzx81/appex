@@ -1339,7 +1339,7 @@ export module model {
 export function index (context:appex.web.IContext) {
 	
 	// pass the fully qualified name of the type.
-    var schema = context.schema.generate('model.Customer');
+    var schema = context.schema.get('model.Customer');
 
     context.response.json(schema);
 }
@@ -1527,9 +1527,9 @@ export function metadata(context:appex.web.IContext) {
         
 		endpoint : 'http://example.com/customer/create',
 
-        input    : context.schema.generate(context.attribute.input),
+        input    : context.schema.get(context.attribute.input),
 
-        output   : context.schema.generate(context.attribute.output)
+        output   : context.schema.get(context.attribute.output)
     }
 
     context.response.json(metadata)
