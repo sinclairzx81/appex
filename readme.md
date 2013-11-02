@@ -38,7 +38,7 @@ export function wildcard (context:appex.web.IContext, path:string) {
 ```
 ### install
 
-```javascript
+```
 npm install appex
 ```
 ### contents
@@ -98,7 +98,7 @@ The following sections outline creating appex applications and configuration.
 The following code will create a standalone appex application and 
 http server and listen on port 3000.
 
-```javascript
+```typescript
 var appex   = require('appex');
 
 var app   = appex({ program : './program.ts', 
@@ -116,7 +116,7 @@ with appex, it is helpful to have these enabled.
 
 appex accepts the following start up options.
 
-```javascript
+```typescript
 var options = {
 
 	// (required) location of source file.
@@ -142,7 +142,7 @@ The following demonstrates setting up appex on an existing nodejs http server. I
 this example, appex will attempt to handle incoming requests, and if appex cannot
 route the request, will fire the callback.
 
-```javascript
+```typescript
 var http  = require('http');
 
 var appex = require('appex');
@@ -167,7 +167,7 @@ server.listen(3000);
 appex allows developers to augment existing express / connect applications by 
 way of middleware. The following demonstrates setting up appex as express middleware.
 
-```javascript
+```typescript
 var express = require('express');
 
 var appex = require('appex');
@@ -193,7 +193,7 @@ in addition to this, appex may also act as traditional express middleware. In th
 function is created which will match "all" incoming requests, the wildcard function simply prints hello world to 
 the console and then calls context.next(), which passes the request on the express handler.
 
-```javascript
+```typescript
 
 //----------------------------------------------
 // program.ts
@@ -233,7 +233,7 @@ Just like traditional express middleware, appex will also inheriate the characte
 consider the following example in which the jade view engine is configured for use. appex will inheritate the 
 response.render() method, which is passed to the appex handler as context.response.render()
 
-```javascript
+```typescript
 //----------------------------------------------
 // app.js
 //----------------------------------------------
@@ -273,7 +273,7 @@ All appex functions are passed a application context object as their first argum
 encapulates the http request and response objects issued by the underlying http server, as well as
 additional objects specific to appex. These are listed below:
 
-```javascript
+```typescript
 // the app context
 export function method(context) {
 	
@@ -302,7 +302,7 @@ export function method(context) {
 it is possible to extend the default objects passed on the context by adding them on the appex startup options. The 
 following will attach the async module to the context. 
 
-```javascript
+```typescript
 //----------------------------------------------
 // app.js
 //----------------------------------------------
@@ -336,7 +336,7 @@ appex extends the request with convenience methods for reading http request data
 are outlined below.
 
 reading a posted string. 
-```javascript
+```typescript
 //----------------------------------------------
 // receive request as a string
 //----------------------------------------------
@@ -349,7 +349,7 @@ export function submit(context) {
 }
 ```
 reading posted form data as json object.
-```javascript
+```typescript
 //----------------------------------------------
 // receive a form post
 //----------------------------------------------
@@ -362,7 +362,7 @@ export function submit(context) {
 }
 ```
 reading posted json data as a json object.
-```javascript
+```typescript
 //----------------------------------------------
 // receive a json post
 //----------------------------------------------
@@ -423,7 +423,7 @@ to for any of the following response methods, appex will use those instead.
 
 appex creates routes based on module scope and function name. consider the following:
 
-```javascript
+```typescript
 export module services.customers {
 	
 	// url: http://[host]:[port]/services/customers/insert
@@ -488,7 +488,7 @@ Named handlers require the following signature:
 * argument[0] - app context
 * returns     - void (optional)
 
-```javascript
+```typescript
 
 // http://[host]:[port]/about
 export function about(context) {
@@ -518,7 +518,7 @@ Index handlers require the following signature:
 * argument[0] - app context
 * returns     - void (optional)
 
-```javascript
+```typescript
 // url: http://[host]:[port]/
 export function index(context) { 
 
@@ -553,7 +553,7 @@ appex wildcard handlers require the following signature:
 * argument[n] - 1 or more arguments to be mapped from the url
 * returns     - void (optional)
 
-```javascript
+```typescript
 declare var console;
 
 export module blogs {
@@ -605,7 +605,7 @@ which allows developers to apply metadata at a lexical scope, and have it cascad
 
 The following outlines this behavour.
 
-```javascript
+```typescript
 /// <reference path="node_modules/appex/appex.d.ts" />
 
 attribute({a: 10}); // global.
@@ -638,7 +638,7 @@ in addition, appex recognizes three types of attributes. developers can use thes
 bahavour of the appex router and apply url rewriting (urls), verb matching (verbs) and middleware (use),
 as demonstrated below.
 
-```javascript
+```typescript
 /// <reference path="node_modules/appex/appex.d.ts" />
 
 function logger(context) {
@@ -667,7 +667,7 @@ export function index(context:appex.web.IContext) {
 appex handles http verb matching with attributes. appex will recognise the 
 'verbs' property applied to the attribute to match against http verbs.
 
-```javascript
+```typescript
 attribute('index', { verbs: ['GET'] })
 export function index (context) { 
         
@@ -689,7 +689,7 @@ export function submit (context) {
 developers can rewrite the default route given to exported functions with the 'urls' property applied
 to the attribute. 
 
-```javascript
+```typescript
 attribute('index', { urls: ['/', '/home', 'home.html'] })
 export function index (context) { 
     
@@ -711,7 +711,7 @@ the following demonstrates how one might use middleware to secure a site admin.
 
 note: middleware 'must' call next or handle the request. 
 
-```javascript
+```typescript
 declare function attribute (qualifier:string, obj:any);
 
 declare var console;
@@ -763,7 +763,7 @@ at the http level.
 
 consider the following example:
 
-```javascript
+```typescript
 
 // module is not exported, and is 
 // therefore private.
@@ -808,7 +808,7 @@ export function public_function   (context) {
 
 Use wildcard functions to catch unhandled routes.
 
-```javascript
+```typescript
 // http:[host]:[port]/
 export function index (context) { 
 
@@ -826,7 +826,7 @@ export function wildcard (context, path) {
 
 Use wildcard functions with context.response.serve() to serve static content.
 
-```javascript
+```typescript
 export module static {
 	
 	// http:[host]:[port]/static/(.*)
@@ -1161,7 +1161,7 @@ cache the generated template code in memory for the lifetime of the application.
 in addition to this, a implementation where the devmode is false can override the caching 
 behaviour with the following.
 
-```javascript
+```typescript
 export function index(context) {
 
 	// manually override the template devmode option.
@@ -1184,7 +1184,7 @@ engine.
 
 appex sitemaps can be obtained from the context.sitemap property. 
 
-```javascript
+```typescript
 export function index(context) {
 
 	// return all nodes in this site.
@@ -1196,7 +1196,7 @@ export function index(context) {
 Additionally, it may be helpful to isolate branches of the sitemap with the 
 context.sitemap.get([qualifier]) function. as demonstrated below.
 
-```javascript
+```typescript
 export module admin {
 
 	export function index     (context) { }
@@ -1229,7 +1229,7 @@ export function test(context) {
 each sitemap node contains the attribute applied to the handler for which the node applies. With this
 developers can apply custom metadata for a given node. as demonstrated below.
 
-```javascript
+```typescript
 declare var attribute;
 
 attribute({website:'http://mysite.com/'}) // global
@@ -1255,7 +1255,7 @@ export function sitemap(context) {
 
 visiting /sitemap will output the following.
 
-```javascript
+```typescript
 {
     "name": "sitemap",
     "nodes": [
@@ -1299,7 +1299,7 @@ and interfaces as well as tools for validating json data.
 The following demonstrates generating json schema from the following class
 hierarchy.
 
-```javascript
+```typescript
 export module model {
 
     /** a product */
@@ -1347,7 +1347,7 @@ export function index (context:appex.web.IContext) {
 
 which generates the following json schema.
 
-```javascript
+```typescript
 {
     "id": "model.Customer",
     "type": "object",
@@ -1420,7 +1420,7 @@ when generating schema from interfaces:
 
 appex supports json schema validation from class and interface definitions. consider the following...
 
-```javascript
+```typescript
 interface Customer {
 
     firstname    : string;
@@ -1467,7 +1467,7 @@ export function index(context) {
 
 will output the following.
 
-```javascript
+```typescript
 [
     {
         "message": "instance.lastname is required."
@@ -1499,7 +1499,7 @@ schema generation and attributes to produce a metadata endpoint consumers of you
 api can use to see what data the endpoint http://example.com/customer/create accepts 
 and returns.
 
-```javascript
+```typescript
 class Request {
 
     /** the customers firstname */
@@ -1538,7 +1538,7 @@ export function metadata(context:appex.web.IContext) {
 
 which outputs the following.
 
-```javascript
+```typescript
 {
     "endpoint": "http://example.com/customer/create",
     "input": {
@@ -1597,7 +1597,7 @@ the appex reflection api is passed on the context.module.reflection property and
 appex handler methods. The following code will JSON serialize everything declared in your appex
 project and write it to the http response. 
 
-```javascript
+```typescript
 export function index (context:appex.web.Context) {
     
     context.response.json( context.module.reflection );
@@ -1620,7 +1620,7 @@ for the following types declared in your project.
 
 to access specific type metadata, use the reflection.get([qualifier]) method, as demonstrated below.
 
-```javascript
+```typescript
 export module model {
     
     export class Customer {
@@ -1640,7 +1640,7 @@ export function index (context:appex.web.Context) {
 ```
 and methods..
 
-```javascript
+```typescript
 function some_method(a:string, b:number, c?:boolean) : void { }
 
 export function index (context:appex.web.Context) {
@@ -1651,7 +1651,7 @@ export function index (context:appex.web.Context) {
 
 ....and variables...
 
-```javascript
+```typescript
 var some_variable:number = 10;
 
 export function index (context:appex.web.Context) {
@@ -1672,7 +1672,7 @@ If you develop on a TypeScript complicant editor (one that supports TS 0.9), app
 with a declaration file you can reference in your project. If installing appex via npm, your
 reference should be as follows.
 
-```javascript
+```typescript
 /// <reference path="node_modules/appex/appex.d.ts" />
 
 export function index (context:appex.web.IContext) { 
@@ -1702,7 +1702,7 @@ will traverse each source files references and include it as part of the compila
 Developers can use this functionality to logically split source files into reusable components of
 functionality, as demonstrated below. 
 
-```javascript
+```typescript
 //---------------------------------------------------	
 // file: app.js
 //---------------------------------------------------
